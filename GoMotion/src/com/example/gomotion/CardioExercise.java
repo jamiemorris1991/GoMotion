@@ -1,5 +1,6 @@
 package com.example.gomotion;
 import java.util.*;
+
 import android.content.*;
 import android.location.*;
 
