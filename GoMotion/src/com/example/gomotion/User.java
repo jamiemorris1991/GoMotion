@@ -4,10 +4,10 @@ import java.util.LinkedList;
 
 public class User
 {
-	private String nickname;
+	private String nick;
 	private int facebookID;
 	private Settings settings;
-	private LinkedList<Exercise> exercises;
+	private LinkedList<Exercise> exerciseList;
 
 	public User()
 	{
@@ -16,9 +16,9 @@ public class User
 	
 	public User(String nick)
 	{
-		this.nickname = nick;
+		this.nick = nick;
 		this.settings = new Settings();
-		this.exercises = new LinkedList<Exercise>();
+		this.exerciseList = new LinkedList<Exercise>();
 	}
 	
 	

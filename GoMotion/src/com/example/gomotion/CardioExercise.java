@@ -1,7 +1,5 @@
 package com.example.gomotion;
 import java.util.*;
-
-
 import android.content.*;
 import android.location.*;
 
@@ -14,7 +12,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 //Class to store running/walking/cycling sessions
 public class CardioExercise extends Exercise
