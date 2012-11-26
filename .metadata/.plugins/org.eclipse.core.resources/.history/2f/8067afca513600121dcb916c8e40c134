@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/topNavBar"
+            android:text="Outdoor"
+            android:textColor="@color/topNavBarText" />
+
+        <Button
+            android:id="@+id/btnIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/topNavBar"
+            android:text="Indoor"
+            android:textColor="@color/topNavBarText" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/quickContactBadge1"
+        android:layout_marginTop="14dp"
+        android:background="#000000" />
+
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView1"
+        android:minHeight="57dp"
+        android:numStars="5"
+        android:rating="2.5" />
+
+    <QuickContactBadge
+        android:id="@+id/quickContactBadge1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_marginTop="17dp"
+        android:layout_toLeftOf="@+id/ratingBar1" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ratingBar1"
+        android:layout_alignTop="@+id/quickContactBadge1"
+        android:layout_marginLeft="16dp"
+        android:text="@String/Hello Ben"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignTop="@+id/quickContactBadge2"
+        android:text="Jamie beat your time on his 5k run, try and regain your title!"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <QuickContactBadge
+        android:id="@+id/quickContactBadge2"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/ratingBar1" />
+
+    <QuickContactBadge
+        android:id="@+id/QuickContactBadge01"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/quickContactBadge2"
+        android:layout_marginTop="24dp"
+        android:layout_toLeftOf="@+id/ratingBar1" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/QuickContactBadge01"
+        android:layout_below="@+id/QuickContactBadge01"
+        android:layout_marginTop="26dp"
+        android:src="@drawable/ic_run" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/QuickContactBadge01"
+        android:layout_alignLeft="@+id/textView2"
+        android:text="Chris said he ran with you yesterday, click to accept this tag."
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView01"
+        android:layout_alignTop="@+id/imageView1"
+        android:text="You haven&apos;t recorded a run in 3 days, why don&apos;t you run now?!"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="More news" />
+
+</RelativeLayout>
