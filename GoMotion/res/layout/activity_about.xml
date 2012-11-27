@@ -11,7 +11,7 @@
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="64dp"
-    android:src="@drawable/ic_logo" />
+    android:src="@drawable/ic_goman" />
 
 <TextView
     android:id="@+id/textView1"
@@ -20,16 +20,16 @@
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="20dp"
-    android:text="Go Motion"
+    android:text="Welcome to GoMotion"
     android:textAppearance="?android:attr/textAppearanceLarge" />
 
 <TextView
     android:id="@+id/textView2"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignRight="@+id/textView1"
     android:layout_below="@+id/imageView1"
-    android:layout_marginTop="41dp"
-    android:text="Contact details (?)" />
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="42dp"
+    android:text="More Details" />
     
 </RelativeLayout>

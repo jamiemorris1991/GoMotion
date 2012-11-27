@@ -7,40 +7,34 @@
         android:id="@+id/pushUpButton"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:onClick="incrementRep"
-        android:text="Touch Me!" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pushUpButton"
-        android:layout_below="@+id/pushUpButton"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="18dp"
-        android:text="Reps: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="18dp"
-        android:text="Sets: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="Touch Me!"
+        android:textSize="96dp" />
 
     <Button
         android:id="@+id/setButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="21dp"
+        android:layout_marginTop="15dp"
         android:onClick="incrementSet"
         android:text="Next Set" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/setButton"
+        android:layout_alignBottom="@+id/setButton"
+        android:layout_alignRight="@+id/textView2"
+        android:text="Sets: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="32dp" />
 
     <TextView
         android:id="@+id/setCount"
@@ -48,9 +42,23 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_alignLeft="@+id/setButton"
+        android:layout_marginLeft="56dp"
+        android:layout_toRightOf="@+id/textView1"
         android:text="0"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="32dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/pushUpButton"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="48dp"
+        android:text="Reps: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="32dp" />
 
     <TextView
         android:id="@+id/repCount"
@@ -58,8 +66,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView2"
         android:layout_alignBottom="@+id/textView2"
-        android:layout_alignLeft="@+id/setCount"
+        android:layout_marginLeft="13dp"
+        android:layout_toRightOf="@+id/setCount"
         android:text="0"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="32dp" />
 
 </RelativeLayout>
