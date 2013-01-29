@@ -42,8 +42,7 @@ public class User
 		ListIterator<Excercise> iterator = excercises.listIterator();
 		while(iterator.hasNext())
 		{
-			excercise.setUser(facebookID);
-			excercise.tryUpload();
+			excercise.tryUpload(facebookID);
 		}
 		
 		//Remove Excercise List
@@ -66,6 +65,6 @@ public class User
 	
 	static public void readFromFile(String path)
 	{
-		//TODO: Open file, read if online, process accordingly
+		//TODO: Open file, read whether online, process accordingly
 	}
 }
