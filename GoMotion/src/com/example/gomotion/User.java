@@ -4,22 +4,68 @@ import java.util.LinkedList;
 
 public class User
 {
-	private String nick;
-	private int facebookID;
-	private Settings settings;
-	private LinkedList<Exercise> exerciseList;
+	//Online Users
+	private Integer facebookID = null;
+	
+	//Offline Users
+	private List<Excercise> excercises = null;
+	
+	//All Users
+	private String firstName, lastName;
+	
+	public boolean isOnline()
+	{
+		return excercises == null;
+	}
 
-	public User()
+	//Create Offline User
+	public User(String firstName, String lastName)
 	{
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+	
+	//Create Online User
+	public User(int facebookID)
+	{
+		this.facebookID = facebookID;
+		//TODO: Pull firstName and secondName from Facebook
+	}
+	
+	//Convert To Online User
+	public void convertToOnline(int facebookID)
+	{
+		facebookID = facebookID;
+		//TODO: Set firstName and lastName from Facebook
 		
+		//Add All Excercises To The Database
+		ListIterator<Excercise> iterator = excercises.listIterator();
+		while(iterator.hasNext())
+		{
+			excercise.setUser(facebookID);
+			excercise.tryUpload();
+		}
+		
+		//Remove Excercise List
+		excercises = null;
 	}
 	
-	public User(String nick)
+	public void saveToFile(String path)
 	{
-		this.nick = nick;
-		this.settings = new Settings();
-		this.exerciseList = new LinkedList<Exercise>();
+		/* TODO: Save to file
+		** File structure:
+		** isOnline()
+		** EITHER
+		** facebookID
+		** OR
+		** firstName
+		** lastName
+		** list of excercises until end of file
+		*/
 	}
 	
-	
+	static public void readFromFile(String path)
+	{
+		//TODO: Open file, read if online, process accordingly
+	}
 }
