@@ -1,6 +1,7 @@
 package com.example.gomotion;
 
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class User
 {
@@ -8,7 +9,7 @@ public class User
 	private Integer facebookID = null;
 	
 	//Offline Users
-	private List<Excercise> excercises = null;
+	private LinkedList<Excercise> excercises = null;
 	
 	//All Users
 	private String firstName, lastName;
@@ -35,14 +36,14 @@ public class User
 	//Convert To Online User
 	public void convertToOnline(int facebookID)
 	{
-		facebookID = facebookID;
+		this.facebookID = facebookID;
 		//TODO: Set firstName and lastName from Facebook
 		
 		//Add All Excercises To The Database
 		ListIterator<Excercise> iterator = excercises.listIterator();
 		while(iterator.hasNext())
 		{
-			excercise.tryUpload(facebookID);
+			iterator.next().tryUpload(facebookID);
 		}
 		
 		//Remove Excercise List

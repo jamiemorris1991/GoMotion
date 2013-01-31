@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //Class to store running/walking/cycling sessions
-public class CardioExercise extends Exercise
+public class CardioExcercise extends Excercise
 {
 	//Enumerates the types or session
     public enum CardioType{WALK, RUN, CYCLE};
@@ -25,12 +25,12 @@ public class CardioExercise extends Exercise
     private double distance;    
     private LinkedList<Location> waypoints;
 
-    public CardioExercise()
+    public CardioExcercise()
     {
     	
     }
     
-    public CardioExercise(int timeLength, CardioType type, double distance, LinkedList<Location> waypoints)
+    public CardioExcercise(int timeLength, CardioType type, double distance, LinkedList<Location> waypoints)
     {
     	this.timeLength = timeLength;
     	this.type = type;

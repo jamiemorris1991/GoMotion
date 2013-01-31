@@ -1,7 +1,7 @@
 package com.example.gomotion;
 
 
-public abstract class Exercise
+public abstract class Excercise
 {
 	//Online Excercises
 	protected Integer ID;
@@ -15,7 +15,7 @@ public abstract class Exercise
 	//If id isn't null then the record has been stored on the server
 	public boolean isStored()
 	{
-		return id != null;
+		return ID != null;
 	}
 	
 	//Get a record from the server to view with the app
@@ -25,7 +25,7 @@ public abstract class Exercise
 	protected abstract boolean saveToDatabase();
 	
 	//Try to save to the database, cache in case of failure
-	public void tryUpload(int userID)
+	public boolean tryUpload(int userID)
 	{
 		//Set UserID (Facebook ID)
 		this.userID = userID;
@@ -34,9 +34,12 @@ public abstract class Exercise
 		if(!saveToDatabase())
 		{
 			Cache.append(this);
+			return false;
 		}
+		
+		//Success
+		return true;
 	}
 	
-	public abstract void loadFromFile(StreamReader reader);
-	public abstract void readFromFile(StreamWriter writer);
+	public abstract void writeToFile(java.io.OutputStream writer);
 }

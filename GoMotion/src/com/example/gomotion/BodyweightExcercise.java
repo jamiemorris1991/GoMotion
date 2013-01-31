@@ -1,6 +1,6 @@
 package com.example.gomotion;
 
-public class BodyweightExercise extends Exercise
+public class BodyweightExcercise extends Excercise
 {
     public enum BodyweightType{PUSHUPS, SITUPS, DIPS};
 	
@@ -8,12 +8,8 @@ public class BodyweightExercise extends Exercise
 	private int sets;
 	private BodyweightType type;
 	
-	public BodyweightExercise()
-	{
-		
-	}
 	
-	public BodyweightExercise(int reps, int sets, BodyweightType type)
+	public BodyweightExcercise(int reps, int sets, BodyweightType type)
 	{
 		this.reps = reps;
 		this.sets = sets;
