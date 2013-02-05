@@ -24,7 +24,18 @@
         android:layout_marginTop="15dp"
         android:onClick="incrementSet"
         android:text="Next Set" />
-
+    
+    <Button
+        android:id="@+id/setButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="21dp"
+        android:layout_marginTop="400dp"
+        android:onClick="finishExercise"
+        android:text="Finish" />
+    
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"

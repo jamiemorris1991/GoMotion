@@ -6,7 +6,7 @@
     <string name="title_activity_push_ups">Push Ups</string>
     <string name="setCount">0</string>
     <string name="repCount">0</string>
-        
-    
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_list_body_weight_exercises">Body Weight Exercise History</string>
 
 </resources>
