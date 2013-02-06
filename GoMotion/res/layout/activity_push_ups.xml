@@ -4,83 +4,57 @@
     android:layout_height="match_parent" >
 
     <Button
-        android:id="@+id/pushUpButton"
+        android:id="@+id/rep_button"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:onClick="incrementRep"
+        android:onClick="doRep"
         android:text="Touch Me!"
         android:textSize="96dp" />
-
-    <Button
-        android:id="@+id/setButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="21dp"
-        android:layout_marginTop="15dp"
-        android:onClick="incrementSet"
-        android:text="Next Set" />
-    
-    <Button
-        android:id="@+id/setButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="21dp"
-        android:layout_marginTop="400dp"
-        android:onClick="finishExercise"
-        android:text="Finish" />
-    
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/setButton"
-        android:layout_alignBottom="@+id/setButton"
-        android:layout_alignRight="@+id/textView2"
-        android:text="Sets: "
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="32dp" />
-
-    <TextView
-        android:id="@+id/setCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_marginLeft="56dp"
-        android:layout_toRightOf="@+id/textView1"
-        android:text="0"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="32dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/pushUpButton"
-        android:layout_marginLeft="26dp"
-        android:layout_marginTop="48dp"
-        android:text="Reps: "
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="32dp" />
-
-    <TextView
-        android:id="@+id/repCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_marginLeft="13dp"
-        android:layout_toRightOf="@+id/setCount"
-        android:text="0"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="32dp" />
-
+		
+	<LinearLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:layout_alignParentBottom="true" 
+	    android:layout_marginBottom="32dp"
+	    android:layout_marginLeft="32dp">
+	    <TextView
+	        android:id="@+id/set_label"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Sets: "
+	        android:textSize="32dp" />
+	    
+	    <TextView
+	        android:id="@+id/set_count"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="0"
+	        android:textSize="32dp" />
+	</LinearLayout>
+	
+	<LinearLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" 
+	    android:layout_alignParentBottom="true" 
+	    android:layout_marginBottom="32dp"
+	    android:layout_marginLeft="182dp" >
+	    <TextView
+	        android:id="@+id/rep_label"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Reps: "
+	        android:textSize="32dp" />
+	
+	    <TextView
+	        android:id="@+id/rep_count"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="0"
+	        android:textSize="32dp" />
+	</LinearLayout>
+	
 </RelativeLayout>

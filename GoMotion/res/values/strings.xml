@@ -4,9 +4,12 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_home_screen">GoMotion</string>
     <string name="title_activity_push_ups">Push Ups</string>
-    <string name="setCount">0</string>
-    <string name="repCount">0</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_list_body_weight_exercises">Body Weight Exercise History</string>
-
+	<string name="rep_choice">Reps</string>
+	<string name="set_choice">Sets</string>
+	<string name="start">Start</string>
+	<string name="cancel">Cancel</string>
+			
+    
 </resources>

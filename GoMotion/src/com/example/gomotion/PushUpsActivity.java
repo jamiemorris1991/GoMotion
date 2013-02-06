@@ -5,19 +5,31 @@ import java.util.LinkedList;
 import com.example.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class PushUpsActivity extends Activity
 {
-	
+	private int countdown;
 	BodyWeightExercise exercise;
 	private int setCount;
 	private int repCount;
 	
-	private LinkedList<Integer> setValues = new LinkedList<Integer>();
+	private TextView setView;
+	private TextView repView;
+	private Button repButton; 
+	
+	private int initialSetCount;
+	private int initialRepCount;
+	
+	//private LinkedList<Integer> setValues = new LinkedList<Integer>();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -25,8 +37,24 @@ public class PushUpsActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push_ups);
         
+        Intent intent = getIntent();
+        initialSetCount = Integer.valueOf(intent.getStringExtra(BodyWeightSettingsDialogFragment.SET_CHOICE));
+        initialRepCount = Integer.valueOf(intent.getStringExtra(BodyWeightSettingsDialogFragment.REP_CHOICE));
+       
+        setCount = initialSetCount;
+        repCount = initialRepCount;
+        
+        setView = (TextView) findViewById(R.id.set_count);
+        repView = (TextView) findViewById(R.id.rep_count);
+        repButton = (Button) findViewById(R.id.rep_button);
+        
+        setView.setText(String.valueOf(setCount));
+        repView.setText(String.valueOf(repCount));
+        
         exercise = new BodyWeightExercise();
         exercise.setTimestamp(System.currentTimeMillis());
+       	exercise.setSets(initialSetCount);
+    	exercise.setReps(initialRepCount);
         exercise.setType(BodyWeightType.PUSHUPS);
     }
 
@@ -37,42 +65,95 @@ public class PushUpsActivity extends Activity
         return true;
     }
     
-    public void incrementRep(View view)
+    public void doRep(View view)
     {
-    	TextView reps = (TextView) findViewById(R.id.repCount);
-    	int repCount =  Integer.parseInt( reps.getText().toString() );
-    	repCount++;
-    	reps.setText(String.valueOf(repCount));
-    }
-    
-    public void incrementSet(View view)
-    {
-    	// Get set value
-    	TextView sets = (TextView) findViewById(R.id.setCount);
-    	setCount = Integer.parseInt( sets.getText().toString() );
-    	
-    	// Get rep value
-    	TextView reps = (TextView) findViewById(R.id.repCount);
-    	repCount = Integer.parseInt(reps.getText().toString());
-    	
-    	// Increment set value and store rep count
-    	if(repCount > 0)
+    	if(repCount > 1)
     	{
-	    	setValues.add( repCount );	
-	    	reps.setText(String.valueOf(0));
-
-	    	setCount++;
-	    	sets.setText(String.valueOf(setCount));	    	
+	    	repCount--;
+        	repView.setText(String.valueOf(repCount));
     	}
+    	else if(setCount == 1 && repCount == 1) // finished
+    	{
+    		finishExercise();
+    	}
+    	else // finish set
+    	{
+        	setCount--;
+        	repCount = initialRepCount;
+        	
+        	setView.setText(String.valueOf(setCount));
+        	repView.setText(String.valueOf(repCount));
+    		
+    		repButton.setClickable(false);
+    		countdown = 11;
+    		
+    		CountDownTimer timer = new CountDownTimer(11000, 1000) 
+    		{
+				@Override
+				public void onTick(long millisUntilFinished)
+				{
+					countdown--;
+					repButton.setText(String.valueOf(countdown));
+				} 
+				@Override
+				public void onFinish()
+				{
+		        	repButton.setText("Touch Me!");
+		        	repButton.setClickable(true);
+				}   			
+    		};
+    		
+    		timer.start();
+    	}	
     }
     
-    public void finishExercise(View view)
-    {
-    	exercise.setSets(setCount);
-    	exercise.setReps(repCount);
-    	
+    
+//    public void incrementRep(View view)
+//    {
+//    	TextView reps = (TextView) findViewById(R.id.repCount);
+//    	int repCount =  Integer.parseInt( reps.getText().toString() );
+//    	repCount++;
+//    	reps.setText(String.valueOf(repCount));
+//    }
+//    
+//    public void incrementSet(View view)
+//    {
+//    	// Get set value
+//    	TextView sets = (TextView) findViewById(R.id.setCount);
+//    	setCount = Integer.parseInt( sets.getText().toString() );
+//    	
+//    	// Get rep value
+//    	TextView reps = (TextView) findViewById(R.id.repCount);
+//    	repCount = Integer.parseInt(reps.getText().toString());
+//    	
+//    	// Increment set value and store rep count
+//    	if(repCount > 0)
+//    	{
+//	    	setValues.add( repCount );	
+//	    	reps.setText(String.valueOf(0));
+//
+//	    	setCount++;
+//	    	sets.setText(String.valueOf(setCount));	    	
+//    	}
+//    }
+    
+    public void finishExercise()
+    {	
     	DatabaseHandler db = new DatabaseHandler(this);    	
     	db.addBodyWeightExercise(exercise);
     	db.close();
+    	
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("GoMotion")
+        .setMessage("Well done, you have completed this exercise!")
+        .setCancelable(false)
+        .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
