@@ -1,23 +1,10 @@
 package com.example.gomotion;
 
-import java.sql.*;
-
-
-public class Database
+public interface Database
 {
-	static private final String connectionString
-	= "jdbc:sqlserver://homepages.ncl.ac.uk;user=t2015t12;password=Vary|Tan";
-	static private Connection connection;
+	public boolean add(BodyWeightExcercise excercise);
+	public boolean add(CardioExcercise excercise);
 	
-	static public void init()
-	{
-		try
-		{
-			connection = DriverManager.getConnection(connectionString);
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	public BodyWeightExcercise getBodyWeightExcercise(int id);
+	public CardioExcercise getCardioExcercise(int id);
 }

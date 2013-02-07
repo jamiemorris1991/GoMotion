@@ -1,8 +1,6 @@
 package com.example.gomotion;
 
-import java.util.LinkedList;
-
-import com.example.gomotion.BodyWeightExercise.BodyWeightType;
+import com.example.gomotion.BodyWeightExcercise.BodyweightType;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,7 +16,7 @@ import android.widget.TextView;
 public class PushUpsActivity extends Activity
 {
 	private int countdown;
-	BodyWeightExercise exercise;
+	BodyWeightExcercise exercise;
 	private int setCount;
 	private int repCount;
 	
@@ -51,11 +49,12 @@ public class PushUpsActivity extends Activity
         setView.setText(String.valueOf(setCount));
         repView.setText(String.valueOf(repCount));
         
-        exercise = new BodyWeightExercise();
-        exercise.setTimestamp(System.currentTimeMillis());
-       	exercise.setSets(initialSetCount);
-    	exercise.setReps(initialRepCount);
-        exercise.setType(BodyWeightType.PUSHUPS);
+        exercise = new BodyWeightExcercise(
+        		null,
+        		(int)System.currentTimeMillis(),
+        		initialSetCount,
+        		initialRepCount,
+        		BodyweightType.PUSHUPS);
     }
 
     @Override
@@ -139,8 +138,8 @@ public class PushUpsActivity extends Activity
     
     public void finishExercise()
     {	
-    	DatabaseHandler db = new DatabaseHandler(this);    	
-    	db.addBodyWeightExercise(exercise);
+    	OfflineDatabase db = new OfflineDatabase(this);    	
+    	db.add(exercise);
     	db.close();
     	
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);

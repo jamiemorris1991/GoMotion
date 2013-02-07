@@ -1,6 +1,6 @@
 package com.example.gomotion;
 
-import com.example.gomotion.BodyWeightExercise.BodyWeightType;
+import com.example.gomotion.BodyWeightExcercise.BodyweightType;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,7 +29,7 @@ public class HomeScreen extends Activity
     
     public void doPushUps(View view)
     {
-    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyWeightType.PUSHUPS);
+    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyweightType.PUSHUPS);
     	dialog.show(getFragmentManager(), "pushups_dialog");
     }
     

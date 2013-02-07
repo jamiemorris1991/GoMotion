@@ -1,6 +1,6 @@
 package com.example.gomotion;
 
-import com.example.gomotion.BodyWeightExercise.BodyWeightType;
+import com.example.gomotion.BodyWeightExcercise.BodyweightType;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,11 +15,11 @@ import android.widget.EditText;
 
 public class BodyWeightSettingsDialogFragment extends DialogFragment
 {
-	private BodyWeightType type;
+	private BodyweightType type;
 	public final static String SET_CHOICE = "com.example.gomotion.SET_CHOICE";
 	public final static String REP_CHOICE = "com.example.gomotion.REP_CHOICE";
 
-	public BodyWeightSettingsDialogFragment(BodyWeightType type)
+	public BodyWeightSettingsDialogFragment(BodyweightType type)
 	{
 		this.type = type;
 	}

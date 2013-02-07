@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.example.gomotion.BodyWeightExercise.BodyWeightType;
+import com.example.gomotion.BodyWeightExcercise.BodyweightType;
 
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -22,12 +22,12 @@ public class ListBodyWeightExercisesActivity extends ListActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        DatabaseHandler db = new DatabaseHandler(this);
+        OfflineDatabase db = new OfflineDatabase(this);
 
         List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         
         // Add each exercise as a map with the key being first line and value the second
-        for(BodyWeightExercise exercise : db.getAllBodyWeightExercises())
+        for(BodyWeightExcercise exercise : db.getAllBodyWeightExercises())
         {
         	Map<String, String> datum = new HashMap<String, String>(2);
         	
@@ -37,7 +37,7 @@ public class ListBodyWeightExercisesActivity extends ListActivity
         	
         	datum.put("First Line", title);
         	
-        	String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date(exercise.getTimestamp()));
+        	String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date(exercise.getTimeStamp()));
         	datum.put("Second Line", "Completed: " + date + "\nSets: " + exercise.getSets() + " Reps: " + exercise.getReps());
 
         	data.add(datum);

@@ -1,17 +1,7 @@
 package com.example.gomotion;
 import java.util.*;
-import android.content.*;
-import android.location.*;
 
-import android.app.Activity;
-import android.content.Context;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
 
 //Class to store running/walking/cycling sessions
 public class CardioExcercise extends Excercise
@@ -37,6 +27,16 @@ public class CardioExcercise extends Excercise
     	this.distance = distance;
     	this.waypoints = waypoints;
     }
+
+	public CardioExcercise(int ID, int timeStamp, long distance, int timeLength, CardioType type)
+	{
+		this.ID = ID;
+		this.timeStamp = timeStamp;
+		
+		this.timeLength = timeLength;
+    	this.type = type;
+    	this.distance = distance;
+	}
 
 	public int getTimeLength()
 	{
@@ -76,6 +76,12 @@ public class CardioExcercise extends Excercise
 	public void setWaypoints(LinkedList<Location> waypoints)
 	{
 		this.waypoints = waypoints;
+	}
+
+	@Override
+	protected boolean saveToDatabase()
+	{
+		return Main.user.getDatabase().add(this);
 	}
     
     
