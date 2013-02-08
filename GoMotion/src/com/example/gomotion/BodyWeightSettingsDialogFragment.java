@@ -1,6 +1,6 @@
 package com.example.gomotion;
 
-import com.example.gomotion.BodyWeightExcercise.BodyweightType;
+import com.example.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,11 +15,12 @@ import android.widget.EditText;
 
 public class BodyWeightSettingsDialogFragment extends DialogFragment
 {
-	private BodyweightType type;
+	private BodyWeightType type;
 	public final static String SET_CHOICE = "com.example.gomotion.SET_CHOICE";
 	public final static String REP_CHOICE = "com.example.gomotion.REP_CHOICE";
+	public final static String REST_TIME = "com.example.gomotion.REST_TIME";
 
-	public BodyWeightSettingsDialogFragment(BodyweightType type)
+	public BodyWeightSettingsDialogFragment(BodyWeightType type)
 	{
 		this.type = type;
 	}
@@ -47,12 +48,15 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 				 					
 					EditText setsEditText = (EditText) v.findViewById(R.id.set_choice);
 					EditText repsEditText = (EditText) v.findViewById(R.id.rep_choice);
+					EditText restTimeText = (EditText) v.findViewById(R.id.rest_time);
 					
-					String sets = setsEditText.getText().toString();
-					String reps = repsEditText.getText().toString();
+					int sets = Integer.valueOf( setsEditText.getText().toString() );
+					int reps = Integer.valueOf( repsEditText.getText().toString() );
+					int restTime = Integer.valueOf( restTimeText.getText().toString() );
 					
 					intent.putExtra(SET_CHOICE, sets);
 					intent.putExtra(REP_CHOICE, reps);
+					intent.putExtra(REST_TIME, restTime);
 
 					startActivity(intent);
 				}

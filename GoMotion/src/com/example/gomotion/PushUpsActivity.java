@@ -1,6 +1,8 @@
 package com.example.gomotion;
 
-import com.example.gomotion.BodyWeightExcercise.BodyweightType;
+import java.util.LinkedList;
+
+import com.example.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +18,9 @@ import android.widget.TextView;
 public class PushUpsActivity extends Activity
 {
 	private int countdown;
-	BodyWeightExcercise exercise;
+	private int restTime;
+	
+	BodyWeightExercise exercise;
 	private int setCount;
 	private int repCount;
 	
@@ -36,8 +40,9 @@ public class PushUpsActivity extends Activity
         setContentView(R.layout.activity_push_ups);
         
         Intent intent = getIntent();
-        initialSetCount = Integer.valueOf(intent.getStringExtra(BodyWeightSettingsDialogFragment.SET_CHOICE));
-        initialRepCount = Integer.valueOf(intent.getStringExtra(BodyWeightSettingsDialogFragment.REP_CHOICE));
+        initialSetCount = intent.getIntExtra(BodyWeightSettingsDialogFragment.SET_CHOICE, 1);
+        initialRepCount = intent.getIntExtra(BodyWeightSettingsDialogFragment.REP_CHOICE, 1);
+        restTime = intent.getIntExtra(BodyWeightSettingsDialogFragment.REST_TIME, 10000) * 1000; // convert seconds to milliseconds
        
         setCount = initialSetCount;
         repCount = initialRepCount;
@@ -49,12 +54,11 @@ public class PushUpsActivity extends Activity
         setView.setText(String.valueOf(setCount));
         repView.setText(String.valueOf(repCount));
         
-        exercise = new BodyWeightExcercise(
-        		null,
-        		(int)System.currentTimeMillis(),
-        		initialSetCount,
-        		initialRepCount,
-        		BodyweightType.PUSHUPS);
+        exercise = new BodyWeightExercise();
+        exercise.setTimestamp(System.currentTimeMillis());
+       	exercise.setSets(initialSetCount);
+    	exercise.setReps(initialRepCount);
+        exercise.setType(BodyWeightType.PUSHUPS);
     }
 
     @Override
@@ -84,9 +88,9 @@ public class PushUpsActivity extends Activity
         	repView.setText(String.valueOf(repCount));
     		
     		repButton.setClickable(false);
-    		countdown = 11;
+    		countdown = (restTime/1000) + 1;
     		
-    		CountDownTimer timer = new CountDownTimer(11000, 1000) 
+    		CountDownTimer timer = new CountDownTimer(restTime + 1000, 1000) 
     		{
 				@Override
 				public void onTick(long millisUntilFinished)
@@ -138,21 +142,21 @@ public class PushUpsActivity extends Activity
     
     public void finishExercise()
     {	
-    	OfflineDatabase db = new OfflineDatabase(this);    	
-    	db.add(exercise);
-    	db.close();
-    	
-    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("GoMotion")
-        .setMessage("Well done, you have completed this exercise!")
-        .setCancelable(false)
-        .setNegativeButton("Close", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        });
-        
-        AlertDialog alert = builder.create();
-        alert.show();
+		OfflineDatabase db = new OfflineDatabase(this);    	
+		db.add(exercise);
+		db.close();
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("GoMotion")
+			.setMessage("Well done, you have completed this exercise!")
+			.setCancelable(false)
+			.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+				finish();
+			}
+		});
+
+		AlertDialog alert = builder.create();
+		alert.show();
     }
 }

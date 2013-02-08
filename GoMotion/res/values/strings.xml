@@ -10,6 +10,6 @@
 	<string name="set_choice">Sets</string>
 	<string name="start">Start</string>
 	<string name="cancel">Cancel</string>
-			
+	<string name="rest_time">Rest time (s)</string>		
     
 </resources>
