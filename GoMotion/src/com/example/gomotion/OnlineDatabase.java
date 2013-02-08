@@ -21,23 +21,23 @@ public class OnlineDatabase implements Database
 		}
 	}
 
-	public boolean add(BodyWeightExcercise excercise)
+	public boolean add(BodyWeightExercise exercise)
 	{
 		return false;
 	}
 
-	public boolean add(CardioExcercise excercise)
+	public boolean add(CardioExercise exercise)
 	{
 		return false;
 	}
 
-	public BodyWeightExcercise getBodyWeightExcercise(int id)
+	public BodyWeightExercise getBodyWeightExercise(int id)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public CardioExcercise getCardioExcercise(int id)
+	public CardioExercise getCardioExercise(int id)
 	{
 		// TODO Auto-generated method stub
 		return null;

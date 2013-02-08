@@ -4,16 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.example.gomotion.BodyWeightExcercise.BodyweightType;
-
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
 public class ListBodyWeightExercisesActivity extends ListActivity 
 {
@@ -23,11 +18,11 @@ public class ListBodyWeightExercisesActivity extends ListActivity
         super.onCreate(savedInstanceState);
         
         OfflineDatabase db = new OfflineDatabase(this);
-
+        //System.out.println(db.getAllBodyWeightExercises().toString());
         List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         
         // Add each exercise as a map with the key being first line and value the second
-        for(BodyWeightExcercise exercise : db.getAllBodyWeightExercises())
+        for(BodyWeightExercise exercise : db.getAllBodyWeightExercises())
         {
         	Map<String, String> datum = new HashMap<String, String>(2);
         	

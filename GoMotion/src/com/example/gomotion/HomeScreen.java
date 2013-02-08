@@ -1,6 +1,6 @@
 package com.example.gomotion;
 
-import com.example.gomotion.BodyWeightExcercise.BodyweightType;
+import com.example.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,9 @@ public class HomeScreen extends Activity
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_home_screen);
+        
+        OfflineDatabase db = new OfflineDatabase(this);
+        db.getAllBodyWeightExercises();
     }
 
     @Override
@@ -29,7 +32,7 @@ public class HomeScreen extends Activity
     
     public void doPushUps(View view)
     {
-    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyweightType.PUSHUPS);
+    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyWeightType.PUSHUPS);
     	dialog.show(getFragmentManager(), "pushups_dialog");
     }
     

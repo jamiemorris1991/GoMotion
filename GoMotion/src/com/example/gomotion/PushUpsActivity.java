@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -54,11 +55,8 @@ public class PushUpsActivity extends Activity
         setView.setText(String.valueOf(setCount));
         repView.setText(String.valueOf(repCount));
         
-        exercise = new BodyWeightExercise();
-        exercise.setTimestamp(System.currentTimeMillis());
-       	exercise.setSets(initialSetCount);
-    	exercise.setReps(initialRepCount);
-        exercise.setType(BodyWeightType.PUSHUPS);
+        exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.PUSHUPS);
+        exercise.setTimeStamp(System.currentTimeMillis());
     }
 
     @Override
@@ -145,6 +143,7 @@ public class PushUpsActivity extends Activity
 		OfflineDatabase db = new OfflineDatabase(this);    	
 		db.add(exercise);
 		db.close();
+		
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("GoMotion")

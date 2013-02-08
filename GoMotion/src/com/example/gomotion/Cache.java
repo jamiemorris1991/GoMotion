@@ -4,7 +4,7 @@ public class Cache
 {
 	static final String CACHE_PATH = "cache.txt";
 	
-	static public void append(Excercise excercise)
+	static public void append(Exercise excercise)
 	{
 		
 	}

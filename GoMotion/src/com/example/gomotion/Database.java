@@ -2,9 +2,9 @@ package com.example.gomotion;
 
 public interface Database
 {
-	public boolean add(BodyWeightExcercise excercise);
-	public boolean add(CardioExcercise excercise);
+	public boolean add(BodyWeightExercise exercise);
+	public boolean add(CardioExercise exercise);
 	
-	public BodyWeightExcercise getBodyWeightExcercise(int id);
-	public CardioExcercise getCardioExcercise(int id);
+	public BodyWeightExercise getBodyWeightExercise(int id);
+	public CardioExercise getCardioExercise(int id);
 }

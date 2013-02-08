@@ -3,7 +3,7 @@ package com.example.gomotion;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.gomotion.BodyWeightExcercise.BodyweightType;
+import com.example.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,10 +15,10 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 {
 	// All Static variables
     // Database Version
-    private final int DATABASE_VERSION = 1;
+    private final static int DATABASE_VERSION = 1;
  
     // Database Name
-    protected final String DATABASE_NAME = "offlineDB";
+    protected final static String DATABASE_NAME = "offlineDB";
  
     // Table names
     private final String TABLE_BODYWEIGHT = "bodyweight";
@@ -29,11 +29,11 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
     private final String KEY_TIMESTAMP = "timestamp";
     private final String KEY_TYPE = "type";
 
-    // Body Weight Excercise Table Column names
+    // Body Weight Exercise Table Column names
     private final String KEY_SETS = "sets";
     private final String KEY_REPS = "reps";
     
-    // Cardio Excercise Table Column names
+    // Cardio Exercise Table Column names
     private final String KEY_TIMELENGTH = "timelength";
     private final String KEY_DISTANCE = "distance";
 
@@ -45,14 +45,14 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
-		// Create Body Weight Excercise table
+		// Create Body Weight Exercise table
 		String CREATE_BODYWEIGHT_TABLE = "CREATE TABLE " + TABLE_BODYWEIGHT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TIMESTAMP + " INTEGER,"
                 + KEY_SETS + " INTEGER," + KEY_REPS + " INTEGER," +  KEY_TYPE + " TEXT" +")";
 		
         db.execSQL(CREATE_BODYWEIGHT_TABLE);
         
-        // Create Cardio Excercise table
+        // Create Cardio Exercise table
  		String CREATE_CARDIO_TABLE = "CREATE TABLE " + TABLE_CARDIO + "("
                  + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TIMESTAMP + " INTEGER,"
                  + KEY_DISTANCE + " INTEGER," + KEY_TIMELENGTH + " INTEGER," +  KEY_TYPE + " TEXT" +")";
@@ -71,18 +71,18 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
         onCreate(db);
 	}
 	
-	/****************************** Body Weight excercise methods ***********************************************/
+	/****************************** Body Weight exercise methods ***********************************************/
 	
-	// Add a new body weight excercise
-	public boolean add(BodyWeightExcercise excercise)
+	// Add a new body weight exercise
+	public boolean add(BodyWeightExercise exercise)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_TIMESTAMP, excercise.getTimeStamp());
-		values.put(KEY_SETS, excercise.getSets());
-		values.put(KEY_REPS, excercise.getReps());
-		values.put(KEY_TYPE, excercise.getType().name());
+		values.put(KEY_TIMESTAMP, exercise.getTimeStamp());
+		values.put(KEY_SETS, exercise.getSets());
+		values.put(KEY_REPS, exercise.getReps());
+		values.put(KEY_TYPE, exercise.getType().name());
 		
 		// Insert into database
 		db.insert(TABLE_BODYWEIGHT, null, values);
@@ -90,8 +90,8 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		return true;
 	}
 	
-	// Get a single body weight excercise
-	public BodyWeightExcercise getBodyWeightExcercise(int id)
+	// Get a single body weight exercise
+	public BodyWeightExercise getBodyWeightExercise(int id)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
 		
@@ -101,24 +101,24 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 
 		if(cursor.moveToFirst()) 
 		{		
-			BodyWeightExcercise excercise = new BodyWeightExcercise(
+			BodyWeightExercise exercise = new BodyWeightExercise(
 					Integer.parseInt(cursor.getString(0)),
 					Integer.parseInt(cursor.getString(1)), 
 					Integer.parseInt(cursor.getString(2)),
 					Integer.parseInt(cursor.getString(3)),
-					BodyWeightExcercise.BodyweightType.valueOf(cursor.getString(4)));
+					BodyWeightExercise.BodyWeightType.valueOf(cursor.getString(4)));
 			
 			cursor.close();
 			
-			return excercise;
+			return exercise;
 		}
 		else return null;
 	}
 	
-	// Returns a list of all body weight excercises
-	public List<BodyWeightExcercise> getAllBodyWeightExcercises()
+	// Returns a list of all body weight exercises
+	public List<BodyWeightExercise> getAllBodyWeightExercises()
 	{
-		List<BodyWeightExcercise> excerciseList = new ArrayList<BodyWeightExcercise>();
+		List<BodyWeightExercise> exerciseList = new ArrayList<BodyWeightExercise>();
 		
 		String query = "SELECT * FROM " + TABLE_BODYWEIGHT;		
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -127,22 +127,22 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		if(cursor.moveToFirst())
 		{
 			do {
-				BodyWeightExcercise excercise = new BodyWeightExcercise(
+				BodyWeightExercise exercise = new BodyWeightExercise(
 						Integer.parseInt(cursor.getString(0)),
-						Integer.parseInt(cursor.getString(1)),
+						Long.parseLong(cursor.getString(1)),
 						Integer.parseInt(cursor.getString(2)),
 						Integer.parseInt(cursor.getString(3)),
-						BodyWeightExcercise.BodyweightType.valueOf(cursor.getString(4))	
+						BodyWeightExercise.BodyWeightType.valueOf(cursor.getString(4))	
 				);
-				excerciseList.add(excercise);
+				exerciseList.add(exercise);
 			} while(cursor.moveToNext());
 		}
 		
-		return excerciseList;
+		return exerciseList;
 	}
 	
-	// Get count of all body weight excercises
-	public int getBodyWeightExcercisesCount() 
+	// Get count of all body weight exercises
+	public int getBodyWeightExercisesCount() 
 	{
 		String query = "SELECT * FROM " + TABLE_BODYWEIGHT;		
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -152,40 +152,40 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		return cursor.getCount();
 	}
 	
-	// Updates a single body weight excercise
-	public int updateBodyWeightExcercise(BodyWeightExcercise excercise)
+	// Updates a single body weight exercise
+	public int updateBodyWeightExercise(BodyWeightExercise exercise)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put(KEY_TIMESTAMP, excercise.getTimeStamp());
-		values.put(KEY_SETS, excercise.getSets());
-		values.put(KEY_REPS, excercise.getReps());
-		values.put(KEY_TYPE, excercise.getType().toString());
+		values.put(KEY_TIMESTAMP, exercise.getTimeStamp());
+		values.put(KEY_SETS, exercise.getSets());
+		values.put(KEY_REPS, exercise.getReps());
+		values.put(KEY_TYPE, exercise.getType().toString());
 		
-		return db.update(TABLE_BODYWEIGHT, values, KEY_ID + " = ?", new String[] { String.valueOf(excercise.getID())});
+		return db.update(TABLE_BODYWEIGHT, values, KEY_ID + " = ?", new String[] { String.valueOf(exercise.getID())});
 	}
 	
-	// Delete a single body weight excercise
-	public void deleteBodyWeightExcercise(BodyWeightExcercise excercise) 
+	// Delete a single body weight exercise
+	public void deleteBodyWeightExercise(BodyWeightExercise exercise) 
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_BODYWEIGHT, KEY_ID + " = ?", new String[] { String.valueOf(excercise.getID())});
+		db.delete(TABLE_BODYWEIGHT, KEY_ID + " = ?", new String[] { String.valueOf(exercise.getID())});
 		db.close();
 	}
 	
-	/****************************** Cardio excercise methods ***********************************************/
+	/****************************** Cardio exercise methods ***********************************************/
 	
-	// Add a single cardio excercise to the database
-	public boolean add(CardioExcercise excercise)
+	// Add a single cardio exercise to the database
+	public boolean add(CardioExercise exercise)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_TIMESTAMP, excercise.getTimeStamp());
-		values.put(KEY_DISTANCE, excercise.getDistance());
-		values.put(KEY_TIMELENGTH, excercise.getTimeLength());
-		values.put(KEY_TYPE, excercise.getType().name());
+		values.put(KEY_TIMESTAMP, exercise.getTimeStamp());
+		values.put(KEY_DISTANCE, exercise.getDistance());
+		values.put(KEY_TIMELENGTH, exercise.getTimeLength());
+		values.put(KEY_TYPE, exercise.getType().name());
 		
 		// Insert into database
 		db.insert(TABLE_CARDIO, null, values);
@@ -193,8 +193,8 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		return true;
 	}
 	
-	// Get a single cardio excercise
-	public CardioExcercise getCardioExcercise(int id) 
+	// Get a single cardio exercise
+	public CardioExercise getCardioExercise(int id) 
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
 		
@@ -204,24 +204,24 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 
 		if(cursor.moveToFirst()) 
 		{		
-			CardioExcercise excercise = new CardioExcercise(
+			CardioExercise exercise = new CardioExercise(
 					Integer.parseInt(cursor.getString(0)),
-					Integer.parseInt(cursor.getString(1)),
+					Long.parseLong(cursor.getString(1)),
 					Integer.parseInt(cursor.getString(2)),
 					Integer.parseInt(cursor.getString(3)), 
-					CardioExcercise.CardioType.valueOf(cursor.getString(4)));
+					CardioExercise.CardioType.valueOf(cursor.getString(4)));
 			
 			cursor.close();
 			
-			return excercise;
+			return exercise;
 		}
 		else return null;
 	}
 	
-	// Returns a list of all cardio excercises
-	public List<CardioExcercise> getAllCardioExcercises() 
+	// Returns a list of all cardio exercises
+	public List<CardioExercise> getAllCardioExercises() 
 	{
-		List<CardioExcercise> excerciseList = new ArrayList<CardioExcercise>();
+		List<CardioExercise> exerciseList = new ArrayList<CardioExercise>();
 		
 		String query = "SELECT * FROM " + TABLE_CARDIO;		
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -230,23 +230,23 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		if(cursor.moveToFirst())
 		{
 			do {
-				CardioExcercise excercise = new CardioExcercise();
+				CardioExercise exercise = new CardioExercise();
 				
-				excercise.setID(Integer.parseInt(cursor.getString(0)));
-				excercise.setTimeStamp(Integer.parseInt(cursor.getString(1)));
-				excercise.setDistance(Integer.parseInt(cursor.getString(2)));
-				excercise.setTimeLength(Integer.parseInt(cursor.getString(3)));
-				excercise.setType(CardioExcercise.CardioType.valueOf(cursor.getString(4)));	
+				exercise.setID(Integer.parseInt(cursor.getString(0)));
+				exercise.setTimeStamp(Integer.parseInt(cursor.getString(1)));
+				exercise.setDistance(Integer.parseInt(cursor.getString(2)));
+				exercise.setTimeLength(Integer.parseInt(cursor.getString(3)));
+				exercise.setType(CardioExercise.CardioType.valueOf(cursor.getString(4)));	
 				
-				excerciseList.add(excercise);
+				exerciseList.add(exercise);
 			} while(cursor.moveToNext());
 		}
 		
-		return excerciseList;
+		return exerciseList;
 	}
 	
-	// Get count of all cardio excercises
-	public int getCardioExcercisesCount() 
+	// Get count of all cardio exercises
+	public int getCardioExercisesCount() 
 	{
 		String query = "SELECT * FROM " + TABLE_CARDIO;		
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -256,25 +256,25 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		return cursor.getCount();
 	}
 	
-	// Updates a single cardio excercise
-	public int updateCardioExcercise(CardioExcercise excercise)
+	// Updates a single cardio exercise
+	public int updateCardioExercise(CardioExercise exercise)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put(KEY_TIMESTAMP, excercise.getTimeStamp());
-		values.put(KEY_DISTANCE, excercise.getDistance());
-		values.put(KEY_TIMELENGTH, excercise.getTimeLength());
-		values.put(KEY_TYPE, excercise.getType().toString());
+		values.put(KEY_TIMESTAMP, exercise.getTimeStamp());
+		values.put(KEY_DISTANCE, exercise.getDistance());
+		values.put(KEY_TIMELENGTH, exercise.getTimeLength());
+		values.put(KEY_TYPE, exercise.getType().toString());
 		
-		return db.update(TABLE_CARDIO, values, KEY_ID + " = ?", new String[] { String.valueOf(excercise.getID())});
+		return db.update(TABLE_CARDIO, values, KEY_ID + " = ?", new String[] { String.valueOf(exercise.getID())});
 	}
 	
-	// Delete a single cardio excercise
-	public void deleteCardioExcercise(CardioExcercise excercise)
+	// Delete a single cardio exercise
+	public void deleteCardioExercise(CardioExercise exercise)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_CARDIO, KEY_ID + " = ?", new String[] { String.valueOf(excercise.getID())});
+		db.delete(TABLE_CARDIO, KEY_ID + " = ?", new String[] { String.valueOf(exercise.getID())});
 		db.close();
 	}
 }
