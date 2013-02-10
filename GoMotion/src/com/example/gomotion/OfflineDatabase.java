@@ -103,7 +103,7 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		{		
 			BodyWeightExercise exercise = new BodyWeightExercise(
 					Integer.parseInt(cursor.getString(0)),
-					Integer.parseInt(cursor.getString(1)), 
+					Long.parseLong(cursor.getString(1)), 
 					Integer.parseInt(cursor.getString(2)),
 					Integer.parseInt(cursor.getString(3)),
 					BodyWeightExercise.BodyWeightType.valueOf(cursor.getString(4)));
@@ -230,13 +230,13 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 		if(cursor.moveToFirst())
 		{
 			do {
-				CardioExercise exercise = new CardioExercise();
-				
-				exercise.setID(Integer.parseInt(cursor.getString(0)));
-				exercise.setTimeStamp(Integer.parseInt(cursor.getString(1)));
-				exercise.setDistance(Integer.parseInt(cursor.getString(2)));
-				exercise.setTimeLength(Integer.parseInt(cursor.getString(3)));
-				exercise.setType(CardioExercise.CardioType.valueOf(cursor.getString(4)));	
+				CardioExercise exercise = new CardioExercise(
+						Integer.parseInt(cursor.getString(0)),
+						Long.parseLong(cursor.getString(1)),
+						Integer.parseInt(cursor.getString(2)),
+						Integer.parseInt(cursor.getString(3)),
+						CardioExercise.CardioType.valueOf(cursor.getString(4))	
+				);	
 				
 				exerciseList.add(exercise);
 			} while(cursor.moveToNext());

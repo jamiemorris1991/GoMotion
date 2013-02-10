@@ -28,7 +28,7 @@ public class CardioExercise extends Exercise
     	this.waypoints = waypoints;
     }
 
-	public CardioExercise(int ID, long timeStamp, long distance, int timeLength, CardioType type)
+	public CardioExercise(int ID, long timeStamp, int distance, int timeLength, CardioType type)
 	{
 		this.ID = ID;
 		this.timeStamp = timeStamp;
