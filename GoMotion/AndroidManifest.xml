@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gomotion"
     android:versionCode="1"
@@ -12,8 +13,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".HomeScreen"
-            android:label="@string/title_activity_home_screen" 
+            android:name="com.example.gomotion.HomeScreen"
+            android:label="@string/title_activity_home_screen"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PushUpsActivity"
+            android:name="com.example.gomotion.PushUpsActivity"
             android:label="@string/title_activity_push_ups"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -30,8 +31,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ListBodyWeightExercisesActivity"
+            android:name="com.example.gomotion.ListBodyWeightExercisesActivity"
             android:label="@string/title_activity_list_body_weight_exercises"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gomotion.HomeScreen" />
+        </activity>
+        <activity
+            android:name="com.example.gomotion.CardioActivity"
+            android:label="@string/title_activity_cardio"
+            android:parentActivityName="com.example.gomotion.HomeScreen"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -39,4 +49,6 @@
         </activity>
     </application>
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
 </manifest>

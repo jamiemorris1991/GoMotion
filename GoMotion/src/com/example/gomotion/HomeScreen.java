@@ -36,6 +36,12 @@ public class HomeScreen extends Activity
     	dialog.show(getFragmentManager(), "pushups_dialog");
     }
     
+    public void doCardio(View view)
+    {
+    	Intent intent = new Intent(this, CardioActivity.class);
+    	startActivity(intent);
+    }
+    
     public void listBodyWeightExercises(View view)
     {
     	Intent intent = new Intent(this, ListBodyWeightExercisesActivity.class);

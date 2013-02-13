@@ -58,13 +58,6 @@ public class PushUpsActivity extends Activity
         exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.PUSHUPS);
         exercise.setTimeStamp(System.currentTimeMillis());
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
-    {
-        getMenuInflater().inflate(R.menu.activity_push_ups, menu);
-        return true;
-    }
     
     public void doRep(View view)
     {
@@ -88,7 +81,7 @@ public class PushUpsActivity extends Activity
     		repButton.setClickable(false);
     		countdown = (restTime/1000) + 1;
     		
-    		CountDownTimer timer = new CountDownTimer(restTime + 1000, 1000) 
+    		CountDownTimer timer = new CountDownTimer(restTime + 100, 1000) 
     		{
 				@Override
 				public void onTick(long millisUntilFinished)
@@ -107,36 +100,6 @@ public class PushUpsActivity extends Activity
     		timer.start();
     	}	
     }
-    
-    
-//    public void incrementRep(View view)
-//    {
-//    	TextView reps = (TextView) findViewById(R.id.repCount);
-//    	int repCount =  Integer.parseInt( reps.getText().toString() );
-//    	repCount++;
-//    	reps.setText(String.valueOf(repCount));
-//    }
-//    
-//    public void incrementSet(View view)
-//    {
-//    	// Get set value
-//    	TextView sets = (TextView) findViewById(R.id.setCount);
-//    	setCount = Integer.parseInt( sets.getText().toString() );
-//    	
-//    	// Get rep value
-//    	TextView reps = (TextView) findViewById(R.id.repCount);
-//    	repCount = Integer.parseInt(reps.getText().toString());
-//    	
-//    	// Increment set value and store rep count
-//    	if(repCount > 0)
-//    	{
-//	    	setValues.add( repCount );	
-//	    	reps.setText(String.valueOf(0));
-//
-//	    	setCount++;
-//	    	sets.setText(String.valueOf(setCount));	    	
-//    	}
-//    }
     
     public void finishExercise()
     {	

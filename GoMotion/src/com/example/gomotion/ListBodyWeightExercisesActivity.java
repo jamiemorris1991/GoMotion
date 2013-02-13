@@ -9,16 +9,20 @@ import java.util.Map;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.widget.SimpleAdapter;
 public class ListBodyWeightExercisesActivity extends ListActivity 
 {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
+        super.onCreate(savedInstanceState);        
+		// Show the Up button in the action bar.
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
         OfflineDatabase db = new OfflineDatabase(this);
-        //System.out.println(db.getAllBodyWeightExercises().toString());
+        
         List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         
         // Add each exercise as a map with the key being first line and value the second
@@ -43,4 +47,14 @@ public class ListBodyWeightExercisesActivity extends ListActivity
         
         setListAdapter(adapter);
     }
+    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }
