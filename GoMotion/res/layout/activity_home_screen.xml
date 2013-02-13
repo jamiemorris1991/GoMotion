@@ -20,7 +20,7 @@
         android:layout_marginTop="10dp"
         android:onClick="doPushUps"
         android:text="Push Ups"
-        android:textSize="10sp" />
+        android:textSize="14sp" />
     
     <Button
         android:id="@+id/doCardio"
@@ -30,7 +30,7 @@
         android:layout_marginTop="10dp"
         android:onClick="doCardio"
         android:text="Cardio"
-        android:textSize="10sp" />
+        android:textSize="14sp" />
 
 	<Button
 	    android:id="@+id/listBodyweightExercises"
@@ -40,6 +40,6 @@
 	    android:layout_marginTop="10dp"
 	    android:onClick="listBodyWeightExercises"
 	    android:text="Body Weight Exercise History"
-	    android:textSize="10sp" />
+	    android:textSize="14sp" />
 
 </LinearLayout>
