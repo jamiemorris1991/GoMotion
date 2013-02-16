@@ -3,6 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CardioActivity" >
+    
+    
+    <TextView
+        android:id="@+id/gps_signal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp"
+        android:textSize="20sp" />
+    
+    <TextView
+        android:id="@+id/waypoint_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="94dp"
+        android:textSize="20sp"
+        android:text="0" />
+    
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -28,12 +49,12 @@
 	        android:text="Distance" />
 	
 	    <TextView
-	        android:id="@+id/cardio_speed"
+	        android:id="@+id/cardio_pace"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textSize="20sp"
 	        android:layout_marginLeft="30dp"
-	        android:text="Speed" />
+	        android:text="Pace" />
 
 	</LinearLayout>
 	
@@ -46,5 +67,14 @@
         android:layout_marginTop="148dp"
         android:text="Start" 
         android:onClick="startExercise" />
+
+    <TextView
+        android:id="@+id/gps_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="53dp"
+        android:textSize="20sp" />
 
 </RelativeLayout>

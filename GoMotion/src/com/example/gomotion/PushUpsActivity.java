@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class PushUpsActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push_ups);
+     	getActionBar().setDisplayHomeAsUpEnabled(true);	
         
         Intent intent = getIntent();
         initialSetCount = intent.getIntExtra(BodyWeightSettingsDialogFragment.SET_CHOICE, 1);
@@ -58,6 +60,17 @@ public class PushUpsActivity extends Activity
         exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.PUSHUPS);
         exercise.setTimeStamp(System.currentTimeMillis());
     }
+    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				confirmExit();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
     
     public void doRep(View view)
     {
@@ -100,6 +113,26 @@ public class PushUpsActivity extends Activity
     		timer.start();
     	}	
     }
+    
+	@Override
+	public void onBackPressed() 
+	{
+		confirmExit();
+	}
+    
+	private void confirmExit()
+	{
+		new AlertDialog.Builder(this)
+		.setMessage("Are you sure you wish to exit?\n\nCurrent progress will be lost.")
+		.setCancelable(false)
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				finish();
+			}
+		})
+		.setNegativeButton("No", null)
+		.show();		
+	}
     
     public void finishExercise()
     {	
