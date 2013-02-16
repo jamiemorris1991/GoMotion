@@ -152,7 +152,7 @@ public class CardioActivity extends Activity
 			}			
 		};
 		
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10000, locationListener);
 	}
 
 	@Override
