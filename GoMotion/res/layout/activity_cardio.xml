@@ -37,24 +37,21 @@
 	        android:id="@+id/cardio_time"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:textSize="20sp"
-	        android:text="Time" />
+	        android:textSize="20sp" />
 	
 	    <TextView
 	        android:id="@+id/cardio_distance"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textSize="20sp"
-	        android:layout_marginLeft="30dp"
-	        android:text="Distance" />
+	        android:layout_marginLeft="30dp" />
 	
 	    <TextView
 	        android:id="@+id/cardio_pace"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textSize="20sp"
-	        android:layout_marginLeft="30dp"
-	        android:text="Pace" />
+	        android:layout_marginLeft="30dp" />
 
 	</LinearLayout>
 	

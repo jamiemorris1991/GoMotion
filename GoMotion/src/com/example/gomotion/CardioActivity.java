@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 public class CardioActivity extends Activity 
 {
-	private List<Waypoint> waypoints;
+	private List<Location> waypoints;
 	private LocationManager locationManager;
 	private GpsStatus gpsStatus;
 
@@ -51,7 +51,7 @@ public class CardioActivity extends Activity
 	private Timer timer;
 	private String timeFormatted;
 	private int time;
-	private int distance;
+	private double distance;
 	private double pace;
 	
 	// Debugging views
@@ -72,18 +72,28 @@ public class CardioActivity extends Activity
 		getActionBar().setDisplayHomeAsUpEnabled(true);	
 		
 		timestamp = System.currentTimeMillis();
+		distance = 0;
+		
+		timeView = (TextView) findViewById(R.id.cardio_time);
+		distanceView = (TextView) findViewById(R.id.cardio_distance);
+		paceView = (TextView) findViewById(R.id.cardio_pace);
+		
+		timeView.setText("00:00");
+		distanceView.setText("0m");
+		paceView.setText("0 mins/mile");
+		
 		started = false;
 		signal = false;
 		gpsSettings = true;
 		
 		timer = new Timer();
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		waypoints = new LinkedList<Waypoint>();
+		waypoints = new LinkedList<Location>();
 		
 		gps_setting = (TextView) findViewById(R.id.gps_setting);
 		waypoint_count = (TextView) findViewById(R.id.waypoint_count);
         signalView = (TextView) findViewById(R.id.gps_signal);
-        signalView.setText("Not Found");
+        signalView.setText("No Signal");
         signalView.setTextColor(Color.RED);
 		
 		gpsListener = new GpsStatus.Listener() {
@@ -101,7 +111,7 @@ public class CardioActivity extends Activity
 			            break;
 	
 			        case GpsStatus.GPS_EVENT_FIRST_FIX:
-			        	signalView.setText("Found");
+			        	signalView.setText("Signal");
 			        	signalView.setTextColor(Color.GREEN);
 			        	
 			        	signal = true;
@@ -131,9 +141,25 @@ public class CardioActivity extends Activity
 			public void onLocationChanged(Location location) 
 			{
 				if(started)
-				{
-					waypoints.add(new Waypoint(location.getLongitude(), location.getLatitude()));
+				{					
+					waypoints.add(location);
 					waypoint_count.setText(String.valueOf(waypoints.size()));
+					
+					int size = waypoints.size();
+					if(size > 1)
+					{
+						distance += waypoints.get(size-2).distanceTo(location);
+						distanceView.setText(String.valueOf((int) distance) + "m");
+						
+						double miles = distance * 0.000621371192;
+						
+						pace = ((double) time) / miles;						
+						int mins = (int) (pace / 60);
+						int secs = (int) (pace % 60);
+						
+						String paceString = String.format("%02d:%02d", mins, secs);
+						paceView.setText(paceString + " min/mile");
+					}
 				}
 			}
 
@@ -250,8 +276,6 @@ public class CardioActivity extends Activity
 				timeView.setText(timeFormatted);
 			}			
 		};
-		
-		timeView = (TextView) findViewById(R.id.cardio_time);
 		
 		timer.scheduleAtFixedRate(new TimerTask() {
 			
