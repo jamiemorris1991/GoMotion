@@ -33,6 +33,7 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 		final View v = inflater.inflate(R.layout.dialog_body_weight_settings, null);
 		
 		builder.setView(v)
+			.setTitle("Push Up Settings")
 			.setPositiveButton(R.string.start, new DialogInterface.OnClickListener()
 			{	
 				public void onClick(DialogInterface dialog, int which)

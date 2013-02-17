@@ -123,6 +123,7 @@ public class PushUpsActivity extends Activity
 	private void confirmExit()
 	{
 		new AlertDialog.Builder(this)
+		.setTitle("Warning")
 		.setMessage("Are you sure you wish to exit?\n\nCurrent progress will be lost.")
 		.setCancelable(false)
 		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -143,6 +144,7 @@ public class PushUpsActivity extends Activity
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("GoMotion")
+			.setTitle("Finished")
 			.setMessage("Well done, you have completed this exercise!")
 			.setCancelable(false)
 			.setNegativeButton("Close", new DialogInterface.OnClickListener() {
