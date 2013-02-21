@@ -41,5 +41,25 @@
 	    android:onClick="listBodyWeightExercises"
 	    android:text="Body Weight Exercise History"
 	    android:textSize="14sp" />
+	
+	<Button
+	    android:id="@+id/listCardioExercises"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+	    android:layout_marginTop="10dp"
+	    android:onClick="listCardioExercises"
+	    android:text="Cardio Exercise History"
+	    android:textSize="14sp" />
+	
+	<Button
+	    android:id="@+id/viewRoute"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+	    android:layout_marginTop="10dp"
+	    android:onClick="viewRoute"
+	    android:text="View Map"
+	    android:textSize="14sp" />
 
 </LinearLayout>

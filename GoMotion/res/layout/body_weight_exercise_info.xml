@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dip" >
+ 
+    <TextView
+        android:id="@+id/body_weight_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Cycling" />
+ 
+    <TextView
+        android:id="@+id/body_weight_completed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Completed: 21/02/2013, 16:30" />
+    
+    <TextView
+        android:id="@+id/body_weight_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Sets: 2 Reps: 5" />
+ 
+</LinearLayout>

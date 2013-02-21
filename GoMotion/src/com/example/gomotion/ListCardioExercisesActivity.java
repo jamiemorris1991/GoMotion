@@ -11,6 +11,8 @@ import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class ListCardioExercisesActivity extends ListActivity
@@ -47,7 +49,7 @@ public class ListCardioExercisesActivity extends ListActivity
 	        
 	        setListAdapter(adapter);
 	    }
-	    
+
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
 			switch (item.getItemId()) {
@@ -56,5 +58,16 @@ public class ListCardioExercisesActivity extends ListActivity
 					return true;
 			}
 			return super.onOptionsItemSelected(item);
+		}
+		
+	    
+		@Override
+		protected void onListItemClick(ListView l, View v, int position, long id)
+		{
+			super.onListItemClick(l, v, position, id);
+			System.out.println("ListView: " + l);
+			System.out.println("View: " + v);
+			System.out.println("Pos: " + position);
+			System.out.println("id: " + id);
 		}
 }

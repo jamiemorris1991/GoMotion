@@ -19,7 +19,8 @@ public class RouteActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_route);		
+		setContentView(R.layout.activity_route);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 

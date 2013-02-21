@@ -18,24 +18,24 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
     private final static int DATABASE_VERSION = 1;
  
     // Database Name
-    protected final static String DATABASE_NAME = "offlineDB";
+    public final static String DATABASE_NAME = "offlineDB";
  
     // Table names
-    private final String TABLE_BODYWEIGHT = "bodyweight";
-    private final String TABLE_CARDIO = "cardio";
+    public final static String TABLE_BODYWEIGHT = "bodyweight";
+    public final static String TABLE_CARDIO = "cardio";
  
     // Duplicate column names
-    private final String KEY_ID = "_id";
-    private final String KEY_TIMESTAMP = "timestamp";
-    private final String KEY_TYPE = "type";
+    public final static String KEY_ID = "_id";
+    public final static String KEY_TIMESTAMP = "timestamp";
+    public final static String KEY_TYPE = "type";
 
     // Body Weight Exercise Table Column names
-    private final String KEY_SETS = "sets";
-    private final String KEY_REPS = "reps";
+    public final static String KEY_SETS = "sets";
+    public final static String KEY_REPS = "reps";
     
     // Cardio Exercise Table Column names
-    private final String KEY_TIMELENGTH = "timelength";
-    private final String KEY_DISTANCE = "distance";
+    public final static String KEY_TIMELENGTH = "timelength";
+    public final static String KEY_DISTANCE = "distance";
 
     public OfflineDatabase(Context context)
     {
@@ -116,29 +116,18 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 	}
 	
 	// Returns a list of all body weight exercises
-	public List<BodyWeightExercise> getAllBodyWeightExercises()
-	{
-		List<BodyWeightExercise> exerciseList = new ArrayList<BodyWeightExercise>();
-		
+	public Cursor getAllBodyWeightExercises()
+	{		
 		String query = "SELECT * FROM " + TABLE_BODYWEIGHT;		
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
 		
-		if(cursor.moveToFirst())
+		if(cursor != null)
 		{
-			do {
-				BodyWeightExercise exercise = new BodyWeightExercise(
-						Integer.parseInt(cursor.getString(0)),
-						Long.parseLong(cursor.getString(1)),
-						Integer.parseInt(cursor.getString(2)),
-						Integer.parseInt(cursor.getString(3)),
-						BodyWeightExercise.BodyWeightType.valueOf(cursor.getString(4))	
-				);
-				exerciseList.add(exercise);
-			} while(cursor.moveToNext());
-		}
+			cursor.moveToFirst();
+		} 
 		
-		return exerciseList;
+		return cursor;
 	}
 	
 	// Get count of all body weight exercises

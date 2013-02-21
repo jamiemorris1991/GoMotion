@@ -32,11 +32,9 @@ public class HomeScreen extends Activity
     
     public void doPushUps(View view)
     {
-//    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyWeightType.PUSHUPS);
-//    	dialog.show(getFragmentManager(), "pushups_dialog");
-    	
-    	Intent intent = new Intent(this, ListCardioExercisesActivity.class);
-    	startActivity(intent);
+    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyWeightType.PUSHUPS);
+    	dialog.show(getFragmentManager(), "pushups_dialog");
+
     }
     
     public void doCardio(View view)
@@ -47,9 +45,19 @@ public class HomeScreen extends Activity
     
     public void listBodyWeightExercises(View view)
     {
-//    	Intent intent = new Intent(this, ListBodyWeightExercisesActivity.class);
-//    	startActivity(intent);
+    	Intent intent = new Intent(this, ListBodyWeightExercisesActivity.class);
+    	startActivity(intent);
+    }
+    
+    public void listCardioExercises(View view)
+    {
     	
+    	Intent intent = new Intent(this, ListCardioExercisesActivity.class);
+    	startActivity(intent);
+    }
+    
+    public void viewRoute(View view)
+    {
     	Intent intent = new Intent(this, RouteActivity.class);
     	startActivity(intent);
     }
