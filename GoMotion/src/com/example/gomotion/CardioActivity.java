@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.example.gomotion.CardioExercise.CardioType;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -29,11 +31,13 @@ import android.widget.TextView;
 
 public class CardioActivity extends Activity 
 {
-	private List<Location> waypoints;
+	public static final String WAYPOINTS = "com.example.gomotion.WAYPOINTS";
+	
+	private LinkedList<Location> waypoints;
+	private LinkedList<Location> initialPoints;
 	private LocationManager locationManager;
 	private GpsStatus gpsStatus;
 
-	
 	// Listeners
 	private GpsStatus.Listener gpsListener;
 	private LocationListener locationListener;
@@ -52,6 +56,8 @@ public class CardioActivity extends Activity
 	private String timeFormatted;
 	private int time;
 	private double distance;
+
+	protected double minDist;
 	private double pace;
 	
 	// Debugging views
@@ -73,6 +79,7 @@ public class CardioActivity extends Activity
 		
 		timestamp = System.currentTimeMillis();
 		distance = 0;
+		minDist = 10;
 		
 		timeView = (TextView) findViewById(R.id.cardio_time);
 		distanceView = (TextView) findViewById(R.id.cardio_distance);
@@ -88,7 +95,9 @@ public class CardioActivity extends Activity
 		
 		timer = new Timer();
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		
 		waypoints = new LinkedList<Location>();
+		initialPoints = new LinkedList<Location>();
 		
 		gps_setting = (TextView) findViewById(R.id.gps_setting);
 		waypoint_count = (TextView) findViewById(R.id.waypoint_count);
@@ -141,14 +150,16 @@ public class CardioActivity extends Activity
 			public void onLocationChanged(Location location) 
 			{
 				if(started)
-				{					
-					waypoints.add(location);
-					waypoint_count.setText(String.valueOf(waypoints.size()));
-					
+				{		
 					int size = waypoints.size();
-					if(size > 1)
+					double dist = waypoints.get(size - 1).distanceTo(location);
+					
+					if(dist > minDist * 0.8)
 					{
-						distance += waypoints.get(size-2).distanceTo(location);
+						waypoints.add(location);
+						waypoint_count.setText(String.valueOf(waypoints.size()));
+					
+						distance += dist;
 						distanceView.setText(String.valueOf((int) distance) + "m");
 						
 						double miles = distance * 0.000621371192;
@@ -159,7 +170,11 @@ public class CardioActivity extends Activity
 						
 						String paceString = String.format("%02d:%02d", mins, secs);
 						paceView.setText(paceString + " min/mile");
-					}
+					}					
+				}
+				else
+				{
+					initialPoints.add(location);
 				}
 			}
 
@@ -237,7 +252,7 @@ public class CardioActivity extends Activity
 				if(gpsSettings && !signal) signalAlert.show(getFragmentManager(), "signal dialog");
 			}
 		};
-		
+
 		signalFound = new Handler() {
 			public void handleMessage(Message msg)
 			{
@@ -267,7 +282,10 @@ public class CardioActivity extends Activity
 	public void startExercise(View view)
 	{
 		started = true;
-		view.setEnabled(false);		
+		view.setEnabled(false);	
+
+		// Get initial starting point (soonest before pressing start)
+		waypoints.add(initialPoints.get( initialPoints.size()-1 ));
 		
 		// Needed to allow updating of view outside of the main thread
 		final Handler timeHandler = new Handler() {	
@@ -297,6 +315,41 @@ public class CardioActivity extends Activity
 			}
 			
 		}, 1000, 1000);
+
+	}
+	
+	public void finishExercise(View view)
+	{
+		CardioExercise exercise = new CardioExercise();
+		
+		exercise.setTimeStamp(timestamp);
+		exercise.setTimeLength(time);
+		exercise.setDistance(distance);
+		exercise.setType(CardioType.RUN);
+		exercise.setWaypoints(waypoints);
+		
+		OfflineDatabase db = new OfflineDatabase(this);
+		db.add(exercise);
+		db.close();
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("GoMotion")
+			.setTitle("Finished")
+			.setMessage("Well done, you have completed this exercise!")
+			.setCancelable(false)
+			.setPositiveButton("View route", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Intent intent = new Intent(CardioActivity.this, RouteActivity.class);
+					intent.putExtra(WAYPOINTS, waypoints);
+					
+					startActivity(intent);
+				}
+			})
+			.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+			}
+		});
 
 	}
 

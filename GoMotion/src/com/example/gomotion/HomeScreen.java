@@ -44,7 +44,10 @@ public class HomeScreen extends Activity
     
     public void listBodyWeightExercises(View view)
     {
-    	Intent intent = new Intent(this, ListBodyWeightExercisesActivity.class);
+//    	Intent intent = new Intent(this, ListBodyWeightExercisesActivity.class);
+//    	startActivity(intent);
+    	
+    	Intent intent = new Intent(this, RouteActivity.class);
     	startActivity(intent);
     }
 }

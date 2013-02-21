@@ -7,6 +7,10 @@ import android.content.Context;
 import com.easy.facebook.android.apicall.GraphApi;
 import com.easy.facebook.android.facebook.*;
 
+//import com.easy.facebook.android.apicall.GraphApi;
+//import com.easy.facebook.android.facebook.*;
+
+
 public class Main
 {
 	static public User user;
@@ -20,26 +24,26 @@ public class Main
 	{
 	}
 
-	static public void loginOnline(Activity activity)
-	{
-		
-		String permissions[] = {"publish_stream"};
-		
-		FBLoginManager manager
-		= new FBLoginManager(activity, R.layout.activity_home_screen,
-				clientID, permissions);
-		
-		if(manager.existsSavedFacebook())
-		{
-			manager.loadFacebook();
-		}
-		else
-		{
-			manager.login();
-		}
-		
-		manager.displayToast("LOL DOG");
-	}
+//	static public void loginOnline(Activity activity)
+//	{
+//		
+//		String permissions[] = {"publish_stream"};
+//		
+//		FBLoginManager manager
+//		= new FBLoginManager(activity, R.layout.activity_home_screen,
+//				clientID, permissions);
+//		
+//		if(manager.existsSavedFacebook())
+//		{
+//			manager.loadFacebook();
+//		}
+//		else
+//		{
+//			manager.login();
+//		}
+//		
+//		manager.displayToast("LOL DOG");
+//	}
 	
 	static public void loginOffline(String name)
 	{
