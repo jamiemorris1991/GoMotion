@@ -54,6 +54,14 @@
                 android:value="com.example.gomotion.HomeScreen" />
         </activity>
         <activity
+            android:name="com.example.gomotion.ListCardioExercisesActivity"
+            android:label="@string/title_activity_list_cardio_weight_exercises"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gomotion.HomeScreen" />
+        </activity>
+        <activity
             android:name="com.example.gomotion.CardioActivity"
             android:label="@string/title_activity_cardio"
             android:parentActivityName="com.example.gomotion.HomeScreen"
@@ -64,7 +72,8 @@
         </activity>
         <activity
             android:name="com.example.gomotion.RouteActivity"
-            android:label="@string/title_activity_route" >
+            android:label="@string/title_activity_route" 
+            android:screenOrientation="portrait" >
         </activity>
         
         <meta-data

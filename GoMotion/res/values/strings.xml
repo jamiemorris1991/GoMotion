@@ -7,13 +7,14 @@
     <string name="title_activity_push_ups">Push Ups</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_list_body_weight_exercises">Body Weight Exercise History</string>
+    <string name="title_activity_list_cardio_weight_exercises">Cardio Exercise History</string>
     <string name="rep_choice">Reps</string>
     <string name="set_choice">Sets</string>
     <string name="start">Start</string>
     <string name="cancel">Cancel</string>
     <string name="rest_time">Rest time (s)</string>
-    <string name="title_activity_cardio">CardioActivity</string>
-    <string name="title_activity_route">RouteActivity</string>
+    <string name="title_activity_cardio">Cardio Tracking</string>
+    <string name="title_activity_route">Route</string>
     <string name="action_settings">Settings</string>
 
 </resources>

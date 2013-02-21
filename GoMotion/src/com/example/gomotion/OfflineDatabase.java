@@ -208,7 +208,7 @@ public class OfflineDatabase extends SQLiteOpenHelper implements Database
 					Integer.parseInt(cursor.getString(0)),
 					Long.parseLong(cursor.getString(1)),
 					Integer.parseInt(cursor.getString(2)),
-					Integer.parseInt(cursor.getString(3)), 
+					Integer.parseInt(cursor.getString(3)),
 					CardioExercise.CardioType.valueOf(cursor.getString(4)));
 			
 			cursor.close();

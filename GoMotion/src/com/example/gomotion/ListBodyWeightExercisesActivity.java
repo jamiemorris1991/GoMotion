@@ -16,9 +16,9 @@ public class ListBodyWeightExercisesActivity extends ListActivity
 {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) 
+    {
         super.onCreate(savedInstanceState);        
-		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
         OfflineDatabase db = new OfflineDatabase(this);

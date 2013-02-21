@@ -10,9 +10,9 @@ public class CardioExercise extends Exercise
     public enum CardioType{WALK, RUN, CYCLE};
 
     //Trip specific variables
+    private int distance;    
     private int timeLength;
     private CardioType type;
-    private double distance;    
     private LinkedList<Location> waypoints;
 
     public CardioExercise()
@@ -20,7 +20,7 @@ public class CardioExercise extends Exercise
     	
     }
     
-    public CardioExercise(int timeLength, CardioType type, double distance, LinkedList<Location> waypoints)
+    public CardioExercise(int distance, int timeLength, CardioType type, LinkedList<Location> waypoints)
     {
     	this.timeLength = timeLength;
     	this.type = type;
@@ -38,6 +38,17 @@ public class CardioExercise extends Exercise
     	this.distance = distance;
 	}
 
+
+	public int getDistance()
+	{
+		return distance;
+	}
+
+	public void setDistance(int distance)
+	{
+		this.distance = distance;
+	}
+	
 	public int getTimeLength()
 	{
 		return timeLength;
@@ -56,16 +67,6 @@ public class CardioExercise extends Exercise
 	public void setType(CardioType type)
 	{
 		this.type = type;
-	}
-
-	public double getDistance()
-	{
-		return distance;
-	}
-
-	public void setDistance(double distance)
-	{
-		this.distance = distance;
 	}
 
 	public LinkedList<Location> getWaypoints()
