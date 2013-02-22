@@ -329,9 +329,10 @@ public class CardioActivity extends Activity
 		exercise.setWaypoints(waypoints);
 
 		OfflineDatabase db = new OfflineDatabase(this);
-		db.add(exercise);
-		db.close();
-
+		
+		final int cid = db.addCardioExercise(exercise);
+		db.addWaypoints(cid, waypoints);
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("GoMotion")
 			.setTitle("Finished")
@@ -339,8 +340,9 @@ public class CardioActivity extends Activity
 			.setCancelable(false)
 			.setPositiveButton("View route", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					
 					Intent intent = new Intent(CardioActivity.this, RouteActivity.class);
-					intent.putExtra(WAYPOINTS, waypoints);
+					intent.putExtra(ListCardioExercisesActivity.EXERCISE_ID, cid);
 	
 					startActivity(intent);
 				}

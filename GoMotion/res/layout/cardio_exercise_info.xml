@@ -6,19 +6,19 @@
     android:padding="6dip" >
  
     <TextView
-        android:id="@+id/body_weight_type"
+        android:id="@+id/cardio_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge" />
  
     <TextView
-        android:id="@+id/body_weight_completed"
+        android:id="@+id/cardio_completed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"        
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <TextView
-        android:id="@+id/body_weight_stats"
+        android:id="@+id/cardio_stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"        
         android:textAppearance="?android:attr/textAppearanceSmall" />
