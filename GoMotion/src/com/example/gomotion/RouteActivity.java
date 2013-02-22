@@ -28,6 +28,8 @@ public class RouteActivity extends Activity
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		int id = getIntent().getIntExtra(ListCardioExercisesActivity.EXERCISE_ID, -1);
 		
+		System.out.println("id: " + id);
+		
 		if(id != -1)
 		{		
 			OfflineDatabase db = new OfflineDatabase(this);
@@ -47,7 +49,8 @@ public class RouteActivity extends Activity
 	        }
 	        while(waypoints.moveToNext());
 	        
-	        lineOptions.color(Color.argb(50, 0, 0, 255));
+	        lineOptions.color(Color.rgb(0, 0, 255));
+	        lineOptions.width(15);
 	
 	        Polyline polyline = map.addPolyline(lineOptions);
 		}

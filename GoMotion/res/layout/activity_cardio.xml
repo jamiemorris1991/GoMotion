@@ -64,6 +64,16 @@
         android:layout_marginTop="148dp"
         android:text="Start" 
         android:onClick="startExercise" />
+    
+       <Button
+        android:id="@+id/finish_cardio"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="238dp"
+        android:text="Finish" 
+        android:onClick="finishExercise" />
 
     <TextView
         android:id="@+id/gps_setting"

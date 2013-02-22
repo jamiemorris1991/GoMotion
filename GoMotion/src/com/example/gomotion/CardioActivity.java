@@ -285,7 +285,8 @@ public class CardioActivity extends Activity
 		view.setEnabled(false);	
 
 		// Get initial starting point (soonest before pressing start)
-		waypoints.add(initialPoints.get( initialPoints.size()-1 ));
+		waypoints.add(initialPoints.get( initialPoints.size() - 1 ));
+		waypoint_count.setText(String.valueOf(waypoints.size()));
 
 		// Needed to allow updating of view outside of the main thread
 		final Handler timeHandler = new Handler() {	
@@ -351,7 +352,8 @@ public class CardioActivity extends Activity
 				public void onClick(DialogInterface dialog, int id) {
 					finish();
 				}
-			});
+			})
+			.show();
 
 	}
 

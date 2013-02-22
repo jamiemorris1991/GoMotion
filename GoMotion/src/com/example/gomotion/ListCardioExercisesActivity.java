@@ -52,24 +52,27 @@ public class ListCardioExercisesActivity extends ListActivity
 	}
 
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, final long id)
+	protected void onListItemClick(ListView l, View v, int position, long id)
 	{		
+		final int cid = (int) id;
 		String items[] = {"Show Route", "Delete"};
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Options")
 			.setItems(items, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					
+
 					if(item == 0)
 					{
+						System.out.println(cid);
+
 						Intent intent = new Intent(ListCardioExercisesActivity.this, RouteActivity.class);
-						intent.putExtra("EXERCISE_ID", id);
+						intent.putExtra(EXERCISE_ID, cid);
 						startActivity(intent);
 					}
 					else if(item == 1) 
 					{
-						db.deleteCardioExercise((int) id);
+						db.deleteCardioExercise(cid);
 						adapter.changeCursor(db.getAllCardioExercises());
 					}
 				}
@@ -107,7 +110,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			char[] charArray = cursor.getString(4).toLowerCase().toCharArray();
 			charArray[0] = Character.toUpperCase(charArray[0]);
 			String title = new String(charArray);
-			TextView type = (TextView) view.getTag(R.id.body_weight_type);
+			TextView type = (TextView) view.getTag(R.id.cardio_type);
 			type.setText(title);
 
 			String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date(cursor.getLong(1)));
@@ -133,7 +136,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			String paceString = String.format("%02d:%02d", paceMins, paceSecs);
 
 
-			TextView stats = (TextView) view.getTag(R.id.body_weight_stats);
+			TextView stats = (TextView) view.getTag(R.id.cardio_stats);
 			stats.setText("Distance: " + distance + "m Time: " + timeFormatted + " Pace: " + paceString + " min/mile");	
 		}
 	}
