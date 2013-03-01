@@ -37,7 +37,7 @@ public class RouteActivity extends Activity
 			
 			map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 	
-	        CameraUpdate cam = CameraUpdateFactory.newLatLngZoom(new LatLng(55.016361, -1.425734), (float) 15);
+	        CameraUpdate cam = CameraUpdateFactory.newLatLngZoom(new LatLng(waypoints.getDouble(0), waypoints.getDouble(1)), (float) 15);
 	        map.moveCamera(cam);	
 	        
 	        PolylineOptions lineOptions = new PolylineOptions();
