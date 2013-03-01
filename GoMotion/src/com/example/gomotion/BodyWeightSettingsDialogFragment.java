@@ -19,6 +19,9 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	public final static String SET_CHOICE = "com.example.gomotion.SET_CHOICE";
 	public final static String REP_CHOICE = "com.example.gomotion.REP_CHOICE";
 	public final static String REST_TIME = "com.example.gomotion.REST_TIME";
+	private String defaultSets = "10";
+	private String defaultReps = "10";
+	private String defaultRest = "30";
 
 	public BodyWeightSettingsDialogFragment(BodyWeightType type)
 	{
@@ -62,14 +65,30 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 					startActivity(intent);
 				}
 			})
-			.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+			.setNeutralButton(R.string.defaultButton, new DialogInterface.OnClickListener()
 			{				
 				public void onClick(DialogInterface dialog, int which)
 				{
-					BodyWeightSettingsDialogFragment.this.getDialog().cancel();
 					
+					EditText setsEditText = (EditText) v.findViewById(R.id.set_choice);
+					EditText repsEditText = (EditText) v.findViewById(R.id.rep_choice);
+					EditText restTimeText = (EditText) v.findViewById(R.id.rest_time);
+					
+					setsEditText.setText(String.valueOf(defaultSets));
+					repsEditText.setText(String.valueOf(defaultReps));
+					restTimeText.setText(String.valueOf(defaultRest));
 				}
-			});
+			})
+		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+		{				
+			public void onClick(DialogInterface dialog, int which)
+			{
+				BodyWeightSettingsDialogFragment.this.getDialog().cancel();
+				
+			}
+		});
+		
+		
 		
 		return builder.create();
 	}
