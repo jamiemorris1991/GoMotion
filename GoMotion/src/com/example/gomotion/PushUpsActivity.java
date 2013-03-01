@@ -27,7 +27,6 @@ public class PushUpsActivity extends Activity
 	private int repCount;
 	
 	private TextView setView;
-	private TextView repView;
 	private Button repButton; 
 	
 	private int initialSetCount;
@@ -51,11 +50,9 @@ public class PushUpsActivity extends Activity
         repCount = initialRepCount;
         
         setView = (TextView) findViewById(R.id.set_count);
-        repView = (TextView) findViewById(R.id.rep_count);
         repButton = (Button) findViewById(R.id.rep_button);
         
         setView.setText(String.valueOf(setCount));
-        repView.setText(String.valueOf(repCount));
         
         exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.PUSHUPS);
         exercise.setTimeStamp(System.currentTimeMillis());
@@ -77,7 +74,7 @@ public class PushUpsActivity extends Activity
     	if(repCount > 1)
     	{
 	    	repCount--;
-        	repView.setText(String.valueOf(repCount));
+        	repButton.setText(String.valueOf(repCount) + "/" + String.valueOf(initialRepCount));
     	}
     	else if(setCount == 1 && repCount == 1) // finished
     	{
@@ -89,7 +86,6 @@ public class PushUpsActivity extends Activity
         	repCount = initialRepCount;
         	
         	setView.setText(String.valueOf(setCount));
-        	repView.setText(String.valueOf(repCount));
     		
     		repButton.setClickable(false);
     		countdown = (restTime/1000) + 1;
