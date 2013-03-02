@@ -1,6 +1,8 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Light" />    
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>   
+    </style>
     
     <style name="GenericProgressBackground" parent="android:Theme">
 	    <item name="android:layout_width">fill_parent</item>    
@@ -9,10 +11,14 @@
 	    <item name="android:gravity">center</item>  
 	</style>
 	
-	<style name="GenericProgressIndicator" parent="@android:style/Widget.ProgressBar.Small">
+	<style name="GenericProgressIndicator">
 	    <item name="android:layout_width">wrap_content</item>
 	    <item name="android:layout_height">wrap_content</item>
 	    <item name="android:indeterminate">true</item> 
 	</style>
 
+	
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/ab_solid</item>
+    </style>
 </resources>

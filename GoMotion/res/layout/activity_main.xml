@@ -64,10 +64,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/buttons"
+        android:background="@color/goBlue"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         android:text="Offline Mode"
+        android:onClick="doHomeScreen"
         android:textColor="@color/buttonsText" />
 
     <Button
@@ -77,7 +78,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/btnOffline"
-        android:background="@color/buttons"
+        android:background="@color/goBlue"
         android:text="Facebook"
         android:textColor="@color/buttonsText" />
 

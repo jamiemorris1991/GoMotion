@@ -4,6 +4,11 @@ import javax.net.ssl.ManagerFactoryParameters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+
 import com.easy.facebook.android.apicall.GraphApi;
 import com.easy.facebook.android.facebook.*;
 
@@ -11,7 +16,7 @@ import com.easy.facebook.android.facebook.*;
 //import com.easy.facebook.android.facebook.*;
 
 
-public class Main
+public class Main extends Activity
 {
 	static public User user;
 	static public Activity currentActivity;
@@ -20,6 +25,25 @@ public class Main
 	
 	/** To be called at the start of the app
 	 */
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_main);
+        
+        OfflineDatabase db = new OfflineDatabase(this);
+        db.getAllBodyWeightExercises();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.activity_home_screen, menu);
+        return true;
+    }
+	
 	static public void init()
 	{
 	}
@@ -60,4 +84,12 @@ public class Main
 		//TODO: Make this return the current window's context
 		return null;
 	}
+	
+	
+    public void doHomeScreen(View view)
+    {
+    	Intent intent = new Intent(this, HomeScreen.class);
+    	startActivity(intent);
+    }
+	
 }

@@ -12,11 +12,11 @@ import android.view.Window;
 public class HomeScreen extends Activity 
 {
 
-    @Override
+   @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_home_screen);
         
         OfflineDatabase db = new OfflineDatabase(this);
@@ -29,7 +29,7 @@ public class HomeScreen extends Activity
         getMenuInflater().inflate(R.menu.activity_home_screen, menu);
         return true;
     }
-    
+ 
     public void doPushUps(View view)
     {
     	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyWeightType.PUSHUPS);
