@@ -11,11 +11,6 @@
         android:text="Welcome to GoMotion"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="38sp" />
-
-   <ImageButton
-       android:id="@drawable/person.png"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content" />
        
     <Button
         android:id="@+id/btnPushUps"
@@ -73,5 +68,17 @@
         android:paddingRight="25dp"
         android:text="Cardio"
         android:textColor="@color/buttonsText" />
+
+    <ImageView
+        android:id="@+id/person.png"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnPushUps"
+        android:layout_below="@+id/textView1"
+        android:layout_margin="0dp"
+        android:layout_toLeftOf="@+id/btnPushUps"
+        android:layout_toRightOf="@+id/btnCardio"
+        android:src="@drawable/person"
+        android:tint="#6488D9" />
 
 </RelativeLayout>

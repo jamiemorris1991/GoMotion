@@ -60,23 +60,25 @@
 
     <Button
         android:id="@+id/btnOffline"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/imageView2"
         android:background="@color/goBlue"
+        android:onClick="doHomeScreen"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         android:text="Offline Mode"
-        android:onClick="doHomeScreen"
         android:textColor="@color/buttonsText" />
 
     <Button
         android:id="@+id/btnFb"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="1dp"
         android:layout_toRightOf="@+id/btnOffline"
         android:background="@color/goBlue"
         android:text="Facebook"
