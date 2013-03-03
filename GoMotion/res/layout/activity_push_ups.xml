@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A7A7A7" >
+    android:background="@color/goBlue" >
 
     <Button
         android:id="@+id/rep_button"
@@ -14,8 +14,8 @@
         android:background="#00000000"
         android:onClick="doRep"
         android:text="Touch Me!"
-        android:textColor="#6488d9"
-        android:textSize="96sp" />
+        android:textColor="@color/background"
+        android:textSize="100sp" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -53,5 +53,17 @@
         android:layout_alignParentLeft="true"
         android:text="Sets: "
         android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/textLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="117dp"
+        android:layout_toRightOf="@+id/set_label"
+        android:text="Timer Complete:"
+        android:textColor="@color/buttonsText"
+        android:textSize="20sp" />
 
 </RelativeLayout>

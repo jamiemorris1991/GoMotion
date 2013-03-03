@@ -5,4 +5,6 @@
     <color name="buttonsText">#FFFFFF</color>
     <color name="topNavBarText">#000000</color>
     <color name="goBlue">#6488D9</color>
+    <color name="background">#FFFFFF</color>
+    <color name="timerBackground">#a7a7a7</color>
 </resources>

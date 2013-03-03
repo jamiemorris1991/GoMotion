@@ -19,9 +19,9 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	public final static String SET_CHOICE = "com.example.gomotion.SET_CHOICE";
 	public final static String REP_CHOICE = "com.example.gomotion.REP_CHOICE";
 	public final static String REST_TIME = "com.example.gomotion.REST_TIME";
-	private String defaultSets = "10";
-	private String defaultReps = "10";
-	private String defaultRest = "30";
+	private Integer defaultSets = 10;
+	private Integer defaultReps = 10;
+	private Integer defaultRest = 30;
 
 	public BodyWeightSettingsDialogFragment(BodyWeightType type)
 	{
@@ -58,11 +58,20 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 					int reps = Integer.valueOf( repsEditText.getText().toString() );
 					int restTime = Integer.valueOf( restTimeText.getText().toString() );
 					
-					intent.putExtra(SET_CHOICE, sets);
-					intent.putExtra(REP_CHOICE, reps);
-					intent.putExtra(REST_TIME, restTime);
-
-					startActivity(intent);
+					// Error checking, if the values have not been set then it uses the default values - Done by BeN
+					// Feel free to change it
+					// It works when only one hasn't been changed, but does not work if all of them has not been entered
+					
+					if (sets <= 0 || reps <= 0 || restTime <= 0) {
+						// close dialog
+					} else {
+						intent.putExtra(SET_CHOICE, sets);
+						intent.putExtra(REP_CHOICE, reps);
+						intent.putExtra(REST_TIME, restTime);
+	
+						startActivity(intent);
+					}
+					// End of error checking
 				}
 			})
 			.setNeutralButton(R.string.defaultButton, new DialogInterface.OnClickListener()

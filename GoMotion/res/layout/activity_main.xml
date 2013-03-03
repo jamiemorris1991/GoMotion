@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
@@ -31,7 +31,7 @@
         android:layout_above="@+id/textView2"
         android:layout_marginRight="25dp"
         android:layout_toLeftOf="@+id/imageView2"
-        android:src="@drawable/ic_bike2" />
+        android:src="@drawable/ic_bike" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -50,13 +50,6 @@
         android:layout_centerVertical="true"
         android:src="@drawable/ic_situp" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_above="@+id/imageView4"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_goman" />
 
     <Button
         android:id="@+id/btnOffline"
@@ -94,6 +87,22 @@
         android:ems="10"
         android:hint="Enter Your Name"
         android:inputType="textPersonName" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="200dp"
+        android:layout_height="280dp"
+        android:layout_above="@+id/imageView4"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_logonew2" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView5"
+        android:layout_marginRight="35dp"
+        android:layout_toLeftOf="@+id/editText1" />
 
 </RelativeLayout>
 

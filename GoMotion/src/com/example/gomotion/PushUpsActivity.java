@@ -28,6 +28,7 @@ public class PushUpsActivity extends Activity
 	
 	private TextView setView;
 	private Button repButton; 
+	private TextView timerLabel;
 	
 	private int initialSetCount;
 	private int initialRepCount;
@@ -51,6 +52,7 @@ public class PushUpsActivity extends Activity
         
         setView = (TextView) findViewById(R.id.set_count);
         repButton = (Button) findViewById(R.id.rep_button);
+        timerLabel = (TextView) findViewById(R.id.textLabel);
         
         setView.setText(String.valueOf(setCount));
         
@@ -75,6 +77,8 @@ public class PushUpsActivity extends Activity
     	{
 	    	repCount--;
         	repButton.setText(String.valueOf(repCount) + "/" + String.valueOf(initialRepCount));
+        	timerLabel.setText("");
+        	view.setBackgroundColor(getResources().getColor(R.color.goBlue));
     	}
     	else if(setCount == 1 && repCount == 1) // finished
     	{
@@ -84,6 +88,9 @@ public class PushUpsActivity extends Activity
     	{
         	setCount--;
         	repCount = initialRepCount;
+        	timerLabel.setText("Timer:");
+        	
+        	view.setBackgroundColor(getResources().getColor(R.color.timerBackground));
         	
         	setView.setText(String.valueOf(setCount));
     		
@@ -101,6 +108,7 @@ public class PushUpsActivity extends Activity
 				@Override
 				public void onFinish()
 				{
+					timerLabel.setText("Timer Complete:");
 		        	repButton.setText("Touch Me!");
 		        	repButton.setClickable(true);
 				}   			
