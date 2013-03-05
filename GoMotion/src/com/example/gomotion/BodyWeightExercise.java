@@ -56,13 +56,6 @@ public class BodyWeightExercise extends Exercise
 	{
 		this.type = type;
 	}
-
-
-	@Override
-	protected boolean saveToDatabase()
-	{
-		return Main.user.getDatabase().add(this);
-	}
 	
 	
 }

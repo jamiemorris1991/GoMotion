@@ -78,12 +78,6 @@ public class CardioExercise extends Exercise
 	{
 		this.waypoints = waypoints;
 	}
-
-	@Override
-	protected boolean saveToDatabase()
-	{
-		return Main.user.getDatabase().add(this);
-	}
     
     
     

@@ -3,7 +3,7 @@ package com.example.gomotion;
 import java.sql.*;
 
 
-public class OnlineDatabase implements Database
+public class OnlineDatabase
 {
 	static private final String connectionString
 	= "jdbc:sqlserver://homepages.ncl.ac.uk;user=t2015t12;password=Vary|Tan";

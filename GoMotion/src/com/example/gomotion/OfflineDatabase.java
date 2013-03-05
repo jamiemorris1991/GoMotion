@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 
-public class OfflineDatabase extends SQLiteOpenHelper implements Database
+public class OfflineDatabase extends SQLiteOpenHelper
 {
 	// All Static variables
     // Database Version
