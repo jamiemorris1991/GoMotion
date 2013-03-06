@@ -14,7 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class PushUpsActivity extends Activity
@@ -28,7 +31,8 @@ public class PushUpsActivity extends Activity
 	
 	private TextView setView;
 	private Button repButton; 
-	private TextView timerLabel;
+	private ImageView imgStopwatch;
+	private View viewToAnimate;
 	
 	private int initialSetCount;
 	private int initialRepCount;
@@ -52,7 +56,9 @@ public class PushUpsActivity extends Activity
         
         setView = (TextView) findViewById(R.id.set_count);
         repButton = (Button) findViewById(R.id.rep_button);
-        timerLabel = (TextView) findViewById(R.id.textLabel);
+        imgStopwatch = (ImageView) findViewById(R.id.imgStopwatch);
+        
+        viewToAnimate = findViewById(R.id.imgStopwatch);
         
         setView.setText(String.valueOf(setCount));
         
@@ -71,13 +77,12 @@ public class PushUpsActivity extends Activity
 		return super.onOptionsItemSelected(item);
 	}
     
-    public void doRep(View view)
+    public void doRep(final View view)
     {
     	if(repCount > 1)
     	{
 	    	repCount--;
         	repButton.setText(String.valueOf(repCount) + "/" + String.valueOf(initialRepCount));
-        	timerLabel.setText("");
         	view.setBackgroundColor(getResources().getColor(R.color.goBlue));
     	}
     	else if(setCount == 1 && repCount == 1) // finished
@@ -88,7 +93,11 @@ public class PushUpsActivity extends Activity
     	{
         	setCount--;
         	repCount = initialRepCount;
-        	timerLabel.setText("Timer:");
+        	
+        	Animation in = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        	
+            viewToAnimate.startAnimation(in);
+            viewToAnimate.setVisibility(View.VISIBLE);
         	
         	view.setBackgroundColor(getResources().getColor(R.color.timerBackground));
         	
@@ -103,14 +112,15 @@ public class PushUpsActivity extends Activity
 				public void onTick(long millisUntilFinished)
 				{
 					countdown--;
-					repButton.setText(String.valueOf(countdown));
+					repButton.setText("00:" + String.valueOf(countdown));
 				} 
 				@Override
 				public void onFinish()
 				{
-					timerLabel.setText("Timer Complete:");
 		        	repButton.setText("Touch Me!");
 		        	repButton.setClickable(true);
+		        	view.setBackgroundColor(getResources().getColor(R.color.goBlue));
+		        	
 				}   			
     		};
     		
