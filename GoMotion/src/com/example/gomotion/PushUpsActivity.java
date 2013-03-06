@@ -31,8 +31,7 @@ public class PushUpsActivity extends Activity
 	
 	private TextView setView;
 	private Button repButton; 
-	private ImageView imgStopwatch;
-	private View viewToAnimate;
+	private ImageView stopWatch;
 	
 	private int initialSetCount;
 	private int initialRepCount;
@@ -56,9 +55,8 @@ public class PushUpsActivity extends Activity
         
         setView = (TextView) findViewById(R.id.set_count);
         repButton = (Button) findViewById(R.id.rep_button);
-        imgStopwatch = (ImageView) findViewById(R.id.imgStopwatch);
         
-        viewToAnimate = findViewById(R.id.imgStopwatch);
+        stopWatch = (ImageView) findViewById(R.id.imgStopwatch);
         
         setView.setText(String.valueOf(setCount));
         
@@ -94,10 +92,13 @@ public class PushUpsActivity extends Activity
         	setCount--;
         	repCount = initialRepCount;
         	
-        	Animation in = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        	final Animation in = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        	final Animation out = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+        	in.setDuration(1000);
+        	out.setDuration(1000);
         	
-            viewToAnimate.startAnimation(in);
-            viewToAnimate.setVisibility(View.VISIBLE);
+            stopWatch.startAnimation(in);
+            stopWatch.setVisibility(View.VISIBLE);
         	
         	view.setBackgroundColor(getResources().getColor(R.color.timerBackground));
         	
@@ -112,15 +113,25 @@ public class PushUpsActivity extends Activity
 				public void onTick(long millisUntilFinished)
 				{
 					countdown--;
-					repButton.setText("00:" + String.valueOf(countdown));
+					if (countdown == 1) {
+						repButton.setText("00:0" + String.valueOf(countdown));
+						stopWatch.startAnimation(out);
+			        	stopWatch.setVisibility(View.INVISIBLE);
+					} else if (countdown < 10) {
+						repButton.setText("00:0" + String.valueOf(countdown));
+					} else {
+						repButton.setText("00:" + String.valueOf(countdown));
+					}
 				} 
 				@Override
 				public void onFinish()
 				{
-		        	repButton.setText("Touch Me!");
+					
 		        	repButton.setClickable(true);
+		        	repButton.startAnimation(in);
+		        	repButton.setText("Tap to start!");
 		        	view.setBackgroundColor(getResources().getColor(R.color.goBlue));
-		        	
+
 				}   			
     		};
     		
