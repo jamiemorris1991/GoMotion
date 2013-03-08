@@ -2,18 +2,26 @@ package com.example.gomotion;
 
 public class BodyWeightExercise extends Exercise
 {
-    public enum BodyWeightType{PUSHUPS, SITUPS, DIPS};
+    public enum BodyWeightType{PUSHUPS, SITUPS, DIPS, OTHER};
 	
 	private int sets;
 	private int reps;
 	private BodyWeightType type;
-	
-	
+	private String name = null;
+
 	public BodyWeightExercise(int sets, int reps, BodyWeightType type)
 	{
 		this.sets = sets;
 		this.reps = reps;
 		this.type = type;
+	}
+	
+	public BodyWeightExercise(int sets, int reps, BodyWeightType type, String name)
+	{
+		this.sets = sets;
+		this.reps = reps;
+		this.type = type;
+		this.name = name;
 	}
 
 	public BodyWeightExercise(int ID, long timeStamp, int sets,
@@ -57,5 +65,12 @@ public class BodyWeightExercise extends Exercise
 		this.type = type;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 }

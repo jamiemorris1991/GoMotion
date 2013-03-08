@@ -7,35 +7,39 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="15" />
-    
+
     <uses-feature
-	  android:glEsVersion="0x00020000"
-	  android:required="true"/>
-    
-    
-     <permission
-          android:name="com.example.gomotion.permission.MAPS_RECEIVE"
-          android:protectionLevel="signature"/>
-     
-    <uses-permission android:name="com.example.gomotion.permission.MAPS_RECEIVE"/>    
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <permission
+        android:name="com.example.gomotion.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.gomotion.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>    
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:icon="@drawable/ic_logonew"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:theme="@style/AppTheme" android:name="Main">
+        <activity
+            android:name="com.example.gomotion.Main"
+            android:theme="@style/AppTheme" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity><activity
+        </activity>
+        <activity
             android:name="com.example.gomotion.HomeScreen"
             android:label="@string/title_activity_home_screen"
-            android:screenOrientation="portrait" android:theme="@style/AppTheme">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
             <intent-filter>
             </intent-filter>
         </activity>
@@ -74,17 +78,21 @@
         </activity>
         <activity
             android:name="com.example.gomotion.RouteActivity"
-            android:label="@string/title_activity_route" 
+            android:label="@string/title_activity_route"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.gomotion.ListCardioExercisesActivity" />
         </activity>
-        
+
         <meta-data
- 		   android:name="com.google.android.maps.v2.API_KEY"
-  		   android:value="AIzaSyBRirOHIDfibvsJHPGbRHOicY7BWRGLQCo"/>
-        
-        
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBRirOHIDfibvsJHPGbRHOicY7BWRGLQCo" />
+
+        <activity
+            android:name="com.example.gomotion.Wall"
+            android:label="@string/title_activity_wall" >
+        </activity>
     </application>
+
 </manifest>

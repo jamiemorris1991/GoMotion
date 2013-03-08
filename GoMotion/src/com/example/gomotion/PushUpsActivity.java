@@ -1,7 +1,5 @@
 package com.example.gomotion;
 
-import java.util.LinkedList;
-
 import com.example.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.app.Activity;

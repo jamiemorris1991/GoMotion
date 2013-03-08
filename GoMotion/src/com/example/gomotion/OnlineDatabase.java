@@ -9,39 +9,66 @@ public class OnlineDatabase
 	= "jdbc:sqlserver://homepages.ncl.ac.uk;user=t2015t12;password=Vary|Tan";
 	static private Connection connection;
 	
-	public void init()
+	public Connection getConnection() throws SQLException
+	{
+		return connection =
+				DriverManager.getConnection(connectionString);
+	}
+
+	public boolean add(BodyWeightExercise exercise) throws SQLException
 	{
 		try
 		{
-			connection = DriverManager.getConnection(connectionString);
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//Try to get a connection
+		Connection connection = getConnection();
+		
+		Statement s = connection.createStatement();
+		s.executeQuery("INSERT INTO bodyweight VALUES ("
+				+ "null," 
+				+ exercise.getTimeStamp() + ","
+				+ exercise.getSets() + ","
+				+ exercise.getReps() + ","
+				+ exercise.getType().ordinal() + ","
+				+ exercise.getName() + ");");
 		}
-	}
-
-	public boolean add(BodyWeightExercise exercise)
-	{
-		return false;
+		catch(SQLException e)
+		{
+			return false;
+		}
+		return true;
 	}
 
 	public boolean add(CardioExercise exercise)
 	{
-		return false;
+		try
+		{
+		//Try to get a connection
+		Connection connection = getConnection();
+		
+		Statement s = connection.createStatement();
+		s.executeQuery("INSERT INTO cardio VALUES ("
+				+ "null," 
+				+ exercise.getTimeStamp() + ","
+				+ exercise.getTimeLength() + ","
+				+ exercise.getDistance() + ","
+				+ exercise.getType().ordinal() + ");");
+		}
+		catch(SQLException e)
+		{
+			return false;
+		}
+		return true;
 	}
 
 	public BodyWeightExercise getBodyWeightExercise(int id)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public CardioExercise getCardioExercise(int id)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
+
 }
