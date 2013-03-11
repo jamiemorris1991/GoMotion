@@ -1,7 +1,9 @@
 package com.example.gomotion;
 import java.util.*;
-
 import android.location.Location;
+import java.sql.*;
+
+import com.example.gomotion.BodyWeightExercise.BodyWeightType;
 
 //Class to store running/walking/cycling sessions
 public class CardioExercise extends Exercise
@@ -18,6 +20,22 @@ public class CardioExercise extends Exercise
     public CardioExercise()
     {
     	
+    }
+    
+    public CardioExercise(ResultSet r) throws SQLException
+    {
+		//ID
+		ID = r.getInt(0);
+		//timeStamp
+		timeStamp = r.getInt(1);
+		//user
+		userID = r.getInt(2);
+		//timeLength
+		timeLength = r.getInt(3);
+		//distance
+		distance = r.getInt(4);
+		//type
+		type = CardioType.values()[r.getInt(5)];
     }
     
     public CardioExercise(int distance, int timeLength, CardioType type, LinkedList<Location> waypoints)

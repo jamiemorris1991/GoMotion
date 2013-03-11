@@ -26,6 +26,7 @@ public class OnlineDatabase
 		s.executeQuery("INSERT INTO bodyweight VALUES ("
 				+ "null," 
 				+ exercise.getTimeStamp() + ","
+				+ exercise.getUserID() + ","
 				+ exercise.getSets() + ","
 				+ exercise.getReps() + ","
 				+ exercise.getType().ordinal() + ","
@@ -49,6 +50,7 @@ public class OnlineDatabase
 		s.executeQuery("INSERT INTO cardio VALUES ("
 				+ "null," 
 				+ exercise.getTimeStamp() + ","
+				+ exercise.getUserID() + ","
 				+ exercise.getTimeLength() + ","
 				+ exercise.getDistance() + ","
 				+ exercise.getType().ordinal() + ");");
@@ -60,14 +62,44 @@ public class OnlineDatabase
 		return true;
 	}
 
-	public BodyWeightExercise getBodyWeightExercise(int id)
+	public BodyWeightExercise getFirstBodyWeightExercise(int userID)
 	{
-		return null;
+		try
+		{
+			Connection connection = getConnection();
+			Statement s = connection.createStatement();
+			
+			ResultSet result = s.executeQuery("SELECT FROM bodyweight b WHERE b.user = " + userID + " LIMIT 1;");
+			
+			if (!result.next())
+				return null;
+			
+			return new BodyWeightExercise(result);
+		}
+		catch(SQLException e)
+		{
+			return null;	
+		}
 	}
 
-	public CardioExercise getCardioExercise(int id)
+	public CardioExercise getFirstCardioExercise(int userID)
 	{
-		return null;
+		try
+		{
+			Connection connection = getConnection();
+			Statement s = connection.createStatement();
+			
+			ResultSet result = s.executeQuery("SELECT FROM cardio c WHERE c.user = " + userID + " LIMIT 1;");
+			
+			if (!result.next())
+				return null;
+			
+			return new CardioExercise(result);
+		}
+		catch(SQLException e)
+		{
+			return null;	
+		}
 	}
 
 

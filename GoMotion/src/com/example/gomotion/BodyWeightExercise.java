@@ -1,5 +1,7 @@
 package com.example.gomotion;
 
+import java.sql.*;
+
 public class BodyWeightExercise extends Exercise
 {
     public enum BodyWeightType{PUSHUPS, SITUPS, DIPS, OTHER};
@@ -9,6 +11,24 @@ public class BodyWeightExercise extends Exercise
 	private BodyWeightType type;
 	private String name = null;
 
+	public BodyWeightExercise(ResultSet r) throws SQLException
+	{
+		//ID
+		ID = r.getInt(0);
+		//timeStamp
+		timeStamp = r.getInt(1);
+		//user
+		userID = r.getInt(2);
+		//sets
+		sets = r.getInt(3);
+		//reps
+		reps = r.getInt(4);
+		//type
+		type = BodyWeightType.values()[r.getInt(5)];
+		//name
+		name = r.getString(6);
+	}
+	
 	public BodyWeightExercise(int sets, int reps, BodyWeightType type)
 	{
 		this.sets = sets;

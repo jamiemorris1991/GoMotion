@@ -1,19 +1,11 @@
 package com.example.gomotion;
 
-import javax.net.ssl.ManagerFactoryParameters;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-
-import com.easy.facebook.android.apicall.GraphApi;
-import com.easy.facebook.android.facebook.*;
-
-//import com.easy.facebook.android.apicall.GraphApi;
-//import com.easy.facebook.android.facebook.*;
 
 
 public class Main extends Activity
