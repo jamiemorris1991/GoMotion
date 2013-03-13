@@ -32,7 +32,7 @@ public class HomeScreen extends Activity
  
     public void doPushUps(View view)
     {
-    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment(BodyWeightType.PUSHUPS);
+    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
     	dialog.show(getFragmentManager(), "pushups_dialog");
 
     }

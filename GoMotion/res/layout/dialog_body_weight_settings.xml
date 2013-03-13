@@ -1,38 +1,93 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-   
-    <EditText
-        android:id="@+id/set_choice"
-        android:inputType="numberDecimal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/set_choice" />
-    <EditText
-        android:id="@+id/rep_choice"
-        android:inputType="numberDecimal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/rep_choice"/>
-    
-    <EditText
-        android:id="@+id/rest_time"
-        android:inputType="numberDecimal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:hint="@string/rest_time"/>
-    
-</LinearLayout>
+    android:layout_height="wrap_content" >
+
+	<LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="10dp" >
+	    	
+	    	<TextView
+		        android:id="@+id/set_selector"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Sets:"
+		        android:textSize="18sp" />
+	    	
+	    	<TextView
+		        android:id="@+id/rep_selector"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Reps:"
+		        android:layout_marginLeft="68dp"
+		        android:textSize="18sp" />
+	    	
+	    	<TextView
+		        android:id="@+id/rest_selector"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="68dp"
+		        android:text="Rest (s):"
+		        android:textSize="18sp" />
+	    
+	</LinearLayout>
+	
+	<LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" 
+	    android:layout_marginTop="10dp" >
+	
+	    <Spinner
+	        android:id="@+id/set_spinner"
+	        android:layout_width="110dp"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp" />
+	    
+	    <Spinner
+	        android:id="@+id/rep_spinner"
+	        android:layout_width="110dp"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp" />
+	    
+	    <Spinner
+	        android:id="@+id/rest_spinner"
+	        android:layout_width="110dp"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp" />
+	   
+	  <!--   <EditText
+	        android:id="@+id/set_choice"
+	        android:inputType="numberDecimal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="16dp"
+	        android:layout_marginLeft="4dp"
+	        android:layout_marginRight="4dp"
+	        android:layout_marginBottom="4dp"
+	        android:hint="@string/set_choice" />
+	    <EditText
+	        android:id="@+id/rep_choice"
+	        android:inputType="numberDecimal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginLeft="4dp"
+	        android:layout_marginRight="4dp"
+	        android:layout_marginBottom="4dp"
+	        android:hint="@string/rep_choice"/>
+	    
+	    <EditText
+	        android:id="@+id/rest_time"
+	        android:inputType="numberDecimal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginLeft="4dp"
+	        android:layout_marginRight="4dp"
+	        android:layout_marginBottom="16dp"
+	        android:hint="@string/rest_time"/>  -->
+	    
+	</LinearLayout>
+</RelativeLayout>
