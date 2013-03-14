@@ -14,8 +14,8 @@
         android:layout_alignParentRight="true"
         android:background="#00000000"
         android:onClick="doRep"
-        android:text="Touch Me!"
-        android:textColor="@color/background"
+        android:text="Tap That ;)"
+        android:textColor="@color/buttonsText"
         android:textSize="100sp" />
 
     <LinearLayout
@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/linearLayout1"
         android:text="0"
+        android:textColor="@color/buttonsText"
         android:textSize="32sp" />
 
     <TextView
@@ -53,6 +54,7 @@
         android:layout_above="@+id/set_count"
         android:layout_alignParentLeft="true"
         android:text="Sets: "
+        android:textColor="@color/buttonsText"
         android:textSize="32sp" />
 
     <ImageView

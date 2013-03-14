@@ -18,7 +18,7 @@
 	</style>
 
 	
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@drawable/ab_solid</item>
     </style>
 </resources>
