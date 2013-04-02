@@ -105,7 +105,7 @@ public class PushUpsActivity extends Activity
     		repButton.setClickable(false);
     		countdown = (restTime/1000) + 1;
     		
-    		CountDownTimer timer = new CountDownTimer(restTime + 100, 1000) 
+    		CountDownTimer timer = new CountDownTimer(restTime + 500, 1000) 
     		{
 				@Override
 				public void onTick(long millisUntilFinished)
