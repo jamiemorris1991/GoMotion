@@ -1,85 +1,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/blueBackground"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="229dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Welcome to GoMotion"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="38sp" />
        
-    <Button
-        android:id="@+id/btnPushUps"
-        android:layout_width="138dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/btnCardio"
-        android:background="@color/goBlue"
-        android:onClick="doPushUps"
-        android:text="Push Ups"
-        android:textColor="@color/buttonsText" />
-
-    <Button
-        android:id="@+id/listBodyweightExercises"
-        android:layout_width="155dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/listCardioExercises"
-        android:layout_marginTop="24dp"
-        android:onClick="listBodyWeightExercises"
-        android:text="Body Weight Exercise History"
-        android:textSize="14sp" />
-
-    <Button
-        android:id="@+id/viewRoute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/listBodyweightExercises"
-        android:layout_marginTop="20dp"
-        android:onClick="viewRoute"
-        android:text="View Map"
-        android:textSize="14sp" />
-
-    <Button
-        android:id="@+id/listCardioExercises"
-        android:layout_width="153dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/btnCardio"
-        android:layout_marginTop="78dp"
-        android:onClick="listCardioExercises"
-        android:text="Cardio Exercise History"
-        android:textSize="14sp" />
-
-    <Button
-        android:id="@+id/btnCardio"
-        android:layout_width="138dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
-        android:background="@color/goBlue"
-        android:onClick="doCardio"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:text="Cardio"
-        android:textColor="@color/buttonsText" />
-
-    <ImageView
-        android:id="@+id/person.png"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btnPushUps"
-        android:layout_below="@+id/textView1"
-        android:layout_margin="0dp"
-        android:layout_toLeftOf="@+id/btnPushUps"
-        android:layout_toRightOf="@+id/btnCardio"
-        android:src="@drawable/person"
-        android:tint="#6488D9" />
-
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+    
+    	<Button 
+		    android:id="@+id/cardio_options"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+		    android:layout_weight="1"
+		    android:text="Outdoor"
+		    android:onClick="outdoorOptions" />
+		
+		<Button 
+		    android:id="@+id/body_weight_options"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:text="Indoor" 
+		    android:onClick="indoorOptions" />
+		
+	</LinearLayout>
+	
 </RelativeLayout>

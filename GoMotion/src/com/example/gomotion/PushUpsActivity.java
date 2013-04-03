@@ -105,13 +105,13 @@ public class PushUpsActivity extends Activity
     		repButton.setClickable(false);
     		countdown = (restTime/1000) + 1;
     		
-    		CountDownTimer timer = new CountDownTimer(restTime + 500, 1000) 
+    		CountDownTimer timer = new CountDownTimer(restTime + 1100, 1000) 
     		{
 				@Override
 				public void onTick(long millisUntilFinished)
 				{
 					countdown--;
-					if (countdown == 1) {
+					if (countdown == 0) {
 						repButton.setText("00:0" + String.valueOf(countdown));
 						stopWatch.startAnimation(out);
 			        	stopWatch.setVisibility(View.INVISIBLE);
@@ -124,12 +124,10 @@ public class PushUpsActivity extends Activity
 				@Override
 				public void onFinish()
 				{
-					
 		        	repButton.setClickable(true);
 		        	repButton.startAnimation(in);
 		        	repButton.setText("Tap to start!");
 		        	view.setBackgroundColor(getResources().getColor(R.color.goBlue));
-
 				}   			
     		};
     		

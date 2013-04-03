@@ -26,9 +26,9 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	public final static String REP_CHOICE = "com.example.gomotion.REP_CHOICE";
 	public final static String REST_TIME = "com.example.gomotion.REST_TIME";
 	
-	Spinner setSpinner;
-	Spinner repSpinner;
-	Spinner restSpinner;
+	private Spinner setSpinner;
+	private Spinner repSpinner;
+	private Spinner restSpinner;
 	
 	private Integer defaultSets = 10;
 	private Integer defaultReps = 10;
