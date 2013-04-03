@@ -31,6 +31,8 @@ public class CardioActivity extends Activity
 {
 	public static final String WAYPOINTS = "com.example.gomotion.WAYPOINTS";
 
+	private int typeID;
+	private CardioType type;
 	private LinkedList<Location> waypoints;
 	private LinkedList<Location> initialPoints;
 	private LocationManager locationManager;
@@ -75,6 +77,24 @@ public class CardioActivity extends Activity
 		setContentView(R.layout.activity_cardio);
 		getActionBar().setDisplayHomeAsUpEnabled(true);	
 
+		typeID = getIntent().getIntExtra(HomeScreen.CARDIO_TPYE, 1);
+		
+		switch(typeID)
+		{
+			case 0:
+				setTitle("Walk Tracking");
+				type = CardioType.WALK;
+				break;
+			case 1:
+				setTitle("Run Tracking");
+				type = CardioType.RUN;
+				break;
+			case 2:
+				setTitle("Cycle Tracking");
+				type = CardioType.CYCLE;
+				break;
+		}
+		
 		timestamp = System.currentTimeMillis();
 		distance = 0;
 		minDist = 10;

@@ -1,22 +1,26 @@
 package com.example.gomotion;
 
+import com.example.gomotion.CardioExercise.CardioType;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 public class HomeScreen extends Activity 
 {
+
+	public static final String CARDIO_TPYE = "com.example.gomotion.CARDIO_TYPE";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
-
 		
     }
 
@@ -25,6 +29,18 @@ public class HomeScreen extends Activity
     {
         getMenuInflater().inflate(R.menu.activity_home_screen, menu);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) 
+    {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+            	Intent intent = new Intent(this, SettingsActivity.class);
+            	startActivity(intent);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
     
     public void outdoorOptions(View view)
@@ -39,7 +55,13 @@ public class HomeScreen extends Activity
     			switch(i)
     			{
     				case 0:
-    					doCardio();
+    					doCardio(0);
+    					break;
+    				case 1:
+    					doCardio(1);
+    					break;
+    				case 2:
+    					doCardio(2);
     					break;
     				case 3:
     					listCardioExercises();
@@ -83,9 +105,10 @@ public class HomeScreen extends Activity
 
     }
     
-    public void doCardio()
+    public void doCardio(int type)
     {
     	Intent intent = new Intent(this, CardioActivity.class);
+    	intent.putExtra(CARDIO_TPYE, type);
     	startActivity(intent);
     }
     
