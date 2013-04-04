@@ -1,4 +1,6 @@
-package com.example.gomotion;
+package com.gomotion;
+
+import com.gomotion.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,13 +29,6 @@ public class Main extends Activity
         
         OfflineDatabase db = new OfflineDatabase(this);
         db.getAllBodyWeightExercises();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.activity_home_screen, menu);
-        return true;
     }
 	
 	static public void init()

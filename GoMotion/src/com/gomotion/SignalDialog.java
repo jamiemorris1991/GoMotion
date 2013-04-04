@@ -1,4 +1,6 @@
-package com.example.gomotion;
+package com.gomotion;
+
+import com.gomotion.R;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;

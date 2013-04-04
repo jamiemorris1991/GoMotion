@@ -1,6 +1,7 @@
-package com.example.gomotion;
+package com.gomotion;
 
-import com.example.gomotion.CardioExercise.CardioType;
+import com.gomotion.R;
+import com.gomotion.CardioExercise.CardioType;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,7 +15,7 @@ import android.view.View;
 public class HomeScreen extends Activity 
 {
 
-	public static final String CARDIO_TPYE = "com.example.gomotion.CARDIO_TYPE";
+	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)

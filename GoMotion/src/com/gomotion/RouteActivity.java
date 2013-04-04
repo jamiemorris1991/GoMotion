@@ -1,4 +1,4 @@
-package com.example.gomotion;
+package com.gomotion;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+import com.gomotion.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

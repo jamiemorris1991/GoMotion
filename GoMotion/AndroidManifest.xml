@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.gomotion"
+    package="com.gomotion"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -13,10 +13,10 @@
         android:required="true" />
 
     <permission
-        android:name="com.example.gomotion.permission.MAPS_RECEIVE"
+        android:name="com.gomotion.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.gomotion.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.gomotion.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -27,7 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.gomotion.Main"
+            android:name="com.gomotion.Main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
             <intent-filter>
@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.gomotion.HomeScreen"
+            android:name="com.gomotion.HomeScreen"
             android:label="@string/title_activity_home_screen"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" >
@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.gomotion.PushUpsActivity"
+            android:name="com.gomotion.PushUpsActivity"
             android:label="@string/title_activity_push_ups"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -53,37 +53,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.gomotion.ListBodyWeightExercisesActivity"
+            android:name="com.gomotion.ListBodyWeightExercisesActivity"
             android:label="@string/title_activity_list_body_weight_exercises"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.gomotion.HomeScreen" />
+                android:value="com.gomotion.HomeScreen" />
         </activity>
         <activity
-            android:name="com.example.gomotion.ListCardioExercisesActivity"
+            android:name="com.gomotion.ListCardioExercisesActivity"
             android:label="@string/title_activity_list_cardio_weight_exercises"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.gomotion.HomeScreen" />
+                android:value="com.gomotion.HomeScreen" />
         </activity>
         <activity
-            android:name="com.example.gomotion.CardioActivity"
+            android:name="com.gomotion.CardioActivity"
             android:label="@string/title_activity_cardio"
-            android:parentActivityName="com.example.gomotion.HomeScreen"
+            android:parentActivityName="com.gomotion.HomeScreen"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.gomotion.HomeScreen" />
+                android:value="com.gomotion.HomeScreen" />
         </activity>
         <activity
-            android:name="com.example.gomotion.RouteActivity"
+            android:name="com.gomotion.RouteActivity"
             android:label="@string/title_activity_route"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.gomotion.ListCardioExercisesActivity" />
+                android:value="com.gomotion.ListCardioExercisesActivity" />
         </activity>
 
         <meta-data
@@ -91,16 +91,17 @@
             android:value="AIzaSyBRirOHIDfibvsJHPGbRHOicY7BWRGLQCo" />
 
         <activity
-            android:name="com.example.gomotion.Wall"
+            android:name="com.gomotion.Wall"
             android:label="@string/title_activity_wall" >
         </activity>
         <activity
-            android:name="com.example.gomotion.SettingsActivity"
+            android:name="com.gomotion.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.example.gomotion.HomeScreen" >
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.gomotion.HomeScreen" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.gomotion.HomeScreen" />
+                android:value="com.gomotion.HomeScreen" />
         </activity>
     </application>
 

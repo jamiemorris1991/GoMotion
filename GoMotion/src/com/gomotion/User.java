@@ -1,4 +1,4 @@
-package com.example.gomotion;
+package com.gomotion;
 
 public class User
 {

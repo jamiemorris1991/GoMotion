@@ -1,7 +1,9 @@
-package com.example.gomotion;
+package com.gomotion;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.gomotion.R;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -22,7 +24,7 @@ import android.widget.TextView;
 
 public class ListCardioExercisesActivity extends ListActivity 
 {
-	public static final String EXERCISE_ID = "com.example.gomotion.EXERCISE_ID";
+	public static final String EXERCISE_ID = "com.gomotion.EXERCISE_ID";
 	
 	private OfflineDatabase db;
 	private CardioAdapter adapter;

@@ -1,9 +1,9 @@
-package com.example.gomotion;
+package com.gomotion;
 import java.util.*;
 import android.location.Location;
 import java.sql.*;
 
-import com.example.gomotion.BodyWeightExercise.BodyWeightType;
+import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 //Class to store running/walking/cycling sessions
 public class CardioExercise extends Exercise

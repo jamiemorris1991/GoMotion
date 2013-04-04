@@ -1,6 +1,7 @@
-package com.example.gomotion;
+package com.gomotion;
 
-import com.example.gomotion.BodyWeightExercise.BodyWeightType;
+import com.gomotion.R;
+import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.app.Activity;
 import android.app.AlertDialog;

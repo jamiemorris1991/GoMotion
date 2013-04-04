@@ -1,4 +1,4 @@
-package com.example.gomotion;
+package com.gomotion;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,15 +16,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.example.gomotion.BodyWeightExercise.BodyWeightType;
+import com.gomotion.R;
+import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 
 public class BodyWeightSettingsDialogFragment extends DialogFragment
 {
 	private BodyWeightType type;
-	public final static String SET_CHOICE = "com.example.gomotion.SET_CHOICE";
-	public final static String REP_CHOICE = "com.example.gomotion.REP_CHOICE";
-	public final static String REST_TIME = "com.example.gomotion.REST_TIME";
+	public final static String SET_CHOICE = "com.gomotion.SET_CHOICE";
+	public final static String REP_CHOICE = "com.gomotion.REP_CHOICE";
+	public final static String REST_TIME = "com.gomotion.REST_TIME";
 	
 	private Spinner setSpinner;
 	private Spinner repSpinner;

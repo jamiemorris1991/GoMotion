@@ -1,0 +1,30 @@
+<PreferenceScreen 
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res/com.gomotion" >
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/pref_units"
+        android:entryValues="@array/pref_unit_values"
+        android:key="units"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Units" />
+    
+    <ListPreference
+        android:defaultValue="3"
+        android:entries="@array/pref_route_colours"
+        android:entryValues="@array/pref_route_colour_values"
+        android:key="route_colour"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Route colour" />
+        
+    <com.gomotion.RouteAccuracyPreference
+        android:key="accuracy"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Route tracking accuracy"
+        android:defaultValue="100" />
+
+</PreferenceScreen>

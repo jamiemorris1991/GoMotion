@@ -1,8 +1,11 @@
-package com.example.gomotion;
+package com.gomotion;
 
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
+
+import com.gomotion.R;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;

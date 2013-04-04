@@ -1,11 +1,12 @@
-package com.example.gomotion;
+package com.gomotion;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.example.gomotion.CardioExercise.CardioType;
+import com.gomotion.R;
+import com.gomotion.CardioExercise.CardioType;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,7 +30,7 @@ import android.widget.TextView;
 
 public class CardioActivity extends Activity 
 {
-	public static final String WAYPOINTS = "com.example.gomotion.WAYPOINTS";
+	public static final String WAYPOINTS = "com.gomotion.WAYPOINTS";
 
 	private int typeID;
 	private CardioType type;
