@@ -9,13 +9,13 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class RouteAccuracyPreference extends DialogPreference
+public class SeekBarPreference extends DialogPreference
 {
-	private static final int DEFAULT_VALUE = 100;
+	private final int DEFAULT_VALUE = 100;
 	private SeekBar seekBar;
 	private int value;
 
-    public RouteAccuracyPreference(Context context, AttributeSet attrs)
+    public SeekBarPreference(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         

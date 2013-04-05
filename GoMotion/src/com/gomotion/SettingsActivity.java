@@ -11,7 +11,13 @@ import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
-	
+	public static final String UNITS = "units";
+	public static final String ROUTE_COLOUR = "route_colour";
+	public static final String ROUTE_TRANSPARENCY = "route_transparency";
+	public static final String ACCURACY = "accuracy";
+	public static final String BODY_WEIGHT_VALUES = "body_weight_values";
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {     
 	    super.onCreate(savedInstanceState);        
@@ -23,8 +29,15 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    ListPreference colour = (ListPreference) findPreference("route_colour");
 	    colour.setSummary(colour.getEntry());
 	    
-	    RouteAccuracyPreference accuracy = (RouteAccuracyPreference) findPreference("accuracy");
+	    SeekBarPreference transparency = (SeekBarPreference) findPreference("transparency");
+	    transparency.setSummary(String.valueOf(transparency.getProgress()) + "%");
+	    
+	    SeekBarPreference accuracy = (SeekBarPreference) findPreference("accuracy");
 	    accuracy.setSummary(String.valueOf(accuracy.getProgress()) + "%");
+	    
+	    DefaultBodyWeightPreference bwsettings = (DefaultBodyWeightPreference) findPreference("body_weight_values");
+	    String[] bwvalues = bwsettings.getValues().split(",");
+	    bwsettings.setSummary(String.format("Sets: %s, Reps: %s, Rest: %ss", bwvalues[0], bwvalues[1], bwvalues[2]));
 	}
 	
     protected void onResume() 
@@ -50,9 +63,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         	ListPreference lp = (ListPreference) pref;
             pref.setSummary(lp.getEntry());
         }
-        else if(pref instanceof RouteAccuracyPreference) {
-        	RouteAccuracyPreference rap = (RouteAccuracyPreference) pref;
+        else if(pref instanceof SeekBarPreference) {
+        	SeekBarPreference rap = (SeekBarPreference) pref;
             pref.setSummary(String.valueOf(rap.getProgress()) + "%");
+        }
+        else if(pref instanceof DefaultBodyWeightPreference) {
+        	DefaultBodyWeightPreference bw = (DefaultBodyWeightPreference) pref;
+    	    String[] bwvalues = bw.getValues().split(",");
+            pref.setSummary(String.format("Sets: %s, Reps: %s, Rest: %ss", bwvalues[0], bwvalues[1], bwvalues[2]));
         }
     }
 }

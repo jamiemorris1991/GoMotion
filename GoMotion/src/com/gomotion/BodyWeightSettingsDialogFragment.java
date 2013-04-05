@@ -7,9 +7,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -34,6 +36,8 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	private Integer defaultSets = 10;
 	private Integer defaultReps = 10;
 	private Integer defaultRest = 30;
+	
+	private Intent intent;
 
 	
 	public BodyWeightSettingsDialogFragment()
@@ -85,25 +89,21 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 		setSpinner.setAdapter(setList);
 		repSpinner.setAdapter(repList);
 		restSpinner.setAdapter(restList);
-	
+		
+		switch(type)
+		{
+			case PUSHUPS: 
+				intent = new Intent(getActivity(), PushUpsActivity.class);
+				break;
+		}
+		
 		
 		builder.setView(v)
 			.setTitle("Push Up Settings")
 			.setPositiveButton(R.string.start, new DialogInterface.OnClickListener()
 			{	
 				public void onClick(DialogInterface dialog, int which)
-				{
-					Intent intent = null;
-					
-					switch(type)
-					{
-						case PUSHUPS: 
-							intent = new Intent(getActivity(), PushUpsActivity.class);
-							break;
-					}
-					
-
-					
+				{					
 					int sets = Integer.valueOf( setSpinner.getSelectedItem().toString() );
 					int reps = Integer.valueOf( repSpinner.getSelectedItem().toString() );
 					int restTime = Integer.valueOf( restSpinner.getSelectedItem().toString() );
@@ -143,9 +143,22 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 			{				
 				public void onClick(DialogInterface dialog, int which)
 				{
-					setSpinner.setSelection(defaultSets - 1);
-					repSpinner.setSelection(defaultReps - 1);
-					restSpinner.setSelection(defaultRest - 1);
+					SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+					String[] defaultValues = sharedPref.getString(SettingsActivity.BODY_WEIGHT_VALUES, "5,10,60").split(",");
+					
+					setSpinner.setSelection(Integer.valueOf(defaultValues[0]) - 1);
+					repSpinner.setSelection(Integer.valueOf(defaultValues[1]) - 1);
+					restSpinner.setSelection(Integer.valueOf(defaultValues[2]) - 1);
+					
+					int sets = Integer.valueOf( setSpinner.getSelectedItem().toString() );
+					int reps = Integer.valueOf( repSpinner.getSelectedItem().toString() );
+					int restTime = Integer.valueOf( restSpinner.getSelectedItem().toString() );
+					
+					intent.putExtra(SET_CHOICE, sets);
+					intent.putExtra(REP_CHOICE, reps);
+					intent.putExtra(REST_TIME, restTime);
+					
+					startActivity(intent);
 
 //					setsEditText.setText(String.valueOf(defaultSets));
 //					repsEditText.setText(String.valueOf(defaultReps));
