@@ -25,6 +25,11 @@ public class RouteAccuracyPreference extends DialogPreference
         
         setDialogIcon(null);
     }
+    
+    public int getProgress()
+    {
+    	return value;
+    }
         
     @Override
 	protected void onBindDialogView(View view)
@@ -52,9 +57,7 @@ public class RouteAccuracyPreference extends DialogPreference
             value = (Integer) defaultValue;
             persistInt(value);
         }
-    }
-    
-    
+    }    
 
     @Override
     protected void onDialogClosed(boolean positiveResult)

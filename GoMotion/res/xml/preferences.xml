@@ -9,7 +9,8 @@
         android:key="units"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="Units" />
+        android:title="Units"
+        android:summary="" />
     
     <ListPreference
         android:defaultValue="3"
