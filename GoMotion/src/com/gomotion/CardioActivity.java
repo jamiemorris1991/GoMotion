@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
@@ -23,6 +24,7 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,9 @@ import android.widget.TextView;
 public class CardioActivity extends Activity 
 {
 	public static final String WAYPOINTS = "com.gomotion.WAYPOINTS";
+	
+	private static final int MIN_DIST = 10;
+	private static final int MAX_DIST = 50;
 
 	private int typeID;
 	private CardioType type;
@@ -254,8 +259,13 @@ public class CardioActivity extends Activity
 				}
 			}			
 		};
+		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		int accuracy = sharedPref.getInt(SettingsActivity.ACCURACY, 100) / 100;
+		
+		int minDist = MIN_DIST + (MAX_DIST * (1 - accuracy));
 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, minDist, locationListener);
 
 		/**
 		 * Signal Handler

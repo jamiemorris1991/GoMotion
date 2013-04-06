@@ -75,7 +75,8 @@
         android:layout_toRightOf="@+id/btnOffline"
         android:background="@color/goBlue"
         android:text="Facebook"
-        android:textColor="@color/buttonsText" />
+        android:textColor="@color/buttonsText"
+        android:onClick="loginFacebook" />
 
     <EditText
         android:id="@+id/editText1"

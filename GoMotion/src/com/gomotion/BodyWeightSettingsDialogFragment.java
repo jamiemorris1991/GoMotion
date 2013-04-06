@@ -33,10 +33,6 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	private Spinner repSpinner;
 	private Spinner restSpinner;
 	
-	private Integer defaultSets = 10;
-	private Integer defaultReps = 10;
-	private Integer defaultRest = 30;
-	
 	private Intent intent;
 
 	
