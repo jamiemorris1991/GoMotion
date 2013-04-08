@@ -47,19 +47,9 @@ public class Main extends Activity
     			{
     				System.out.println("Session opened!");
 
-    				// make request to the /me API
-    				Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
-
-    					// callback after Graph API response with user object
-    					public void onCompleted(GraphUser user, Response response) {
-    						if(user != null)
-    						{
-    							session.removeCallback(callback);
-    							Intent intent = new Intent(Main.this, HomeScreen.class);
-    							startActivity(intent);   
-    						}
-    					}
-    				});
+					session.removeCallback(callback);
+					Intent intent = new Intent(Main.this, HomeScreen.class);
+					startActivity(intent);
     			}
     		}
     	};

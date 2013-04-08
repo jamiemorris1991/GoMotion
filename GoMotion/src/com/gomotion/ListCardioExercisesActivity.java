@@ -16,6 +16,7 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 import com.gomotion.R;
 
 import android.app.AlertDialog;
@@ -43,8 +44,14 @@ public class ListCardioExercisesActivity extends ListActivity
 	
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+	private static final String POST_ITEM = "postItem";
+	
 	private boolean pendingPublishReauthorization = false;
+	private int postItem;
+	private String name;
 	private boolean online = false;
+	
+	private Session session;
 	
 	private OfflineDatabase db;
 	private CardioAdapter adapter;
@@ -56,9 +63,23 @@ public class ListCardioExercisesActivity extends ListActivity
 		setContentView(R.layout.activity_list_body_weight_exercises);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		if (savedInstanceState != null)
-		{
-		    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+		session = Session.getActiveSession();
+		
+		if(session != null)
+		{			
+			if (savedInstanceState != null)
+			{
+				postItem = savedInstanceState.getInt(POST_ITEM);
+			    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+			}
+			
+			session.addCallback(new Session.StatusCallback() {
+
+				public void call(Session session, SessionState state, Exception exception) {
+	
+					onSessionStateChange(session, state, exception);
+				}				
+			});
 		}
 
 		db = new OfflineDatabase(this);
@@ -82,9 +103,7 @@ public class ListCardioExercisesActivity extends ListActivity
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{		
 		final int cid = (int) id;
-		
-		Session session = Session.getActiveSession();
-		
+				
 		String[] items = null;
 
 		if(session != null && session.isOpened())
@@ -120,6 +139,7 @@ public class ListCardioExercisesActivity extends ListActivity
 					}
 					else if(item == 1 && online)
 					{
+						postItem = cid;
 						postRoute();
 					}
 				}
@@ -131,12 +151,7 @@ public class ListCardioExercisesActivity extends ListActivity
 	
     private void onSessionStateChange(Session session, SessionState state, Exception exception)
     {
-//        if (state.isOpened()) {
-//            shareButton.setVisibility(View.VISIBLE);
-//        } else if (state.isClosed()) {
-//            shareButton.setVisibility(View.INVISIBLE);
-//        }
-    	
+    	System.out.println("State changed: " + session.getState());
     	if (pendingPublishReauthorization && state.equals(SessionState.OPENED_TOKEN_UPDATED)) 
     	{
     	    pendingPublishReauthorization = false;
@@ -148,13 +163,12 @@ public class ListCardioExercisesActivity extends ListActivity
     public void onSaveInstanceState(Bundle outState) 
     {
         super.onSaveInstanceState(outState);
+        outState.putInt(POST_ITEM, postItem);
         outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
     }
     
     public void postRoute()
     {
-    	 Session session = Session.getActiveSession();
-
     	    if (session != null){
 
     	        // Check for publish permissions    
@@ -167,13 +181,42 @@ public class ListCardioExercisesActivity extends ListActivity
     	            return;
     	        }
 
+	            System.out.println("Creating request.");
+	            
+	            OfflineDatabase db = new OfflineDatabase(this);
+	            CardioExercise exercise = db.getCardioExercise(postItem);
+	            Cursor waypoints = db.getWaypoints(exercise.getID());
+	            
+	            // Build URL for Google Maps
+	            
+	            while(waypoints.moveToNext())
+	            {
+	            	
+	            }
+	            
+	            
+				// make request to the /me API
+				Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+
+					// callback after Graph API response with user object
+					public void onCompleted(GraphUser user, Response response) {
+						if(user != null)
+						{
+							name = user.getFirstName();
+						}
+					}
+				});
+	            	            
+	            String descriptionTemplate = "%s has just completed a %s, view the route they travelled here!";
+	            String description = String.format(descriptionTemplate, name, formatExerciseType(exercise.getType().toString()));
+	            
     	        Bundle postParams = new Bundle();
     	        postParams.putString("name", "GoMotion Fitness App for Android");
     	        postParams.putString("caption", "Cardio exercise completed");
-    	        postParams.putString("description", "John has just completed a run, view the route they ran here!");
+    	        postParams.putString("description", description);
     	        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 
-    	        Request.Callback callback= new Request.Callback() {
+    	        Request.Callback callback = new Request.Callback() {
     	            public void onCompleted(Response response) {
     	                JSONObject graphResponse = response
     	                                           .getGraphObject()
@@ -192,7 +235,7 @@ public class ListCardioExercisesActivity extends ListActivity
     	                         Toast.LENGTH_SHORT).show();
     	                    } else {
     	                        Toast.makeText(ListCardioExercisesActivity.this, 
-    	                             postId,
+    	                             "Post successful",
     	                             Toast.LENGTH_LONG).show();
     	                }
     	            }
@@ -203,6 +246,7 @@ public class ListCardioExercisesActivity extends ListActivity
 
     	        RequestAsyncTask task = new RequestAsyncTask(request);
     	        task.execute();
+	            System.out.println("Status posted.");
     	    }
     }
     
@@ -213,6 +257,22 @@ public class ListCardioExercisesActivity extends ListActivity
             }
         }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+    }
+    
+    public static String formatExerciseType(String s)
+    {
+		char[] charArray = s.toLowerCase().toCharArray();
+		charArray[0] = Character.toUpperCase(charArray[0]);
+		String formatted = new String(charArray);
+    	
+    	return formatted;
     }
 
 	public class CardioAdapter extends CursorAdapter
@@ -240,9 +300,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) 
 		{			
-			char[] charArray = cursor.getString(4).toLowerCase().toCharArray();
-			charArray[0] = Character.toUpperCase(charArray[0]);
-			String title = new String(charArray);
+			String title = formatExerciseType(cursor.getString(4));
 			TextView type = (TextView) view.getTag(R.id.cardio_type);
 			type.setText(title);
 
