@@ -1,8 +1,21 @@
 package com.gomotion;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
 import com.gomotion.R;
 
 import android.app.AlertDialog;
@@ -13,6 +26,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +34,17 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ListCardioExercisesActivity extends ListActivity 
 {
 	public static final String EXERCISE_ID = "com.gomotion.EXERCISE_ID";
+	
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+	private boolean pendingPublishReauthorization = false;
+	private boolean online = false;
 	
 	private OfflineDatabase db;
 	private CardioAdapter adapter;
@@ -35,6 +55,11 @@ public class ListCardioExercisesActivity extends ListActivity
 		super.onCreate(savedInstanceState);        
 		setContentView(R.layout.activity_list_body_weight_exercises);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		if (savedInstanceState != null)
+		{
+		    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+		}
 
 		db = new OfflineDatabase(this);
 		Cursor exercises = db.getAllCardioExercises();
@@ -57,7 +82,23 @@ public class ListCardioExercisesActivity extends ListActivity
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{		
 		final int cid = (int) id;
-		String items[] = {"Show Route", "Delete"};
+		
+		Session session = Session.getActiveSession();
+		
+		String[] items = null;
+
+		if(session != null && session.isOpened())
+		{
+			online = true;
+			String[] temp = {"View route", "Share route", "Delete"};
+			items = temp;
+		} 
+		else 
+		{
+			String[] temp = {"View route", "Delete"};
+			items = temp;
+
+		}		
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Options")
@@ -72,10 +113,14 @@ public class ListCardioExercisesActivity extends ListActivity
 						intent.putExtra(EXERCISE_ID, cid);
 						startActivity(intent);
 					}
-					else if(item == 1) 
+					else if(item == 1 && !online || item == 2) 
 					{
 						db.deleteCardioExercise(cid);
 						adapter.changeCursor(db.getAllCardioExercises());
+					}
+					else if(item == 1 && online)
+					{
+						postRoute();
 					}
 				}
 			});
@@ -83,6 +128,92 @@ public class ListCardioExercisesActivity extends ListActivity
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
+	
+    private void onSessionStateChange(Session session, SessionState state, Exception exception)
+    {
+//        if (state.isOpened()) {
+//            shareButton.setVisibility(View.VISIBLE);
+//        } else if (state.isClosed()) {
+//            shareButton.setVisibility(View.INVISIBLE);
+//        }
+    	
+    	if (pendingPublishReauthorization && state.equals(SessionState.OPENED_TOKEN_UPDATED)) 
+    	{
+    	    pendingPublishReauthorization = false;
+    	    postRoute();
+    	}
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) 
+    {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
+    }
+    
+    public void postRoute()
+    {
+    	 Session session = Session.getActiveSession();
+
+    	    if (session != null){
+
+    	        // Check for publish permissions    
+    	        List<String> permissions = session.getPermissions();
+    	        if (!isSubsetOf(PERMISSIONS, permissions))
+    	        {
+    	            pendingPublishReauthorization = true;
+    	            Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(this, PERMISSIONS);
+    	            session.requestNewPublishPermissions(newPermissionsRequest);
+    	            return;
+    	        }
+
+    	        Bundle postParams = new Bundle();
+    	        postParams.putString("name", "GoMotion Fitness App for Android");
+    	        postParams.putString("caption", "Cardio exercise completed");
+    	        postParams.putString("description", "John has just completed a run, view the route they ran here!");
+    	        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+
+    	        Request.Callback callback= new Request.Callback() {
+    	            public void onCompleted(Response response) {
+    	                JSONObject graphResponse = response
+    	                                           .getGraphObject()
+    	                                           .getInnerJSONObject();
+    	                String postId = null;
+    	                try {
+    	                    postId = graphResponse.getString("id");
+    	                } catch (JSONException e) {
+    	                    Log.i("Error",
+    	                        "JSON error "+ e.getMessage());
+    	                }
+    	                FacebookRequestError error = response.getError();
+    	                if (error != null) {
+    	                    Toast.makeText(ListCardioExercisesActivity.this,
+    	                         error.getErrorMessage(),
+    	                         Toast.LENGTH_SHORT).show();
+    	                    } else {
+    	                        Toast.makeText(ListCardioExercisesActivity.this, 
+    	                             postId,
+    	                             Toast.LENGTH_LONG).show();
+    	                }
+    	            }
+    	        };
+
+    	        Request request = new Request(session, "me/feed", postParams, 
+    	                              HttpMethod.POST, callback);
+
+    	        RequestAsyncTask task = new RequestAsyncTask(request);
+    	        task.execute();
+    	    }
+    }
+    
+    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+        for (String string : subset) {
+            if (!superset.contains(string)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 	public class CardioAdapter extends CursorAdapter
 	{

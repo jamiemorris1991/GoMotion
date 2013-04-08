@@ -1,6 +1,7 @@
 package com.gomotion;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.json.JSONException;
@@ -24,7 +25,6 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
 
 public class HomeScreen extends Activity 
 {
@@ -33,16 +33,17 @@ public class HomeScreen extends Activity
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
 	private boolean pendingPublishReauthorization = false;
-	
-	private boolean online;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
-		
-		getIntent().getBooleanExtra(Main.ONLINE_MODE, false);
+				
+		if (savedInstanceState != null)
+		{
+		    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+		}
     }
 
     @Override
@@ -152,6 +153,28 @@ public class HomeScreen extends Activity
     	startActivity(intent);
     }
     
+    private void onSessionStateChange(Session session, SessionState state)
+    {
+//        if (state.isOpened()) {
+//            shareButton.setVisibility(View.VISIBLE);
+//        } else if (state.isClosed()) {
+//            shareButton.setVisibility(View.INVISIBLE);
+//        }
+    	System.out.println("State changed: " + session.getState());
+    	if (pendingPublishReauthorization && state.equals(SessionState.OPENED_TOKEN_UPDATED)) 
+    	{
+    	    pendingPublishReauthorization = false;
+    	    testPost(null);
+    	}
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) 
+    {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
+    }
+    
     public void testPost(View view)
     {
     	 Session session = Session.getActiveSession();
@@ -160,22 +183,25 @@ public class HomeScreen extends Activity
 
     	        // Check for publish permissions    
     	        List<String> permissions = session.getPermissions();
-    	        if (!isSubsetOf(PERMISSIONS, permissions)) {
+    	        System.out.println(permissions);
+    	        if (!isSubsetOf(PERMISSIONS, permissions))
+    	        {
     	            pendingPublishReauthorization = true;
-    	            Session.NewPermissionsRequest newPermissionsRequest = new Session
-    	                    .NewPermissionsRequest(this, PERMISSIONS);
-    	        session.requestNewPublishPermissions(newPermissionsRequest);
+    	            Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(this, PERMISSIONS);
+    	            session.requestNewPublishPermissions(newPermissionsRequest);
+    	            System.out.println("New permissions requested");
     	            return;
     	        }
 
+	            System.out.println("Creating request.");
+
     	        Bundle postParams = new Bundle();
-    	        postParams.putString("name", "Facebook SDK for Android");
-    	        postParams.putString("caption", "Build great social apps and get more installs.");
-    	        postParams.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
-    	        postParams.putString("link", "https://developers.facebook.com/android");
+    	        postParams.putString("name", "GoMotion Fitness App for Android");
+    	        postParams.putString("caption", "Cardio exercise completed");
+    	        postParams.putString("description", "John has just completed a run, view the route they ran here!");
     	        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 
-    	        Request.Callback callback= new Request.Callback() {
+    	        Request.Callback callback = new Request.Callback() {
     	            public void onCompleted(Response response) {
     	                JSONObject graphResponse = response
     	                                           .getGraphObject()
@@ -184,18 +210,16 @@ public class HomeScreen extends Activity
     	                try {
     	                    postId = graphResponse.getString("id");
     	                } catch (JSONException e) {
-    	                    Log.i(TAG,
+    	                    Log.i("Error",
     	                        "JSON error "+ e.getMessage());
     	                }
     	                FacebookRequestError error = response.getError();
     	                if (error != null) {
-    	                    Toast.makeText(getActivity()
-    	                         .getApplicationContext(),
+    	                    Toast.makeText(HomeScreen.this,
     	                         error.getErrorMessage(),
     	                         Toast.LENGTH_SHORT).show();
     	                    } else {
-    	                        Toast.makeText(getActivity()
-    	                             .getApplicationContext(), 
+    	                        Toast.makeText(HomeScreen.this, 
     	                             postId,
     	                             Toast.LENGTH_LONG).show();
     	                }
@@ -207,6 +231,17 @@ public class HomeScreen extends Activity
 
     	        RequestAsyncTask task = new RequestAsyncTask(request);
     	        task.execute();
+	            System.out.println("Status posted.");
+
     	    }
+    }
+    
+    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+        for (String string : subset) {
+            if (!superset.contains(string)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
