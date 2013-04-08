@@ -33,7 +33,7 @@ public class RouteActivity extends Activity
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		String routeColour = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "3");
 		
-		int routeTransparency = Integer.valueOf( sharedPref.getString(SettingsActivity.ROUTE_TRANSPARENCY, "80") );
+		int routeTransparency = sharedPref.getInt(SettingsActivity.ROUTE_TRANSPARENCY, 80);
 		
 		System.out.println(routeColour);
 		

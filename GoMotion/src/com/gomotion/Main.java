@@ -15,6 +15,8 @@ import com.facebook.model.GraphUser;
 public class Main extends Activity
 {
 	static public User user;
+	
+	private Session.StatusCallback callback;
 			
 	/** To be called at the start of the app
 	 */
@@ -32,38 +34,41 @@ public class Main extends Activity
 
     public void loginFacebook(View view)
     {
-    	// start Facebook Login
-    	Session.openActiveSession(this, true, new Session.StatusCallback() {
+    	callback = new Session.StatusCallback() {
 
     		// callback when session changes state
-    		public void call(Session session, SessionState state, Exception exception) {
+    		public void call(final Session session, SessionState state, Exception exception) {
 
     			System.out.println("Call");
     			System.out.println(session.getState());
     			if(session.isClosed()) System.out.println("Session is closed");
-				
+
     			if (session.isOpened()) 
     			{
-					System.out.println("Session opened!");
-    				
+    				System.out.println("Session opened!");
+
     				// make request to the /me API
     				Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
-    					
+
     					// callback after Graph API response with user object
     					public void onCompleted(GraphUser user, Response response) {
     						if(user != null)
     						{
-    					    	Intent intent = new Intent(Main.this, HomeScreen.class);
-    					    	startActivity(intent);   
+    							session.removeCallback(callback);
+    							Intent intent = new Intent(Main.this, HomeScreen.class);
+    							startActivity(intent);   
     						}
     					}
-    					
     				});
     			}
     		}
-    	});	
+    	};
+
+
+    	// start Facebook Login
+    	Session.openActiveSession(this, true, callback);
     }    
-        
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {

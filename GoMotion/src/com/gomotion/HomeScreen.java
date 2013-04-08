@@ -33,16 +33,31 @@ public class HomeScreen extends Activity
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
 	private boolean pendingPublishReauthorization = false;
+	
+	private Session session;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
 				
-		if (savedInstanceState != null)
-		{
-		    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+		session = Session.getActiveSession();
+		
+		if(session != null)
+		{			
+			if (savedInstanceState != null)
+			{
+			    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+			}
+			
+			session.addCallback(new Session.StatusCallback() {
+
+				public void call(Session session, SessionState state, Exception exception) {
+	
+					onSessionStateChange(session, state, exception);
+				}				
+			});
 		}
     }
 
@@ -153,13 +168,8 @@ public class HomeScreen extends Activity
     	startActivity(intent);
     }
     
-    private void onSessionStateChange(Session session, SessionState state)
+    private void onSessionStateChange(Session session, SessionState state, Exception exception)
     {
-//        if (state.isOpened()) {
-//            shareButton.setVisibility(View.VISIBLE);
-//        } else if (state.isClosed()) {
-//            shareButton.setVisibility(View.INVISIBLE);
-//        }
     	System.out.println("State changed: " + session.getState());
     	if (pendingPublishReauthorization && state.equals(SessionState.OPENED_TOKEN_UPDATED)) 
     	{
@@ -177,19 +187,15 @@ public class HomeScreen extends Activity
     
     public void testPost(View view)
     {
-    	 Session session = Session.getActiveSession();
-
     	    if (session != null){
 
     	        // Check for publish permissions    
     	        List<String> permissions = session.getPermissions();
-    	        System.out.println(permissions);
     	        if (!isSubsetOf(PERMISSIONS, permissions))
     	        {
     	            pendingPublishReauthorization = true;
     	            Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(this, PERMISSIONS);
     	            session.requestNewPublishPermissions(newPermissionsRequest);
-    	            System.out.println("New permissions requested");
     	            return;
     	        }
 
@@ -220,7 +226,7 @@ public class HomeScreen extends Activity
     	                         Toast.LENGTH_SHORT).show();
     	                    } else {
     	                        Toast.makeText(HomeScreen.this, 
-    	                             postId,
+    	                             "Post successful",
     	                             Toast.LENGTH_LONG).show();
     	                }
     	            }
@@ -232,7 +238,6 @@ public class HomeScreen extends Activity
     	        RequestAsyncTask task = new RequestAsyncTask(request);
     	        task.execute();
 	            System.out.println("Status posted.");
-
     	    }
     }
     
@@ -243,5 +248,12 @@ public class HomeScreen extends Activity
             }
         }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 }

@@ -13,7 +13,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 {
 	public static final String UNITS = "units";
 	public static final String ROUTE_COLOUR = "route_colour";
-	public static final String ROUTE_TRANSPARENCY = "route_transparency";
+	public static final String ROUTE_TRANSPARENCY = "transparency";
 	public static final String ACCURACY = "accuracy";
 	public static final String BODY_WEIGHT_VALUES = "body_weight_values";
 
