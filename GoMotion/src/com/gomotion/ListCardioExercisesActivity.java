@@ -207,7 +207,7 @@ public class ListCardioExercisesActivity extends ListActivity
 					}
 				});
 	            	            
-	            String descriptionTemplate = "%s has just completed a %s, view the route they travelled here!";
+	            String descriptionTemplate = "%s has just %s %d miles/km in %d hours/mins, view the route they travelled here!";
 	            String description = String.format(descriptionTemplate, name, formatExerciseType(exercise.getType().toString()));
 	            
     	        Bundle postParams = new Bundle();

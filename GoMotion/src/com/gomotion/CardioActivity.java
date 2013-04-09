@@ -349,41 +349,54 @@ public class CardioActivity extends Activity
 	}
 
 	public void finishExercise(View view)
-	{
-		CardioExercise exercise = new CardioExercise();
-
-		exercise.setTimeStamp(timestamp);
-		exercise.setTimeLength(time);
-		exercise.setDistance((int) Math.round(distance));
-		exercise.setType(CardioType.RUN);
-		exercise.setWaypoints(waypoints);
-
-		OfflineDatabase db = new OfflineDatabase(this);
-		
-		final int cid = db.addCardioExercise(exercise);
-		db.addWaypoints(cid, waypoints);
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("GoMotion")
-			.setTitle("Finished")
-			.setMessage("Well done, you have completed this exercise!")
-			.setCancelable(false)
-			.setPositiveButton("View route", new DialogInterface.OnClickListener() {
+	{		
+		// Confirm user has finished exercise
+		AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(this);
+		confirmBuilder.setTitle("GoMotion")
+			.setTitle("Warning")
+			.setMessage("Are you sure you have finished this exercise and do not wish to continue? (any further progress will be lost)")
+			.setCancelable(true)
+			.setPositiveButton("Finish exercise", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					
-					Intent intent = new Intent(CardioActivity.this, RouteActivity.class);
-					intent.putExtra(ListCardioExercisesActivity.EXERCISE_ID, cid);
-	
-					startActivity(intent);
-				}
-			})
-			.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
+					CardioExercise exercise = new CardioExercise();
+
+					exercise.setTimeStamp(timestamp);
+					exercise.setTimeLength(time);
+					exercise.setDistance((int) Math.round(distance));
+					exercise.setType(type);
+					exercise.setWaypoints(waypoints);
+
+					OfflineDatabase db = new OfflineDatabase(CardioActivity.this);
+					
+					final int cid = db.addCardioExercise(exercise);
+					db.addWaypoints(cid, waypoints);
+					
+					
+					AlertDialog.Builder builder = new AlertDialog.Builder(CardioActivity.this);
+					builder.setTitle("GoMotion")
+						.setTitle("Finished")
+						.setMessage("Well done, you have completed this exercise!")
+						.setCancelable(false)
+						.setPositiveButton("View route", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								
+								finish();
+								Intent intent = new Intent(CardioActivity.this, RouteActivity.class);
+								intent.putExtra(ListCardioExercisesActivity.EXERCISE_ID, cid);
+				
+								startActivity(intent);
+							}
+						})
+						.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						})
+						.show();
 				}
 			})
 			.show();
-
 	}
 
 	@Override
@@ -397,13 +410,12 @@ public class CardioActivity extends Activity
 		new AlertDialog.Builder(this)
 		.setTitle("Warning")
 		.setMessage("Are you sure you wish to exit?\n\nCurrent progress will be lost.")
-		.setCancelable(false)
+		.setCancelable(true)
 		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				finish();
 			}
 		})
-		.setNegativeButton("No", null)
 		.show();		
 	}
 
