@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:text="Get up and goMotion" />
+        android:text="Get up and GoMotion" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -59,11 +59,11 @@
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/imageView2"
         android:background="@color/goBlue"
-        android:onClick="doHomeScreen"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         android:text="Offline Mode"
-        android:textColor="@color/buttonsText" />
+        android:textColor="@color/buttonsText"
+        android:onClick="offlineMode" />
 
     <Button
         android:id="@+id/btnFb"

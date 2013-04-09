@@ -5,7 +5,7 @@ public class Waypoint
 	private double longitude;
 	private double latitude;
 	
-	public Waypoint(double longitude, double latitude)
+	public Waypoint(double latitude, double longitude)
 	{
 		this.longitude = longitude;
 		this.latitude = latitude;

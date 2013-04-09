@@ -1,5 +1,9 @@
 package com.gomotion;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,16 +12,6 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.facebook.FacebookRequestError;
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.RequestAsyncTask;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
-import com.gomotion.R;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -36,6 +30,15 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 
 
 public class ListCardioExercisesActivity extends ListActivity 
@@ -181,20 +184,6 @@ public class ListCardioExercisesActivity extends ListActivity
     	            return;
     	        }
 
-	            System.out.println("Creating request.");
-	            
-	            OfflineDatabase db = new OfflineDatabase(this);
-	            CardioExercise exercise = db.getCardioExercise(postItem);
-	            Cursor waypoints = db.getWaypoints(exercise.getID());
-	            
-	            // Build URL for Google Maps
-	            
-	            while(waypoints.moveToNext())
-	            {
-	            	
-	            }
-	            
-	            
 				// make request to the /me API
 				Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
 
@@ -203,50 +192,96 @@ public class ListCardioExercisesActivity extends ListActivity
 						if(user != null)
 						{
 							name = user.getFirstName();
+
+				            System.out.println("Creating request.");
+				            
+				            OfflineDatabase db = new OfflineDatabase(ListCardioExercisesActivity.this);
+				            CardioExercise exercise = db.getCardioExercise(postItem);
+				            Cursor waypoints = db.getWaypoints(exercise.getID());
+				            
+				            // Build URL for Google Maps
+				            StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
+				            String size = "size=500x500";
+				            params.append(size);
+				            
+				            waypoints.moveToFirst();
+				            Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
+				            waypoints.moveToLast();
+				            Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
+				            waypoints.moveToFirst();
+				            
+				            String startMarker = String.format("&markers=color:green|label:S|%f,%f", first.getLatitude(), first.getLongitude());
+				            String endMarker = String.format("&markers=color:red|label:F|%f,%f", last.getLatitude(), last.getLongitude());
+				            params.append(startMarker);
+				            params.append(endMarker);
+				            params.append("&sensor=false");
+				            				            				            
+			        		/*do {
+			        		        			
+			        			
+			        		} while(waypoints.moveToNext());*/
+				            				            
+				            				
+							String typeVerb = "";
+							
+							switch(exercise.getType())
+							{
+								case WALK:
+									typeVerb = "walked";
+									break;
+								case RUN:
+									typeVerb = "ran";
+									break;
+								case CYCLE:
+									typeVerb = "cycled";
+									break;
+							}
+							
+							/**
+							 * MUST ACCOUNT FOR HOURS AND IMPERIAL UNITS ALSO
+							 * DON'T FORGET!
+							 *  **/
+							double distance = ((double) exercise.getDistance()) / 1000; // kilometres				
+							int timeLength = exercise.getTimeLength();
+							int mins = timeLength / 60;
+							int secs = timeLength % 60;
+				            	            
+				            String descriptionTemplate = "%s has just %s %.2f km in %d:%d, view the route they travelled here!";
+				            String description = String.format(descriptionTemplate, name, typeVerb, distance, mins, secs);
+
+			    	        final Bundle postParams = new Bundle();
+			    	        postParams.putString("name", "GoMotion Fitness App for Android");
+			    	        postParams.putString("caption", "Cardio exercise completed");
+			    	        postParams.putString("description", description);
+			    	        postParams.putString("link", params.toString());
+			    	        postParams.putString("picture", params.toString());
+							
+							Request.Callback callback = new Request.Callback() {
+			    	            public void onCompleted(Response response) {
+
+			    	                FacebookRequestError error = response.getError();
+			    	                if (error != null) {
+			    	                    Toast.makeText(ListCardioExercisesActivity.this,
+			    	                         error.getErrorMessage(),
+			    	                         Toast.LENGTH_SHORT).show();
+			    	                    } else {
+			    	                        Toast.makeText(ListCardioExercisesActivity.this, 
+			    	                             "Post successful",
+			    	                             Toast.LENGTH_LONG).show();
+			    	                }
+			    	            }
+			    	        };
+
+			    	        Request request = new Request(session, "me/feed", postParams, 
+			    	                              HttpMethod.POST, callback);
+
+			    	        final RequestAsyncTask task = new RequestAsyncTask(request);
+			    	        task.execute();
 						}
 					}
 				});
-	            	            
-	            String descriptionTemplate = "%s has just %s %d miles/km in %d hours/mins, view the route they travelled here!";
-	            String description = String.format(descriptionTemplate, name, formatExerciseType(exercise.getType().toString()));
-	            
-    	        Bundle postParams = new Bundle();
-    	        postParams.putString("name", "GoMotion Fitness App for Android");
-    	        postParams.putString("caption", "Cardio exercise completed");
-    	        postParams.putString("description", description);
-    	        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 
-    	        Request.Callback callback = new Request.Callback() {
-    	            public void onCompleted(Response response) {
-    	                JSONObject graphResponse = response
-    	                                           .getGraphObject()
-    	                                           .getInnerJSONObject();
-    	                String postId = null;
-    	                try {
-    	                    postId = graphResponse.getString("id");
-    	                } catch (JSONException e) {
-    	                    Log.i("Error",
-    	                        "JSON error "+ e.getMessage());
-    	                }
-    	                FacebookRequestError error = response.getError();
-    	                if (error != null) {
-    	                    Toast.makeText(ListCardioExercisesActivity.this,
-    	                         error.getErrorMessage(),
-    	                         Toast.LENGTH_SHORT).show();
-    	                    } else {
-    	                        Toast.makeText(ListCardioExercisesActivity.this, 
-    	                             "Post successful",
-    	                             Toast.LENGTH_LONG).show();
-    	                }
-    	            }
-    	        };
-
-    	        Request request = new Request(session, "me/feed", postParams, 
-    	                              HttpMethod.POST, callback);
-
-    	        RequestAsyncTask task = new RequestAsyncTask(request);
-    	        task.execute();
-	            System.out.println("Status posted.");
+				System.out.println("Status posted.");
     	    }
     }
     
@@ -308,7 +343,8 @@ public class ListCardioExercisesActivity extends ListActivity
 			TextView completed = (TextView) view.getTag(R.id.cardio_completed);
 			completed.setText("Completed: " +  date);
 
-			String distance = cursor.getString(2);
+			double dist = Double.valueOf(cursor.getString(2));
+			String distStr = String.format("%.2f", dist / 1000);
 			String timeStr = cursor.getString(3);
 			
 			int time = Integer.valueOf(timeStr);
@@ -320,7 +356,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			if(hours == 0) timeFormatted = String.format("%02d:%02d", mins, secs).toString();
 			else timeFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
 			
-			double miles = Double.valueOf(distance) * 0.000621371192;
+			double miles = dist * 0.000621371192;
 			double pace = ((double) time) / miles;						
 			int paceMins = (int) (pace / 60);
 			int paceSecs = (int) (pace % 60);
@@ -328,7 +364,7 @@ public class ListCardioExercisesActivity extends ListActivity
 
 
 			TextView stats = (TextView) view.getTag(R.id.cardio_stats);
-			stats.setText("Distance: " + distance + "m Time: " + timeFormatted + " Pace: " + paceString + " min/mile");	
+			stats.setText("Distance: " + distStr + " km Time: " + timeFormatted + " Pace: " + paceString + " min/mile");	
 		}
 	}
 }

@@ -69,7 +69,7 @@ public class Main extends Activity
     public void offlineMode(View view)
     {
     	Session session = Session.getActiveSession();
-    	if(session.isOpened()) session.closeAndClearTokenInformation();
+    	if(session != null && session.isOpened()) session.closeAndClearTokenInformation();
     	
     	Intent intent = new Intent(this, HomeScreen.class);
     	startActivity(intent);
