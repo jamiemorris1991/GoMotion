@@ -1,15 +1,18 @@
 package com.gomotion;
 
-import com.gomotion.R;
 import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,7 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PushUpsActivity extends Activity
+public class SitUpsActivity extends Activity
 {
 	private int countdown;
 	private int restTime;
@@ -33,16 +36,22 @@ public class PushUpsActivity extends Activity
 	private int initialSetCount;
 	private int initialRepCount;
 	
-	//private LinkedList<Integer> setValues = new LinkedList<Integer>();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_push_ups);
-     	getActionBar().setDisplayHomeAsUpEnabled(true);	
-        
-        Intent intent = getIntent();
+	private SensorManager sensorManager;
+	private Sensor sensor;
+	private SensorEventListener listener;
+	
+	private boolean down;
+	private boolean up;
+	private boolean waiting;
+		
+	@Override
+	protected void onCreate(Bundle savedInstanceState) 
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_sit_ups);
+		setupActionBar();
+		
+		 Intent intent = getIntent();
         initialSetCount = intent.getIntExtra(BodyWeightSettingsDialogFragment.SET_CHOICE, 1);
         initialRepCount = intent.getIntExtra(BodyWeightSettingsDialogFragment.REP_CHOICE, 1);
         restTime = intent.getIntExtra(BodyWeightSettingsDialogFragment.REST_TIME, 10000) * 1000; // convert seconds to milliseconds
@@ -50,35 +59,75 @@ public class PushUpsActivity extends Activity
         setCount = initialSetCount;
         repCount = initialRepCount;
         
-        setView = (TextView) findViewById(R.id.set_count);
-        repButton = (Button) findViewById(R.id.rep_button);
+        setView = (TextView) findViewById(R.id.sit_set_count);
+        repButton = (Button) findViewById(R.id.sit_rep_button);
         
-        stopWatch = (ImageView) findViewById(R.id.imgStopwatch);
+        stopWatch = (ImageView) findViewById(R.id.sit_imgStopwatch);
         
         setView.setText(String.valueOf(setCount));
         
-        exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.PUSHUPS);
+        exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.SITUPS);
         exercise.setTimeStamp(System.currentTimeMillis());
-    }
-    
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				confirmExit();
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
+		
+		down = false;
+		up = false;
+						
+		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		
+		listener = new SensorEventListener() {
+
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {				
+			}
+
+			public void onSensorChanged(SensorEvent event)
+			{
+				//System.out.println(event.values[0]);
+				if(!waiting)
+				{
+					if(!down && event.values[0] < -8)
+					{
+						down = true;
+						System.out.println("down");
+					}
+					else if(down && !up && event.values[0] > -2)
+					{
+						up = true;
+						System.out.println("up");
+					}
+					
+					if(up && down)
+					{
+						System.out.println("Full sit up");
+						doRep();
+						down = up = false;
+					}
+				}
+			}			
+		};
+		
+		sensorManager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_GAME);
 	}
-    
-    public void doRep(final View view)
-    {
+
+	private void setupActionBar() 
+	{
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	@Override
+	protected void onDestroy() {
+		sensorManager.unregisterListener(listener);
+		
+		super.onDestroy();
+	}
+	
+	private void doRep()
+	{
     	if(repCount > 1)
     	{
 	    	repCount--;
         	repButton.setText(String.valueOf(repCount) + "/" + String.valueOf(initialRepCount));
-        	view.setBackgroundColor(getResources().getColor(R.color.goBlue));
+        	//view.setBackgroundColor(getResources().getColor(R.color.goBlue));
     	}
     	else if(setCount == 1 && repCount == 1) // finished
     	{
@@ -86,6 +135,7 @@ public class PushUpsActivity extends Activity
     	}
     	else // finish set
     	{
+    		waiting = true;
         	setCount--;
         	repCount = initialRepCount;
         	
@@ -97,7 +147,7 @@ public class PushUpsActivity extends Activity
             stopWatch.startAnimation(in);
             stopWatch.setVisibility(View.VISIBLE);
         	
-        	view.setBackgroundColor(getResources().getColor(R.color.timerBackground));
+        	//view.setBackgroundColor(getResources().getColor(R.color.timerBackground));
         	
         	setView.setText(String.valueOf(setCount));
     		
@@ -125,15 +175,16 @@ public class PushUpsActivity extends Activity
 				{
 		        	repButton.setClickable(true);
 		        	repButton.startAnimation(in);
-		        	repButton.setText("Tap to start!");
-		        	view.setBackgroundColor(getResources().getColor(R.color.goBlue));
+		        	repButton.setText("Keep going!");
+		        	waiting = false;
+		        	//view.setBackgroundColor(getResources().getColor(R.color.goBlue));
 				}   			
     		};
     		
     		timer.start();
     	}	
-    }
-    
+	}
+	
 	@Override
 	public void onBackPressed() 
 	{

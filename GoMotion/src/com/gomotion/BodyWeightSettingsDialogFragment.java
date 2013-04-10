@@ -22,7 +22,7 @@ import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 public class BodyWeightSettingsDialogFragment extends DialogFragment
 {
-	private BodyWeightType type;
+	private int type;
 	public final static String SET_CHOICE = "com.gomotion.SET_CHOICE";
 	public final static String REP_CHOICE = "com.gomotion.REP_CHOICE";
 	public final static String REST_TIME = "com.gomotion.REST_TIME";
@@ -33,18 +33,14 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	
 	private Intent intent;
 
-	
-	public BodyWeightSettingsDialogFragment()
-	{
-		this.type = BodyWeightType.PUSHUPS;
-	}
-
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		final LayoutInflater inflater = getActivity().getLayoutInflater();
 		final View v = inflater.inflate(R.layout.dialog_body_weight_settings, null);
+		
+		type = getArguments().getInt(HomeScreen.BODY_WEIGHT_TYPE);
 		
 		setSpinner = (Spinner) v.findViewById(R.id.set_spinner);
 		repSpinner = (Spinner) v.findViewById(R.id.rep_spinner);
@@ -86,8 +82,11 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 		
 		switch(type)
 		{
-			case PUSHUPS: 
+			case 1: 
 				intent = new Intent(getActivity(), PushUpsActivity.class);
+				break;
+			case 2:
+				intent = new Intent(getActivity(), SitUpsActivity.class);
 				break;
 		}
 		

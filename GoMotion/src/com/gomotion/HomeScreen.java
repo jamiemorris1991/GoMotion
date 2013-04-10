@@ -25,6 +25,7 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 public class HomeScreen extends Activity 
 {
@@ -33,6 +34,8 @@ public class HomeScreen extends Activity
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
 	private boolean pendingPublishReauthorization = false;
+	
+	public static final String BODY_WEIGHT_TYPE = "com.gomotion.BODY_WEIGHT_TYPE";
 	
 	private Session session;
 
@@ -125,6 +128,9 @@ public class HomeScreen extends Activity
     				case 0:
     					doPushUps();
     					break;
+    				case 1:
+    					doSitUps();
+    					break;
     				case 4:
     					listBodyWeightExercises();
     					break;
@@ -138,8 +144,24 @@ public class HomeScreen extends Activity
     public void doPushUps()
     {
     	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
-    	dialog.show(getFragmentManager(), "pushups_dialog");
+    	
+    	Bundle bundle = new Bundle();
+    	bundle.putInt(BODY_WEIGHT_TYPE, 1);
+    	dialog.setArguments(bundle);
+    	
+    	dialog.show(getFragmentManager(), "push_ups_dialog");
 
+    }
+    
+    public void doSitUps()
+    {
+    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
+    	    	
+    	Bundle bundle = new Bundle();
+    	bundle.putInt(BODY_WEIGHT_TYPE, 2);
+    	dialog.setArguments(bundle);    	
+    	
+    	dialog.show(getFragmentManager(), "sit_ups_dialog");
     }
     
     public void doCardio(int type)
