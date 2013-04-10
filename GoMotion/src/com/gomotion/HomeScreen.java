@@ -1,9 +1,8 @@
 package com.gomotion;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.LinkedList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
@@ -24,18 +22,14 @@ import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionState;
-import com.gomotion.BodyWeightExercise.BodyWeightType;
+import com.facebook.model.GraphUser;
 
 public class HomeScreen extends Activity 
 {
-	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";
-	
-	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
-	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
-	private boolean pendingPublishReauthorization = false;
-	
+	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";	
 	public static final String BODY_WEIGHT_TYPE = "com.gomotion.BODY_WEIGHT_TYPE";
+	
+	private LinkedList<String> idList;
 	
 	private Session session;
 
@@ -48,18 +42,56 @@ public class HomeScreen extends Activity
 		session = Session.getActiveSession();
 		
 		if(session != null)
-		{			
-			if (savedInstanceState != null)
-			{
-			    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
-			}
+		{					
+			idList = new LinkedList<String>();
 			
-			session.addCallback(new Session.StatusCallback() {
+			// make request to the /me API
+			Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
 
-				public void call(Session session, SessionState state, Exception exception) {
-	
-					onSessionStateChange(session, state, exception);
-				}				
+				// callback after Graph API response with user object
+				public void onCompleted(GraphUser user, Response response) {
+					if(user != null)
+					{
+						final Bundle postParams = new Bundle();
+						
+						postParams.putString("fields", "installed");
+
+						Request.Callback callback = new Request.Callback() {
+							public void onCompleted(Response response) {
+
+								JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
+								String postId = null;
+								try {
+									JSONArray jsonList = graphResponse.getJSONArray("data");
+									
+									for(int i = 0; i < jsonList.length(); i++)
+									{
+										String id = jsonList.getJSONObject(i).getString("id");
+										idList.add(id);
+									}
+									
+									System.out.println(idList);
+
+								} catch (JSONException e) {
+									Log.i("JSON Error",
+											"JSON error "+ e.getMessage());
+								}		    	            	
+								FacebookRequestError error = response.getError();
+								if (error != null) {
+									System.out.println(error.getErrorMessage());
+								} else {
+									System.out.println("Friend IDs retrieved successfully");
+								}
+							}
+						};
+
+		    	        Request request = new Request(session, "me/friends", postParams, 
+		    	                              HttpMethod.GET, callback);
+
+		    	        final RequestAsyncTask task = new RequestAsyncTask(request);
+		    	        task.execute();
+					}
+				}
 			});
 		}
     }
@@ -190,92 +222,9 @@ public class HomeScreen extends Activity
     	startActivity(intent);
     }
     
-    private void onSessionStateChange(Session session, SessionState state, Exception exception)
-    {
-    	System.out.println("State changed: " + session.getState());
-    	if (pendingPublishReauthorization && state.equals(SessionState.OPENED_TOKEN_UPDATED)) 
-    	{
-    	    pendingPublishReauthorization = false;
-    	    testPost(null);
-    	}
-    }
-    
     @Override
     public void onSaveInstanceState(Bundle outState) 
     {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
-    }
-    
-    public void testPost(View view)
-    {
-    	    if (session != null){
-
-    	        // Check for publish permissions    
-    	        List<String> permissions = session.getPermissions();
-    	        if (!isSubsetOf(PERMISSIONS, permissions))
-    	        {
-    	            pendingPublishReauthorization = true;
-    	            Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(this, PERMISSIONS);
-    	            session.requestNewPublishPermissions(newPermissionsRequest);
-    	            return;
-    	        }
-
-	            System.out.println("Creating request.");
-
-    	        Bundle postParams = new Bundle();
-    	        postParams.putString("name", "GoMotion Fitness App for Android");
-    	        postParams.putString("caption", "Cardio exercise completed");
-    	        postParams.putString("description", "John has just completed a run, view the route they ran here!");
-    	        postParams.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
-
-    	        Request.Callback callback = new Request.Callback() {
-    	            public void onCompleted(Response response) {
-    	                JSONObject graphResponse = response
-    	                                           .getGraphObject()
-    	                                           .getInnerJSONObject();
-    	                String postId = null;
-    	                try {
-    	                    postId = graphResponse.getString("id");
-    	                } catch (JSONException e) {
-    	                    Log.i("Error",
-    	                        "JSON error "+ e.getMessage());
-    	                }
-    	                FacebookRequestError error = response.getError();
-    	                if (error != null) {
-    	                    Toast.makeText(HomeScreen.this,
-    	                         error.getErrorMessage(),
-    	                         Toast.LENGTH_SHORT).show();
-    	                    } else {
-    	                        Toast.makeText(HomeScreen.this, 
-    	                             "Post successful",
-    	                             Toast.LENGTH_LONG).show();
-    	                }
-    	            }
-    	        };
-
-    	        Request request = new Request(session, "me/feed", postParams, 
-    	                              HttpMethod.POST, callback);
-
-    	        RequestAsyncTask task = new RequestAsyncTask(request);
-    	        task.execute();
-	            System.out.println("Status posted.");
-    	    }
-    }
-    
-    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
-        for (String string : subset) {
-            if (!superset.contains(string)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-    	super.onActivityResult(requestCode, resultCode, data);
-    	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 }
