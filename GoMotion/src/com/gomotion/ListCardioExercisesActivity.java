@@ -18,8 +18,11 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,17 +197,26 @@ public class ListCardioExercisesActivity extends ListActivity
 							name = user.getFirstName();
 
 				            System.out.println("Creating request.");
-				            
-				            OfflineDatabase db = new OfflineDatabase(ListCardioExercisesActivity.this);
-				            CardioExercise exercise = db.getCardioExercise(postItem);
-				            Cursor waypoints = db.getWaypoints(exercise.getID());
-				            
+				            				            
 				            // Build URL for Google Maps
 				            StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
 				            String size = "size=500x500";
 				            params.append(size);
 				            
+				            OfflineDatabase db = new OfflineDatabase(ListCardioExercisesActivity.this);
+				            CardioExercise exercise = db.getCardioExercise(postItem);
+				            Cursor waypoints = db.getWaypoints(exercise.getID());
+				            
+				            waypoints.moveToPosition(waypoints.getCount() / 2);
+				            
+				            // Must center and zoom map until markers can be used
+				            params.append("&zoom=15");
+				            params.append("&center=" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
+				            
 				            waypoints.moveToFirst();
+				            
+				            // Can't use multiple markers as Facebook removes parameters with the same name
+				            /* waypoints.moveToFirst();
 				            Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
 				            waypoints.moveToLast();
 				            Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
@@ -213,14 +225,39 @@ public class ListCardioExercisesActivity extends ListActivity
 				            String startMarker = String.format("&markers=color:green|label:S|%f,%f", first.getLatitude(), first.getLongitude());
 				            String endMarker = String.format("&markers=color:red|label:F|%f,%f", last.getLatitude(), last.getLongitude());
 				            params.append(startMarker);
-				            params.append(endMarker);
-				            params.append("&sensor=false");
-				            				            				            
-			        		/*do {
-			        		        			
+				            params.append(endMarker);*/
+				            
+				            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
+				           
+				            String colour = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "3");
+				            
+				    		int routeTransparency = (int) (255 * ((double) sharedPref.getInt(SettingsActivity.ROUTE_TRANSPARENCY, 80) / 100));
+				    		String transparency = Integer.toHexString(routeTransparency);
+				    						    		
+				    		switch(Integer.valueOf(colour))
+				    		{
+				    			case 1:
+				    				colour = "0xff0000";
+				    				break;
+				    			case 2:
+				    				colour = "0x00ff00";
+				    				break;
+				    			case 3:
+				    				colour = "0x0000ff";
+				    				break;
+				    		}
+				            
+				            String pathSettings = "&path=color:" + colour + transparency + "|weight:5";
+				            params.append(pathSettings);
+				            
+				            int n = 0;
+			        		do {
+			        			n++;
+			        			if(n % 6 == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
 			        			
-			        		} while(waypoints.moveToNext());*/
-				            				            
+			        		} while(waypoints.moveToNext());
+			        		
+				            params.append("&sensor=false");
 				            				
 							String typeVerb = "";
 							
