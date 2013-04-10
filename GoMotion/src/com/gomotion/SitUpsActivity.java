@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -112,6 +113,17 @@ public class SitUpsActivity extends Activity
 	private void setupActionBar() 
 	{
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				confirmExit();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
