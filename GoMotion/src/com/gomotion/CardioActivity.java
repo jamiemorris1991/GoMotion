@@ -188,7 +188,7 @@ public class CardioActivity extends Activity
 
 						double miles = distance * 0.000621371192;
 
-						pace = ((double) time) / miles;						
+						pace = time / miles;						
 						int mins = (int) (pace / 60);
 						int secs = (int) (pace % 60);
 
@@ -276,6 +276,7 @@ public class CardioActivity extends Activity
 		signalAlert.setCancelable(false);
 
 		signalLost = new Handler() {
+			@Override
 			public void handleMessage(Message msg)
 			{
 				if(gpsSettings && !signal) signalAlert.show(getFragmentManager(), "signal dialog");
@@ -283,6 +284,7 @@ public class CardioActivity extends Activity
 		};
 
 		signalFound = new Handler() {
+			@Override
 			public void handleMessage(Message msg)
 			{
 				if(signal) signalAlert.dismiss();

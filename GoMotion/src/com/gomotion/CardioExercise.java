@@ -3,8 +3,6 @@ import java.util.*;
 import android.location.Location;
 import java.sql.*;
 
-import com.gomotion.BodyWeightExercise.BodyWeightType;
-
 //Class to store running/walking/cycling sessions
 public class CardioExercise extends Exercise
 {

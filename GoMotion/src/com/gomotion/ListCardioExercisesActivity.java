@@ -1,17 +1,10 @@
 package com.gomotion;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -20,11 +13,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +42,8 @@ public class ListCardioExercisesActivity extends ListActivity
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
 	private static final String POST_ITEM = "postItem";
+
+	protected static final int THESHOLD_ACCURACY = 20;
 	
 	private boolean pendingPublishReauthorization = false;
 	private int postItem;
@@ -138,15 +131,15 @@ public class ListCardioExercisesActivity extends ListActivity
 						intent.putExtra(EXERCISE_ID, cid);
 						startActivity(intent);
 					}
-					else if(item == 1 && !online || item == 2) 
-					{
-						db.deleteCardioExercise(cid);
-						adapter.changeCursor(db.getAllCardioExercises());
-					}
 					else if(item == 1 && online)
 					{
 						postItem = cid;
 						postRoute();
+					}
+					else if((item == 1 && !online) || item == 2) 
+					{
+						db.deleteCardioExercise(cid);
+						adapter.changeCursor(db.getAllCardioExercises());
 					}
 				}
 			});
@@ -251,9 +244,10 @@ public class ListCardioExercisesActivity extends ListActivity
 				            params.append(pathSettings);
 				            
 				            int n = 0;
+				            int threshold = (int) Math.ceil((waypoints.getCount() / THESHOLD_ACCURACY));
 			        		do {
 			        			n++;
-			        			if(n % 6 == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
+			        			if(n % threshold == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
 			        			
 			        		} while(waypoints.moveToNext());
 			        		
@@ -394,7 +388,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			else timeFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
 			
 			double miles = dist * 0.000621371192;
-			double pace = ((double) time) / miles;						
+			double pace = time / miles;						
 			int paceMins = (int) (pace / 60);
 			int paceSecs = (int) (pace % 60);
 			String paceString = String.format("%02d:%02d", paceMins, paceSecs);

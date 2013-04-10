@@ -2,14 +2,26 @@ package com.gomotion;
 
 import java.text.SimpleDateFormat;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 import com.gomotion.R;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -20,12 +32,24 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ListBodyWeightExercisesActivity extends ListActivity 
 {
 	private OfflineDatabase db;
 	private BodyWeightAdapter adapter;
+	
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+	private static final String POST_ITEM = "postItem";
+	
+	private boolean pendingPublishReauthorization = false;
+	private int postItem;
+	private String name;
+	private boolean online = false;
+	
+	private Session session;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -33,6 +57,25 @@ public class ListBodyWeightExercisesActivity extends ListActivity
 		super.onCreate(savedInstanceState);        
 		setContentView(R.layout.activity_list_body_weight_exercises);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		session = Session.getActiveSession();
+		
+		if(session != null)
+		{			
+			if (savedInstanceState != null)
+			{
+				postItem = savedInstanceState.getInt(POST_ITEM);
+			    pendingPublishReauthorization = savedInstanceState.getBoolean(PENDING_PUBLISH_KEY, false);
+			}
+			
+			session.addCallback(new Session.StatusCallback() {
+
+				public void call(Session session, SessionState state, Exception exception) {
+	
+					onSessionStateChange(session, state, exception);
+				}				
+			});
+		}
 
 		db = new OfflineDatabase(this);
 		Cursor exercises = db.getAllBodyWeightExercises();
@@ -52,18 +95,37 @@ public class ListBodyWeightExercisesActivity extends ListActivity
 	}
 
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, final long id)
+	protected void onListItemClick(ListView l, View v, int position, long id)
 	{		
-		String items[] = {"Delete"};
+		final int bwid = (int) id;
+		String[] items = null;
+
+		if(session != null && session.isOpened())
+		{
+			online = true;
+			String[] temp = {"Share exercise", "Delete"};
+			items = temp;
+		} 
+		else 
+		{
+			String[] temp = {"Delete"};
+			items = temp;
+
+		}		
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Options")
 			.setItems(items, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					if(item == 0) 
+					if((!online && item == 0) || item == 1) 
 					{
-						db.deleteBodyWeightExercise((int) id);
+						db.deleteBodyWeightExercise(bwid);
 						adapter.changeCursor(db.getAllBodyWeightExercises());
+					}
+					else if(online && item == 0)
+					{
+						postItem = bwid;
+						postExercise();
 					}
 				}
 			});
@@ -71,6 +133,136 @@ public class ListBodyWeightExercisesActivity extends ListActivity
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
+	
+    private void onSessionStateChange(Session session, SessionState state, Exception exception)
+    {
+    	System.out.println("State changed: " + session.getState());
+    	if (pendingPublishReauthorization && state.equals(SessionState.OPENED_TOKEN_UPDATED)) 
+    	{
+    	    pendingPublishReauthorization = false;
+    	    postExercise();
+    	}
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) 
+    {
+        super.onSaveInstanceState(outState);
+        outState.putInt(POST_ITEM, postItem);
+        outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
+    }
+    
+    public void postExercise()
+    {
+    	    if (session != null){
+
+    	        // Check for publish permissions    
+    	        List<String> permissions = session.getPermissions();
+    	        if (!isSubsetOf(PERMISSIONS, permissions))
+    	        {
+    	            pendingPublishReauthorization = true;
+    	            Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(this, PERMISSIONS);
+    	            session.requestNewPublishPermissions(newPermissionsRequest);
+    	            return;
+    	        }
+
+				// make request to the /me API
+				Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+
+					// callback after Graph API response with user object
+					public void onCompleted(GraphUser user, Response response) {
+						if(user != null)
+						{
+							name = user.getFirstName();
+
+				            System.out.println("Creating request.");
+				            
+				            OfflineDatabase db = new OfflineDatabase(ListBodyWeightExercisesActivity.this);
+				            BodyWeightExercise exercise = db.getBodyWeightExercise(postItem);	  
+				            
+				            int setCount = exercise.getSets();
+				            int repCount = exercise.getReps();
+				            
+				            String exerciseType = "";
+				            
+				            switch(exercise.getType())
+				            {
+				            	case PUSHUPS:
+				            		exerciseType = "push ups";
+				            		break;
+				            	case SITUPS:
+				            		exerciseType = "sit ups";
+				            		break;
+				            	case DIPS:
+				            		exerciseType = "dips";
+				            		break;
+				            }
+				            
+				            String descriptionTemplate = "%s has just completed %d sets of %d %s!";
+				            String description = String.format(descriptionTemplate, name, setCount, repCount, exerciseType);
+
+			    	        final Bundle postParams = new Bundle();
+			    	        postParams.putString("name", "GoMotion Fitness App for Android");
+			    	        postParams.putString("caption", "Body weight exercise completed");
+			    	        postParams.putString("description", description);
+			    	        postParams.putString("picture", "i.imgur.com/yXnPUCc.png");
+							
+							Request.Callback callback = new Request.Callback() {
+			    	            public void onCompleted(Response response) {
+
+			    	                FacebookRequestError error = response.getError();
+			    	                if (error != null) {
+			    	                    Toast.makeText(ListBodyWeightExercisesActivity.this,
+			    	                         error.getErrorMessage(),
+			    	                         Toast.LENGTH_SHORT).show();
+			    	                    } else {
+			    	                        Toast.makeText(ListBodyWeightExercisesActivity.this, 
+			    	                             "Post successful",
+			    	                             Toast.LENGTH_LONG).show();
+			    	                }
+			    	            }
+			    	        };
+
+			    	        Request request = new Request(session, "me/feed", postParams, 
+			    	                              HttpMethod.POST, callback);
+
+			    	        final RequestAsyncTask task = new RequestAsyncTask(request);
+			    	        task.execute();
+						}
+					}
+				});
+
+				System.out.println("Status posted.");
+    	    }
+    }
+    
+    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+        for (String string : subset) {
+            if (!superset.contains(string)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+    }
+    
+    public static String formatExerciseType(String s)
+    {
+    	if(s.equals("PUSHUPS")) return "Push Ups";
+    	else if(s.equals("SITUPS")) return "Sit Ups";
+    	
+		char[] charArray = s.toLowerCase().toCharArray();
+		charArray[0] = Character.toUpperCase(charArray[0]);
+		String formatted = new String(charArray);
+    	
+    	return formatted;
+    }
 
 	public class BodyWeightAdapter extends CursorAdapter
 	{
@@ -97,9 +289,8 @@ public class ListBodyWeightExercisesActivity extends ListActivity
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) 
 		{
-			char[] charArray = cursor.getString(4).toLowerCase().toCharArray();
-			charArray[0] = Character.toUpperCase(charArray[0]);
-			String title = new String(charArray);
+			String title = formatExerciseType(cursor.getString(4));
+			
 			TextView type = (TextView) view.getTag(R.id.body_weight_type);
 			type.setText(title);
 

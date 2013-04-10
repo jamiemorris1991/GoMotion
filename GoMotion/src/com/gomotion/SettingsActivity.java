@@ -40,13 +40,15 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    bwsettings.setSummary(String.format("Sets: %s, Reps: %s, Rest: %ss", bwvalues[0], bwvalues[1], bwvalues[2]));
 	}
 	
-    protected void onResume() 
+    @Override
+	protected void onResume() 
     {
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
-    protected void onPause()
+    @Override
+	protected void onPause()
     {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
