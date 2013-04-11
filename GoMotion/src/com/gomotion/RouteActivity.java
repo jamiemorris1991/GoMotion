@@ -13,7 +13,10 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -57,6 +60,20 @@ public class RouteActivity extends Activity
 	
 	        CameraUpdate cam = CameraUpdateFactory.newLatLngZoom(new LatLng(waypoints.getDouble(0), waypoints.getDouble(1)), 15);
 	        map.moveCamera(cam);	
+
+	        Marker start = map.addMarker(new MarkerOptions()
+	        	.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+	        	.position(new LatLng(waypoints.getDouble(0), waypoints.getDouble(1)))
+	        	.title("Start"));
+	        
+	        waypoints.moveToLast();
+	        
+	        Marker finish = map.addMarker(new MarkerOptions()
+        		.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+	        	.position(new LatLng(waypoints.getDouble(0), waypoints.getDouble(1)))
+	        	.title("Finish"));
+	        
+	        waypoints.moveToFirst();
 	        
 	        PolylineOptions lineOptions = new PolylineOptions();
 	        do {

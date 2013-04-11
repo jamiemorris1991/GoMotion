@@ -26,12 +26,4 @@
 		
 	</LinearLayout>
 	
-	<Button 
-	    android:id="@+id/post_facebook"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_marginTop="200px"
-	    android:text="Post" 
-	    android:onClick="testPost" />
-	
 </RelativeLayout>

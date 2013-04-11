@@ -205,7 +205,7 @@ public class ListBodyWeightExercisesActivity extends ListActivity
 			    	        postParams.putString("name", "GoMotion Fitness App for Android");
 			    	        postParams.putString("caption", "Body weight exercise completed");
 			    	        postParams.putString("description", description);
-			    	        postParams.putString("picture", "i.imgur.com/yXnPUCc.png");
+			    	        postParams.putString("picture", "http://i.imgur.com/ABwcmW9.png");
 							
 							Request.Callback callback = new Request.Callback() {
 			    	            public void onCompleted(Response response) {

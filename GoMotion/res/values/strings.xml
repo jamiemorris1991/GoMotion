@@ -20,5 +20,6 @@
     <string name="title_activity_wall">Wall</string>
     <string name="app_id">127254410787193</string>
     <string name="title_activity_sit_ups">SitUpsActivity</string>
+    <string name="title_activity_dips">DipsActivity</string>
 
 </resources>

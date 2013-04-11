@@ -52,12 +52,22 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-        </activity>        
+        </activity>
         <activity
             android:name="com.gomotion.SitUpsActivity"
             android:label="@string/title_activity_sit_ups"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.gomotion.HomeScreen" >
+            android:parentActivityName="com.gomotion.HomeScreen"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gomotion.HomeScreen" />
+        </activity>        
+        <activity
+            android:name="com.gomotion.DipsActivity"
+            android:label="@string/title_activity_dips"
+            android:parentActivityName="com.gomotion.HomeScreen" 
+            android:screenOrientation="portrait" >
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gomotion.HomeScreen" />
@@ -122,6 +132,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
+
     </application>
 
 </manifest>
