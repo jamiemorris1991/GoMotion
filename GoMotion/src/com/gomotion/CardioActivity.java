@@ -63,7 +63,7 @@ public class CardioActivity extends Activity
 	private String timeFormatted;
 	private int time;
 	private double distance;
-	private double speed;
+	private long lastTime;
 
 	private int minDist;
 	private double pace;
@@ -176,9 +176,13 @@ public class CardioActivity extends Activity
 		locationListener =  new LocationListener() {
 
 			public void onLocationChanged(Location location) 
-			{
+			{				
 				if(started)
 				{		
+					long timestamp = System.currentTimeMillis();
+					long timeGap = timestamp - lastTime;
+					lastTime = timestamp;
+					
 					int size = waypoints.size();
 					double dist = waypoints.get(size - 1).distanceTo(location);
 
@@ -197,20 +201,16 @@ public class CardioActivity extends Activity
 						int secs = (int) (pace % 60);
 
 						String paceString = String.format("%02d:%02d", mins, secs);
-<<<<<<< HEAD
-						paceView.setText(paceString + " min/km");
-=======
 						paceView.setText(paceString + " min/mile");
 						
-						speed  = distance/time;
-						DecimalFormat decimal = new DecimalFormat("#.##");
-						speedView.setText(decimal.format(speed) + " MPH");
->>>>>>> c1e812ac6765eb1e7da46a11416d091e39d491db
+						int speed  = (int) (dist/timeGap);
+						speedView.setText(String.valueOf(speed) + " metres/s");
 					}					
 				}
 				else
 				{
 					initialPoints.add(location);
+					lastTime = System.currentTimeMillis();
 				}
 			}
 
