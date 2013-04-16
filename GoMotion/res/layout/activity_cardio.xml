@@ -43,42 +43,6 @@
         android:textSize="32sp" />
 
     <TextView
-        android:id="@+id/lblTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Duration:"
-        android:textColor="@color/buttonsText" />
-
-    <TextView
-        android:id="@+id/lblWaypoint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/cardio_time"
-        android:layout_alignParentLeft="true"
-        android:text="Waypoints:"
-        android:textColor="@color/buttonsText" />
-
-    <TextView
-        android:id="@+id/lblSignal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/cardio_time"
-        android:layout_alignParentRight="true"
-        android:text="Signal:"
-        android:textColor="@color/buttonsText" />
-
-    <TextView
-        android:id="@+id/gps_signal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/cardio_time"
-        android:text="signal"
-        android:textSize="20sp" />
-
-    <TextView
         android:id="@+id/waypoint_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,16 +52,6 @@
         android:text="0"
         android:textColor="@color/buttonsText"
         android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/cardio_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lblTime"
-        android:layout_centerHorizontal="true"
-        android:text="00:00"
-        android:textColor="@color/buttonsText"
-        android:textSize="32sp" />
 
     <TextView
         android:id="@+id/lblDistance"
@@ -136,21 +90,72 @@
         android:id="@+id/lblPace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cardio_pace"
-        android:layout_alignBottom="@+id/cardio_pace"
-        android:layout_marginLeft="13dp"
+        android:layout_alignBaseline="@+id/cardio_distance"
+        android:layout_alignBottom="@+id/cardio_distance"
+        android:layout_marginLeft="14dp"
         android:layout_toRightOf="@+id/cardio_time"
         android:text="Pace:"
         android:textColor="@color/buttonsText"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/gps_setting"
+        android:id="@+id/lblWaypoint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/lblDistance"
+        android:layout_marginTop="10dp"
+        android:text="Waypoints:"
+        android:textColor="@color/buttonsText" />
+
+    <TextView
+        android:id="@+id/gps_signal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/waypoint_count"
+        android:layout_alignBottom="@+id/waypoint_count"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/cardio_time"
+        android:layout_marginRight="10dp"
         android:text="signal"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/lblSignal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gps_signal"
+        android:layout_alignLeft="@+id/gps_signal"
+        android:text="Signal:"
+        android:textColor="@color/buttonsText" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:layout_below="@+id/waypoint_count"
+        android:src="@drawable/stopwatch1" />
+
+    <TextView
+        android:id="@+id/cardio_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="108dp"
+        android:text="00:00"
+        android:textColor="@color/buttonsText"
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/cardio_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardio_time"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:text="3 MPH"
+        android:textColor="@color/buttonsText"
+        android:textSize="32sp" />
 
 </RelativeLayout>
