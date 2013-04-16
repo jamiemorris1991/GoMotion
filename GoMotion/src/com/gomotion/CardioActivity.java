@@ -1,5 +1,6 @@
 package com.gomotion;
 
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -62,19 +63,21 @@ public class CardioActivity extends Activity
 	private String timeFormatted;
 	private int time;
 	private double distance;
+	private double speed;
 
 	private int minDist;
 	private double pace;
 
 	// Debugging views
 	private TextView waypoint_count;
-	private TextView gps_setting;
+	//private TextView gps_setting;
 
 	// Views
 	private TextView signalView;
 	private TextView timeView;
 	private TextView distanceView;
 	private TextView paceView;
+	private TextView speedView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -107,8 +110,10 @@ public class CardioActivity extends Activity
 		timeView = (TextView) findViewById(R.id.cardio_time);
 		distanceView = (TextView) findViewById(R.id.cardio_distance);
 		paceView = (TextView) findViewById(R.id.cardio_pace);
+		speedView = (TextView) findViewById(R.id.cardio_speed);
 
 		timeView.setText("00:00");
+		speedView.setText("0 MPH"); // Needs to be imperial and metric.
 		distanceView.setText("0m");
 		paceView.setText("0 mins/mile");
 
@@ -122,7 +127,7 @@ public class CardioActivity extends Activity
 		waypoints = new LinkedList<Location>();
 		initialPoints = new LinkedList<Location>();
 
-		gps_setting = (TextView) findViewById(R.id.gps_setting);
+		//gps_setting = (TextView) findViewById(R.id.gps_setting);
 		waypoint_count = (TextView) findViewById(R.id.waypoint_count);
 		signalView = (TextView) findViewById(R.id.gps_signal);
 		signalView.setText("No Signal");
@@ -192,7 +197,15 @@ public class CardioActivity extends Activity
 						int secs = (int) (pace % 60);
 
 						String paceString = String.format("%02d:%02d", mins, secs);
+<<<<<<< HEAD
 						paceView.setText(paceString + " min/km");
+=======
+						paceView.setText(paceString + " min/mile");
+						
+						speed  = distance/time;
+						DecimalFormat decimal = new DecimalFormat("#.##");
+						speedView.setText(decimal.format(speed) + " MPH");
+>>>>>>> c1e812ac6765eb1e7da46a11416d091e39d491db
 					}					
 				}
 				else
@@ -204,8 +217,8 @@ public class CardioActivity extends Activity
 			public void onProviderDisabled(String provider)
 			{
 				gpsSettings = false;
-				gps_setting.setText("GPS is turned off");
-				gps_setting.setTextColor(Color.RED);
+				//gps_setting.setText("GPS is turned off");
+				//gps_setting.setTextColor(Color.RED);
 
 				new AlertDialog.Builder(CardioActivity.this)
 				.setTitle("Attention")
@@ -228,8 +241,8 @@ public class CardioActivity extends Activity
 			public void onProviderEnabled(String provider)
 			{
 				gpsSettings = true;
-				gps_setting.setText("GPS is turned on");
-				gps_setting.setTextColor(Color.GREEN);
+				//gps_setting.setText("GPS is turned on");
+				//gps_setting.setTextColor(Color.GREEN);
 			}
 
 			public void onStatusChanged(String provider, int status, Bundle extras) 
