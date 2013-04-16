@@ -32,8 +32,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	    SeekBarPreference transparency = (SeekBarPreference) findPreference("transparency");
 	    transparency.setSummary(String.valueOf(transparency.getProgress()) + "%");
 	    
-	    SeekBarPreference accuracy = (SeekBarPreference) findPreference("accuracy");
-	    accuracy.setSummary(String.valueOf(accuracy.getProgress()) + "%");
+	    ListPreference accuracy = (ListPreference) findPreference("accuracy");
+	    accuracy.setSummary(accuracy.getEntry());
 	    
 	    DefaultBodyWeightPreference bwsettings = (DefaultBodyWeightPreference) findPreference("body_weight_values");
 	    String[] bwvalues = bwsettings.getValues().split(",");
