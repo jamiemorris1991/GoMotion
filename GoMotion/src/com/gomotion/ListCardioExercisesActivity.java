@@ -366,6 +366,9 @@ public class ListCardioExercisesActivity extends ListActivity
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) 
 		{			
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
+			String units = sharedPref.getString(SettingsActivity.UNITS, "1");
+			
 			String title = formatExerciseType(cursor.getString(4));
 			TextView type = (TextView) view.getTag(R.id.cardio_type);
 			type.setText(title);
@@ -373,9 +376,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm").format(new Date(cursor.getLong(1)));
 			TextView completed = (TextView) view.getTag(R.id.cardio_completed);
 			completed.setText("Completed: " +  date);
-
-			double dist = Double.valueOf(cursor.getString(2));
-			String distStr = String.format("%.2f", dist / 1000);
+			
 			String timeStr = cursor.getString(3);
 			
 			int time = Integer.valueOf(timeStr);
@@ -386,16 +387,28 @@ public class ListCardioExercisesActivity extends ListActivity
 			String timeFormatted;
 			if(hours == 0) timeFormatted = String.format("%02d:%02d", mins, secs).toString();
 			else timeFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
+				
 			
-			double miles = dist * 0.000621371192;
-			double pace = time / miles;						
+			double dist = Double.valueOf(cursor.getString(2)) / 1000;
+			String distUnits = " km ";
+			String paceUnits = " min/km";
+			
+			if(Integer.valueOf(units) == 2)
+			{
+				dist = dist * 0.000621371192;
+				distUnits = " mi ";
+				paceUnits = " min/mile";
+			}			
+
+			String distStr = String.format("%.2f", dist);
+			
+			double pace = time / dist;						
 			int paceMins = (int) (pace / 60);
 			int paceSecs = (int) (pace % 60);
 			String paceString = String.format("%02d:%02d", paceMins, paceSecs);
-
-
+			
 			TextView stats = (TextView) view.getTag(R.id.cardio_stats);
-			stats.setText("Distance: " + distStr + " km Time: " + timeFormatted + " Pace: " + paceString + " min/mile");	
+			stats.setText("Distance: " + distStr + distUnits + "Time: " + timeFormatted + " Pace: " + paceString + paceUnits);	
 		}
 	}
 }

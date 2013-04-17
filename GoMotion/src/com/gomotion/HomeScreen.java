@@ -10,11 +10,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+import android.view.ViewGroup;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
@@ -38,7 +44,7 @@ public class HomeScreen extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
-				
+
 		session = Session.getActiveSession();
 		
 		if(session != null)
@@ -123,11 +129,60 @@ public class HomeScreen extends Activity
     
     public void outdoorOptions(View view)
     {
-    	String[] items = {"Walk", "Run", "Cycle", "History"};
+    	final Item[] items = {
+    		    new Item("Walk", R.drawable.walking),
+    		    new Item("Run", R.drawable.running),
+    		    new Item("Cycle", R.drawable.bike),
+    		    new Item("History", 0),
+    		};
+
+    		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(
+    		    this,
+    		    android.R.layout.select_dialog_item,
+    		    android.R.id.text1,
+    		    items){
+    		        public View getView(int position, View convertView, ViewGroup viewGroup) {
+    		            //User super class to create the View
+    		            View v = super.getView(position, convertView, viewGroup);
+    		            TextView tv = (TextView)v.findViewById(android.R.id.text1);
+
+    		            //Put the image on the TextView
+    		            tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0);
+
+    		            //Add margin between image and text (support various screen densities)
+    		            int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+    		            tv.setCompoundDrawablePadding(dp5);
+    		            tv.setTextSize(18);
+
+    		            return v;
+    		        }
+    		    };
+    	
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
     	builder.setTitle("Outdoor options")
-    	.setItems(items, new DialogInterface.OnClickListener() {
+    	.setAdapter(adapter, new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int i) {
+				
+    			switch(i)
+    			{
+    				case 0:
+    					doCardio(0);
+    					break;
+    				case 1:
+    					doCardio(1);
+    					break;
+    				case 2:
+    					doCardio(2);
+    					break;
+    				case 3:
+    					listCardioExercises();
+    					break;
+    			}				
+			}    		
+    	})
+    	/*.setItems(items, new DialogInterface.OnClickListener() {
     		public void onClick(DialogInterface dialog, int i) {
     			
     			switch(i)
@@ -147,7 +202,7 @@ public class HomeScreen extends Activity
     			}
     			
     		}
-    	});
+    	})*/;
     	
     	builder.show();
     }
