@@ -30,10 +30,12 @@ public class OnlineDatabase {
 			getConnection();
 			Statement s = connection.createStatement();
 			s.executeUpdate("INSERT INTO bodyweight VALUES (" + "null,"
-					+ exercise.getTimeStamp() + "," + exercise.getUserID()
-					+ "," + exercise.getSets() + "," + exercise.getReps() + ","
-					+ exercise.getType().ordinal() + "," + exercise.getName()
-					+ ");");
+					+ exercise.getTimeStamp() + ","
+					+ exercise.getUserID() + ","
+					+ exercise.getSets() + ","
+					+ exercise.getReps() + ","
+					+ "\"" + exercise.getName().replace("\"", "\\\"") + "\","
+					+ exercise.getType().ordinal() + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -52,6 +54,7 @@ public class OnlineDatabase {
 					+ exercise.getTimeStamp() + "," + exercise.getUserID()
 					+ "," + exercise.getTimeLength() + ","
 					+ exercise.getDistance() + ","
+					+ "\"" + exercise.getMapURL().replace("\"", "\\\"") + "\","
 					+ exercise.getType().ordinal() + ");");
 		} catch (SQLException e) {
 			return false;

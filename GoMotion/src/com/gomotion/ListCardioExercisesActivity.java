@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
@@ -108,7 +109,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		if(session != null && session.isOpened())
 		{
 			online = true;
-			String[] temp = {"View route", "Share route", "Delete"};
+			String[] temp = {"View route", "Share route on Facebook", "Share route on GoMotion", "Delete"};
 			items = temp;
 		} 
 		else 
@@ -136,7 +137,12 @@ public class ListCardioExercisesActivity extends ListActivity
 						postItem = cid;
 						postRouteFacebook();
 					}
-					else if((item == 1 && !online) || item == 2) 
+					else if(item == 2 && online)
+					{
+						postItem = cid;
+						postRouteGoMotion();
+					}
+					else if((item == 1 && !online) || (online && item == 3)) 
 					{
 						db.deleteCardioExercise(cid);
 						adapter.changeCursor(db.getAllCardioExercises());
@@ -190,68 +196,13 @@ public class ListCardioExercisesActivity extends ListActivity
 							name = user.getFirstName();
 
 				            System.out.println("Creating request.");
-				            				            
-				            // Build URL for Google Maps
-				            StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
-				            String size = "size=500x500";
-				            params.append(size);
 				            
+				            //Get database items
 				            OfflineDatabase db = new OfflineDatabase(ListCardioExercisesActivity.this);
 				            CardioExercise exercise = db.getCardioExercise(postItem);
-				            Cursor waypoints = db.getWaypoints(exercise.getID());
 				            
-				            waypoints.moveToPosition(waypoints.getCount() / 2);
-				            
-				            // Must center and zoom map until markers can be used
-				            params.append("&zoom=15");
-				            params.append("&center=" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
-				            
-				            waypoints.moveToFirst();
-				            
-				            // Can't use multiple markers as Facebook removes parameters with the same name
-				            /* waypoints.moveToFirst();
-				            Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
-				            waypoints.moveToLast();
-				            Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
-				            waypoints.moveToFirst();
-				            
-				            String startMarker = String.format("&markers=color:green|label:S|%f,%f", first.getLatitude(), first.getLongitude());
-				            String endMarker = String.format("&markers=color:red|label:F|%f,%f", last.getLatitude(), last.getLongitude());
-				            params.append(startMarker);
-				            params.append(endMarker);*/
-				            
-				            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
-				           
-				            String colour = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "3");
-				            
-				    		int routeTransparency = (int) (255 * ((double) sharedPref.getInt(SettingsActivity.ROUTE_TRANSPARENCY, 80) / 100));
-				    		String transparency = Integer.toHexString(routeTransparency);
-				    						    		
-				    		switch(Integer.valueOf(colour))
-				    		{
-				    			case 1:
-				    				colour = "0xff0000";
-				    				break;
-				    			case 2:
-				    				colour = "0x00ff00";
-				    				break;
-				    			case 3:
-				    				colour = "0x0000ff";
-				    				break;
-				    		}
-				            
-				            String pathSettings = "&path=color:" + colour + transparency + "|weight:5";
-				            params.append(pathSettings);
-				            
-				            int n = 0;
-				            int threshold = (int) Math.ceil((waypoints.getCount() / THESHOLD_ACCURACY));
-			        		do {
-			        			n++;
-			        			if(n % threshold == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
-			        			
-			        		} while(waypoints.moveToNext());
-			        		
-				            params.append("&sensor=false");
+				            String mapURL = makeGoogleMapsString(db,
+									exercise);
 				            				
 							String typeVerb = "";
 							
@@ -284,8 +235,8 @@ public class ListCardioExercisesActivity extends ListActivity
 			    	        postParams.putString("name", "GoMotion Fitness App for Android");
 			    	        postParams.putString("caption", "Cardio exercise completed");
 			    	        postParams.putString("description", description);
-			    	        postParams.putString("link", params.toString());
-			    	        postParams.putString("picture", params.toString());
+			    	        postParams.putString("link", mapURL);
+			    	        postParams.putString("picture", mapURL);
 							
 							Request.Callback callback = new Request.Callback() {
 			    	            public void onCompleted(Response response) {
@@ -316,6 +267,50 @@ public class ListCardioExercisesActivity extends ListActivity
     	    }
     }
     
+    public void postRouteGoMotion() {
+		AsyncTask<CardioExercise, Void, Boolean> task;
+		task = new AsyncTask<CardioExercise, Void, Boolean>() {
+	
+			@Override
+			protected Boolean doInBackground(CardioExercise... params) {
+				if(Session.getActiveSession() == null)
+					return false;
+				Request request = Request.newMeRequest(Session.getActiveSession(), null);
+				Response response = request.executeAndWait();
+				params[0].setUserID((String)response.getGraphObject().getProperty("id"));
+				//#ADD URL
+				return OnlineDatabase.add(params[0]);
+			}
+	
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if (result)
+					ListCardioExercisesActivity.this
+							.runOnUiThread(new Runnable() {
+								public void run() {
+									Toast.makeText(
+											ListCardioExercisesActivity.this,
+											"Exercise post successful",
+											Toast.LENGTH_SHORT).show();
+								}
+							});
+				else
+					ListCardioExercisesActivity.this
+							.runOnUiThread(new Runnable() {
+								public void run() {
+									Toast.makeText(
+											ListCardioExercisesActivity.this,
+											"Failed to communicate with database",
+											Toast.LENGTH_SHORT).show();
+								}
+							});
+	
+			}
+		};
+		
+		task.execute(db.getCardioExercise(postItem));
+	}
+    
     private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
         for (String string : subset) {
             if (!superset.contains(string)) {
@@ -331,8 +326,73 @@ public class ListCardioExercisesActivity extends ListActivity
     	super.onActivityResult(requestCode, resultCode, data);
     	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
-    
-    public static String formatExerciseType(String s)
+
+	private String makeGoogleMapsString(OfflineDatabase db,
+			CardioExercise exercise) {
+		// Build URL for Google Maps
+		StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
+		String size = "size=500x500";
+		params.append(size);
+		
+		Cursor waypoints = db.getWaypoints(exercise.getID());
+		
+		waypoints.moveToPosition(waypoints.getCount() / 2);
+		
+		// Must center and zoom map until markers can be used
+		params.append("&zoom=15");
+		params.append("&center=" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
+		
+		waypoints.moveToFirst();
+		
+		// Can't use multiple markers as Facebook removes parameters with the same name
+		/* waypoints.moveToFirst();
+		Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
+		waypoints.moveToLast();
+		Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
+		waypoints.moveToFirst();
+		
+		String startMarker = String.format("&markers=color:green|label:S|%f,%f", first.getLatitude(), first.getLongitude());
+		String endMarker = String.format("&markers=color:red|label:F|%f,%f", last.getLatitude(), last.getLongitude());
+		params.append(startMarker);
+		params.append(endMarker);*/
+		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
+         
+		String colour = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "3");
+		
+		int routeTransparency = (int) (255 * ((double) sharedPref.getInt(SettingsActivity.ROUTE_TRANSPARENCY, 80) / 100));
+		String transparency = Integer.toHexString(routeTransparency);
+						    		
+		switch(Integer.valueOf(colour))
+		{
+			case 1:
+				colour = "0xff0000";
+				break;
+			case 2:
+				colour = "0x00ff00";
+				break;
+			case 3:
+				colour = "0x0000ff";
+				break;
+		}
+		
+		String pathSettings = "&path=color:" + colour + transparency + "|weight:5";
+		params.append(pathSettings);
+		
+		int n = 0;
+		int threshold = (int) Math.ceil((waypoints.getCount() / THESHOLD_ACCURACY));
+		do {
+			n++;
+			if(n % threshold == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
+			
+		} while(waypoints.moveToNext());
+		
+		params.append("&sensor=false");
+		return params.toString();
+	}
+
+
+	public static String formatExerciseType(String s)
     {
 		char[] charArray = s.toLowerCase().toCharArray();
 		charArray[0] = Character.toUpperCase(charArray[0]);

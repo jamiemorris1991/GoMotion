@@ -14,6 +14,7 @@ public class CardioExercise extends Exercise
     private int timeLength;
     private CardioType type;
     private LinkedList<Location> waypoints;
+    private String mapURL;
 
     public CardioExercise()
     {
@@ -32,8 +33,10 @@ public class CardioExercise extends Exercise
 		timeLength = r.getInt(3);
 		//distance
 		distance = r.getInt(4);
+		//URL
+		mapURL = r.getString(6).replace("\\\"", "\"");
 		//type
-		type = CardioType.values()[r.getInt(5)];
+		type = CardioType.values()[r.getInt(6)];
     }
     
     public CardioExercise(int distance, int timeLength, CardioType type, LinkedList<Location> waypoints)
@@ -95,15 +98,13 @@ public class CardioExercise extends Exercise
 		this.waypoints = waypoints;
 	}
     
-    
-    
-//    //Method to add a waypoint to wayPoints, gotten from android.location
-//    static private LocationManager locationManager;
-//    public void poll()
-//    {
-//    	if(locationManager == null)
-//    		locationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//    }
-//    
-//    //TODO: Getters and setters
+	public String getMapURL()
+	{
+		return mapURL;
+	}
+	
+	public void setMapURL(String mapURL)
+	{
+		this.mapURL = mapURL;
+	}
 }
