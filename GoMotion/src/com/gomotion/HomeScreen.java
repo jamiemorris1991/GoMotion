@@ -130,8 +130,8 @@ public class HomeScreen extends Activity
     public void outdoorOptions(View view)
     {
     	final Item[] items = {
-    		    new Item("Walk", R.drawable.walking),
-    		    new Item("Run", R.drawable.running),
+    		    new Item("Walk", R.drawable.walk),
+    		    new Item("Run", R.drawable.run),
     		    new Item("Cycle", R.drawable.bike),
     		    new Item("History", 0),
     		};

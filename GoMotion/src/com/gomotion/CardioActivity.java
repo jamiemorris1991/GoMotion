@@ -132,6 +132,22 @@ public class CardioActivity extends Activity
 		signalView = (TextView) findViewById(R.id.gps_signal);
 		signalView.setText("No Signal");
 		signalView.setTextColor(Color.RED);
+						
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		String accuracy = sharedPref.getString(SettingsActivity.ACCURACY, "1");
+				
+		switch(Integer.valueOf(accuracy))
+		{
+			case 1:
+				minDist = 10;
+				break;
+			case 2:
+				minDist = 20;
+				break;
+			case 3:
+				minDist = 30;
+				break;
+		}
 
 		gpsListener = new GpsStatus.Listener() {
 
@@ -179,7 +195,7 @@ public class CardioActivity extends Activity
 			{				
 				if(started)
 				{		
-					long timestamp = System.currentTimeMillis();
+					long timestamp = time;
 					long timeGap = timestamp - lastTime;
 					lastTime = timestamp;
 					
@@ -210,7 +226,7 @@ public class CardioActivity extends Activity
 				else
 				{
 					initialPoints.add(location);
-					lastTime = System.currentTimeMillis();
+					lastTime = time;
 				}
 			}
 
@@ -271,24 +287,6 @@ public class CardioActivity extends Activity
 				}
 			}			
 		};
-				
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		String accuracy = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "1");
-		
-		
-		switch(Integer.valueOf(accuracy))
-		{
-			case 1:
-				minDist = 10;
-				break;
-			case 2:
-				minDist = 30;
-				break;
-			case 3:
-				minDist = 50;
-				break;
-		}
-		
 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, minDist, locationListener);
 
@@ -437,12 +435,13 @@ public class CardioActivity extends Activity
 		new AlertDialog.Builder(this)
 		.setTitle("Warning")
 		.setMessage("Are you sure you wish to exit?\n\nCurrent progress will be lost.")
-		.setCancelable(true)
+		.setCancelable(false)
 		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				finish();
 			}
 		})
+		.setNegativeButton("Cancel", null)
 		.show();		
 	}
 

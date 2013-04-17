@@ -369,6 +369,9 @@ public class ListCardioExercisesActivity extends ListActivity
 			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
 			String units = sharedPref.getString(SettingsActivity.UNITS, "1");
 			
+			String accuracy = sharedPref.getString(SettingsActivity.ACCURACY, "1");
+			System.out.println(accuracy);
+			
 			String title = formatExerciseType(cursor.getString(4));
 			TextView type = (TextView) view.getTag(R.id.cardio_type);
 			type.setText(title);
@@ -395,7 +398,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			
 			if(Integer.valueOf(units) == 2)
 			{
-				dist = dist * 0.000621371192;
+				dist = dist * 0.621371192;
 				distUnits = " mi ";
 				paceUnits = " min/mile";
 			}			
