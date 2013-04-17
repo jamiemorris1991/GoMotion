@@ -27,6 +27,7 @@ public class OfflineDatabase extends SQLiteOpenHelper
     public final static String KEY_ID = "_id";
     public final static String KEY_TIMESTAMP = "timestamp";
     public final static String KEY_TYPE = "type";
+    public final static String KEY_NAME = "name";
 
     // Body Weight Exercise Table Column names
     public final static String KEY_SETS = "sets";
@@ -52,7 +53,8 @@ public class OfflineDatabase extends SQLiteOpenHelper
 		// Create Body Weight Exercise table
 		String CREATE_BODYWEIGHT_TABLE = "CREATE TABLE " + TABLE_BODYWEIGHT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TIMESTAMP + " INTEGER,"
-                + KEY_SETS + " INTEGER," + KEY_REPS + " INTEGER," +  KEY_TYPE + " TEXT" +")";
+                + KEY_SETS + " INTEGER," + KEY_REPS + " INTEGER," +  KEY_TYPE + " TEXT," 
+                + KEY_NAME + " TEXT" + ")";
 		
         db.execSQL(CREATE_BODYWEIGHT_TABLE);
         
@@ -95,6 +97,7 @@ public class OfflineDatabase extends SQLiteOpenHelper
 		values.put(KEY_SETS, exercise.getSets());
 		values.put(KEY_REPS, exercise.getReps());
 		values.put(KEY_TYPE, exercise.getType().name());
+		values.put(KEY_NAME, exercise.getName());
 		
 		// Insert into database
 		db.insert(TABLE_BODYWEIGHT, null, values);

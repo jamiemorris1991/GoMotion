@@ -194,8 +194,8 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 								case SITUPS:
 									exerciseType = "sit ups";
 									break;
-								case DIPS:
-									exerciseType = "dips";
+								case CUSTOM:
+									exerciseType = exercise.getName().toLowerCase();
 									break;
 								}
 
@@ -309,10 +309,7 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 	}
 
 	public static String formatExerciseType(String s) {
-		if (s.equals("PUSHUPS"))
-			return "Push Ups";
-		else if (s.equals("SITUPS"))
-			return "Sit Ups";
+
 
 		char[] charArray = s.toLowerCase().toCharArray();
 		charArray[0] = Character.toUpperCase(charArray[0]);
@@ -346,12 +343,17 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
-			String title = formatExerciseType(cursor.getString(4));
+			String s = cursor.getString(4);
+			String title = "";
+			
+			if (s.equals("PUSHUPS")) title = "Push Ups";
+			else if (s.equals("SITUPS")) title = "Sit Ups";
+			else if(s.equals("CUSTOM")) title = cursor.getString(5);
 
 			TextView type = (TextView) view.getTag(R.id.body_weight_type);
 			type.setText(title);
 
-			String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss")
+			String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm")
 					.format(new Date(cursor.getLong(1)));
 			TextView completed = (TextView) view
 					.getTag(R.id.body_weight_completed);

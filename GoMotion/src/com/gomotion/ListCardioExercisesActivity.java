@@ -370,7 +370,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			TextView type = (TextView) view.getTag(R.id.cardio_type);
 			type.setText(title);
 
-			String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date(cursor.getLong(1)));
+			String date = new SimpleDateFormat("dd/MM/yyyy, HH:mm").format(new Date(cursor.getLong(1)));
 			TextView completed = (TextView) view.getTag(R.id.cardio_completed);
 			completed.setText("Completed: " +  date);
 

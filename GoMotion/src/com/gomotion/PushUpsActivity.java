@@ -23,6 +23,7 @@ public class PushUpsActivity extends Activity
 	private int restTime;
 	
 	BodyWeightExercise exercise;
+	private String exerciseName;
 	private int setCount;
 	private int repCount;
 	
@@ -43,9 +44,12 @@ public class PushUpsActivity extends Activity
      	getActionBar().setDisplayHomeAsUpEnabled(true);	
         
         Intent intent = getIntent();
+        exerciseName = intent.getStringExtra(BodyWeightSettingsDialogFragment.EXERCISE_NAME);
         initialSetCount = intent.getIntExtra(BodyWeightSettingsDialogFragment.SET_CHOICE, 1);
         initialRepCount = intent.getIntExtra(BodyWeightSettingsDialogFragment.REP_CHOICE, 1);
         restTime = intent.getIntExtra(BodyWeightSettingsDialogFragment.REST_TIME, 10000) * 1000; // convert seconds to milliseconds
+        
+        if(exerciseName != null) setTitle(exerciseName);
        
         setCount = initialSetCount;
         repCount = initialRepCount;
@@ -57,7 +61,8 @@ public class PushUpsActivity extends Activity
         
         setView.setText(String.valueOf(setCount));
         
-        exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.PUSHUPS);
+        if(exerciseName == null) exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.PUSHUPS);
+        else exercise = new BodyWeightExercise(initialSetCount, initialRepCount, BodyWeightType.CUSTOM, exerciseName);
         exercise.setTimeStamp(System.currentTimeMillis());
     }
     
@@ -159,8 +164,7 @@ public class PushUpsActivity extends Activity
     {	
 		OfflineDatabase db = new OfflineDatabase(this);    	
 		db.add(exercise);
-		db.close();
-		
+		db.close();		
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("GoMotion")

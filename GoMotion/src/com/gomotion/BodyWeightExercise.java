@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class BodyWeightExercise extends Exercise
 {
-    public enum BodyWeightType{PUSHUPS, SITUPS, DIPS, OTHER};
+    public enum BodyWeightType{PUSHUPS, SITUPS, CUSTOM};
 	
 	private int sets;
 	private int reps;

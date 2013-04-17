@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.gomotion.R;
@@ -26,11 +28,14 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	public final static String SET_CHOICE = "com.gomotion.SET_CHOICE";
 	public final static String REP_CHOICE = "com.gomotion.REP_CHOICE";
 	public final static String REST_TIME = "com.gomotion.REST_TIME";
-	
+	public final static String EXERCISE_NAME = "com.gomotion.EXERCISE_NAME";
+
 	private Spinner setSpinner;
 	private Spinner repSpinner;
 	private Spinner restSpinner;
 	
+	private View v;
+		
 	private Intent intent;
 
 	@Override
@@ -38,10 +43,25 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		final LayoutInflater inflater = getActivity().getLayoutInflater();
-		final View v = inflater.inflate(R.layout.dialog_body_weight_settings, null);
 		
 		type = getArguments().getInt(HomeScreen.BODY_WEIGHT_TYPE);
-		
+				
+		switch(type)
+		{
+			case 1: 
+				intent = new Intent(getActivity(), PushUpsActivity.class);
+				break;
+			case 2:
+				intent = new Intent(getActivity(), SitUpsActivity.class);
+				break;
+			case 3:
+				intent = new Intent(getActivity(), PushUpsActivity.class);
+				break;
+		}
+				
+		if(type == 3) v = inflater.inflate(R.layout.dialog_body_weight_settings_custom, null);
+		else v = inflater.inflate(R.layout.dialog_body_weight_settings, null);
+				
 		setSpinner = (Spinner) v.findViewById(R.id.set_spinner);
 		repSpinner = (Spinner) v.findViewById(R.id.rep_spinner);
 		restSpinner = (Spinner) v.findViewById(R.id.rest_spinner);
@@ -78,21 +98,7 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 		
 		setSpinner.setAdapter(setList);
 		repSpinner.setAdapter(repList);
-		restSpinner.setAdapter(restList);
-		
-		switch(type)
-		{
-			case 1: 
-				intent = new Intent(getActivity(), PushUpsActivity.class);
-				break;
-			case 2:
-				intent = new Intent(getActivity(), SitUpsActivity.class);
-				break;
-			case 3:
-				//intent = new Intent(getActivity(), DipsActivity.class);
-				break;
-		}
-		
+		restSpinner.setAdapter(restList);		
 		
 		builder.setView(v)
 			.setTitle("Push Up Settings")
@@ -107,6 +113,13 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 					intent.putExtra(SET_CHOICE, sets);
 					intent.putExtra(REP_CHOICE, reps);
 					intent.putExtra(REST_TIME, restTime);
+					
+					if(type == 3)
+					{
+						EditText field = (EditText) v.findViewById(R.id.custom_exercise_name);
+						String exerciseName = field.getText().toString();
+						intent.putExtra(EXERCISE_NAME, exerciseName);
+					}
 					
 					startActivity(intent);
 					
@@ -153,6 +166,13 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 					intent.putExtra(SET_CHOICE, sets);
 					intent.putExtra(REP_CHOICE, reps);
 					intent.putExtra(REST_TIME, restTime);
+					
+					if(type == 3)
+					{
+						EditText field = (EditText) v.findViewById(R.id.custom_exercise_name);
+						String exerciseName = field.getText().toString();
+						intent.putExtra(EXERCISE_NAME, exerciseName);
+					}
 					
 					startActivity(intent);
 

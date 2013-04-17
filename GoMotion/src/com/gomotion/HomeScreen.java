@@ -170,7 +170,7 @@ public class HomeScreen extends Activity
     					doSitUps();
     					break;
     				case 2:
-    					//doCustom();
+    					doCustomExercise();
     					break;
     				case 3:
     					listBodyWeightExercises();
@@ -203,6 +203,17 @@ public class HomeScreen extends Activity
     	dialog.setArguments(bundle);    	
     	
     	dialog.show(getFragmentManager(), "sit_ups_dialog");
+    }
+    
+    public void doCustomExercise()
+    {
+    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
+    	
+    	Bundle bundle = new Bundle();
+    	bundle.putInt(BODY_WEIGHT_TYPE, 3);
+    	dialog.setArguments(bundle);    	
+    	
+    	dialog.show(getFragmentManager(), "custom_exercise_dialog");
     }
     
     public void doCardio(int type)

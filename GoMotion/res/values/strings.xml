@@ -21,5 +21,7 @@
     <string name="app_id">127254410787193</string>
     <string name="title_activity_sit_ups">Sit Ups</string>
     <string name="menu_logout">Logout</string>
+    <string name="custom_exercise_name">Exercise name</string>
+    
     
 </resources>
