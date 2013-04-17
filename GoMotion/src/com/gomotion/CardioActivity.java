@@ -63,9 +63,9 @@ public class CardioActivity extends Activity
 	private String timeFormatted;
 	private int time;
 	private double distance;
-	private double speed;
+	private long lastTime;
 
-	protected double minDist;
+	private int minDist;
 	private double pace;
 
 	// Debugging views
@@ -106,7 +106,6 @@ public class CardioActivity extends Activity
 		
 		timestamp = System.currentTimeMillis();
 		distance = 0;
-		minDist = 10;
 
 		timeView = (TextView) findViewById(R.id.cardio_time);
 		distanceView = (TextView) findViewById(R.id.cardio_distance);
@@ -177,9 +176,13 @@ public class CardioActivity extends Activity
 		locationListener =  new LocationListener() {
 
 			public void onLocationChanged(Location location) 
-			{
+			{				
 				if(started)
 				{		
+					long timestamp = System.currentTimeMillis();
+					long timeGap = timestamp - lastTime;
+					lastTime = timestamp;
+					
 					int size = waypoints.size();
 					double dist = waypoints.get(size - 1).distanceTo(location);
 
@@ -191,23 +194,23 @@ public class CardioActivity extends Activity
 						distance += dist;
 						distanceView.setText(String.valueOf((int) distance) + "m");
 
-						double miles = distance * 0.000621371192;
+						//double miles = distance * 0.000621371192;
 
-						pace = time / miles;						
+						pace = time / distance;						
 						int mins = (int) (pace / 60);
 						int secs = (int) (pace % 60);
 
 						String paceString = String.format("%02d:%02d", mins, secs);
 						paceView.setText(paceString + " min/mile");
 						
-						speed  = distance/time;
-						DecimalFormat decimal = new DecimalFormat("#.##");
-						speedView.setText(decimal.format(speed) + " MPH");
+						int speed  = (int) (dist/timeGap);
+						speedView.setText(String.valueOf(speed) + " metres/s");
 					}					
 				}
 				else
 				{
 					initialPoints.add(location);
+					lastTime = System.currentTimeMillis();
 				}
 			}
 
@@ -268,11 +271,24 @@ public class CardioActivity extends Activity
 				}
 			}			
 		};
-		
+				
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		int accuracy = sharedPref.getInt(SettingsActivity.ACCURACY, 100) / 100;
+		String accuracy = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "1");
 		
-		int minDist = MIN_DIST + (MAX_DIST * (1 - accuracy));
+		
+		switch(Integer.valueOf(accuracy))
+		{
+			case 1:
+				minDist = 10;
+				break;
+			case 2:
+				minDist = 30;
+				break;
+			case 3:
+				minDist = 50;
+				break;
+		}
+		
 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, minDist, locationListener);
 

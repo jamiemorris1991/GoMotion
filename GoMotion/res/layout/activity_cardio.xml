@@ -154,8 +154,8 @@
         android:layout_below="@+id/cardio_time"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
-        android:text="3 MPH"
+        android:text="3 metres/s"
         android:textColor="@color/buttonsText"
-        android:textSize="32sp" />
+        android:textSize="26sp" />
 
 </RelativeLayout>
