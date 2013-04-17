@@ -89,7 +89,7 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 				intent = new Intent(getActivity(), SitUpsActivity.class);
 				break;
 			case 3:
-				intent = new Intent(getActivity(), DipsActivity.class);
+				//intent = new Intent(getActivity(), DipsActivity.class);
 				break;
 		}
 		

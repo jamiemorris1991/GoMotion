@@ -99,7 +99,8 @@ public class HomeScreen extends Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.activity_home_screen, menu);
+    	if(session != null && session.isOpened()) getMenuInflater().inflate(R.menu.activity_home_screen_online, menu);
+    	else getMenuInflater().inflate(R.menu.activity_home_screen, menu);
         return true;
     }
     
@@ -110,9 +111,14 @@ public class HomeScreen extends Activity
             case R.id.menu_settings:
             	Intent intent = new Intent(this, SettingsActivity.class);
             	startActivity(intent);
-            default:
-                return super.onOptionsItemSelected(item);
+            	break;
+            case R.id.menu_logout:
+            	session.close();
+            	invalidateOptionsMenu();
+            	break;
         }
+        
+        return super.onOptionsItemSelected(item);
     }
     
     public void outdoorOptions(View view)
@@ -148,7 +154,7 @@ public class HomeScreen extends Activity
     
     public void indoorOptions(View view)
     {
-    	String[] items = {"Push Ups", "Sit Ups", "Dips", "Custom", "History"};
+    	String[] items = {"Push Ups", "Sit Ups", "Custom", "History"};
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
     	builder.setTitle("Indoor options")
@@ -164,9 +170,9 @@ public class HomeScreen extends Activity
     					doSitUps();
     					break;
     				case 2:
-    					doDips();
+    					//doCustom();
     					break;
-    				case 4:
+    				case 3:
     					listBodyWeightExercises();
     					break;
     			}    			
@@ -197,17 +203,6 @@ public class HomeScreen extends Activity
     	dialog.setArguments(bundle);    	
     	
     	dialog.show(getFragmentManager(), "sit_ups_dialog");
-    }
-    
-    public void doDips()
-    {
-    	BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
-    	
-    	Bundle bundle = new Bundle();
-    	bundle.putInt(BODY_WEIGHT_TYPE, 3);
-    	dialog.setArguments(bundle);    	
-    	
-    	dialog.show(getFragmentManager(), "dips_dialog");
     }
     
     public void doCardio(int type)

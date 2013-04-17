@@ -63,16 +63,6 @@
                 android:value="com.gomotion.HomeScreen" />
         </activity>        
         <activity
-            android:name="com.gomotion.DipsActivity"
-            android:label="@string/title_activity_dips"
-            android:parentActivityName="com.gomotion.HomeScreen" 
-            android:screenOrientation="portrait" >
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gomotion.HomeScreen" />
-        </activity>
-        <activity
             android:name="com.gomotion.ListBodyWeightExercisesActivity"
             android:label="@string/title_activity_list_body_weight_exercises"
             android:screenOrientation="portrait" >
