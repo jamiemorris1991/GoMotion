@@ -5,7 +5,7 @@ public abstract class Exercise
 {
 	//Online Exercises
 	protected Integer ID;
-	protected Integer userID;
+	protected String userID;
 	protected boolean shouldShare;
 	
 	//All exercises
@@ -18,7 +18,7 @@ public abstract class Exercise
 	}
 	
 	//Online or offline user functions
-	public void setOnline(int userID)
+	public void setOnline(String userID)
 	{
 		this.userID = userID;
 	}
@@ -32,15 +32,15 @@ public abstract class Exercise
 	{
 		return ID;
 	}
-	public void setID(Integer iD)
+	public void setID(Integer ID)
 	{
-		ID = iD;
+		this.ID = ID;
 	}
-	public Integer getUserID()
+	public String getUserID()
 	{
 		return userID;
 	}
-	public void setUserID(Integer userID)
+	public void setUserID(String userID)
 	{
 		this.userID = userID;
 	}

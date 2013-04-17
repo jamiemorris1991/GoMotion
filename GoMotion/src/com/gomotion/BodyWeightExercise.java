@@ -18,7 +18,7 @@ public class BodyWeightExercise extends Exercise
 		//timeStamp
 		timeStamp = r.getInt(1);
 		//user
-		userID = r.getInt(2);
+		userID = r.getString(2);
 		//sets
 		sets = r.getInt(3);
 		//reps
