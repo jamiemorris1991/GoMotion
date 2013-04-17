@@ -23,10 +23,10 @@ public class BodyWeightExercise extends Exercise
 		sets = r.getInt(3);
 		//reps
 		reps = r.getInt(4);
+		//name
+		name = r.getString(6).replace("\\\"", "\"");
 		//type
 		type = BodyWeightType.values()[r.getInt(5)];
-		//name
-		name = r.getString(6);
 	}
 	
 	public BodyWeightExercise(int sets, int reps, BodyWeightType type)
