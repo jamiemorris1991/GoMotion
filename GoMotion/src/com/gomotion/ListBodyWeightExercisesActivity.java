@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -15,7 +18,9 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.facebook.android.Util;
 import com.facebook.model.GraphUser;
+import com.gomotion.BodyWeightExercise.BodyWeightType;
 import com.gomotion.R;
 
 import android.app.AlertDialog;
@@ -249,8 +254,12 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 
 			@Override
 			protected Boolean doInBackground(BodyWeightExercise... params) {
-
-				return OnlineDatabase.add(db.getBodyWeightExercise(postItem));
+				if(Session.getActiveSession() == null)
+					return false;
+				Request request = Request.newMeRequest(Session.getActiveSession(), null);
+				Response response = request.executeAndWait();
+				params[0].setUserID((String)response.getGraphObject().getProperty("id"));
+				return OnlineDatabase.add(params[0]);
 			}
 
 			@Override
@@ -278,7 +287,7 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 
 			}
 		};
-
+		
 		task.execute(db.getBodyWeightExercise(postItem));
 	}
 

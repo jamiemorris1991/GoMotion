@@ -27,7 +27,7 @@ public class CardioExercise extends Exercise
 		//timeStamp
 		timeStamp = r.getInt(1);
 		//user
-		userID = r.getInt(2);
+		userID = r.getString(2);
 		//timeLength
 		timeLength = r.getInt(3);
 		//distance

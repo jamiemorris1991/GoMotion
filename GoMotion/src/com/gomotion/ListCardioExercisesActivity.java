@@ -134,7 +134,7 @@ public class ListCardioExercisesActivity extends ListActivity
 					else if(item == 1 && online)
 					{
 						postItem = cid;
-						postRoute();
+						postRouteFacebook();
 					}
 					else if((item == 1 && !online) || item == 2) 
 					{
@@ -154,7 +154,7 @@ public class ListCardioExercisesActivity extends ListActivity
     	if (pendingPublishReauthorization && state.equals(SessionState.OPENED_TOKEN_UPDATED)) 
     	{
     	    pendingPublishReauthorization = false;
-    	    postRoute();
+    	    postRouteFacebook();
     	}
     }
     
@@ -166,7 +166,7 @@ public class ListCardioExercisesActivity extends ListActivity
         outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
     }
     
-    public void postRoute()
+    public void postRouteFacebook()
     {
     	    if (session != null){
 
