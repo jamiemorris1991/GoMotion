@@ -1,29 +1,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:orientation="vertical" >
-       
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
-    
-    	<Button 
-		    android:id="@+id/cardio_options"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content" 
-		    android:layout_weight="1"
-		    android:text="Outdoor"
-		    android:onClick="outdoorOptions" />
-		
-		<Button 
-		    android:id="@+id/body_weight_options"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="Indoor" 
-		    android:onClick="indoorOptions" />
-		
-	</LinearLayout>
-	
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/cardio_options"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="outdoorOptions"
+            android:text="Outdoor"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+        <Button
+            android:id="@+id/body_weight_options"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="indoorOptions"
+            android:text="Indoor"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayout1"
+        android:dividerPadding="@dimen/activity_horizontal_margin"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
 </RelativeLayout>

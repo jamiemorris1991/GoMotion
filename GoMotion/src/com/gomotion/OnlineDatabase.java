@@ -1,6 +1,8 @@
 package com.gomotion;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class OnlineDatabase {
 	static private final String url = "jdbc:mysql://hexdex.net:3306/hexdexne_csc2015";
@@ -9,8 +11,6 @@ public class OnlineDatabase {
 	static private Connection connection;
 
 	static public Connection getConnection() throws SQLException {
-		System.out.println("Connecting to database...");
-
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -34,7 +34,7 @@ public class OnlineDatabase {
 					+ exercise.getUserID() + ","
 					+ exercise.getSets() + ","
 					+ exercise.getReps() + ","
-					+ "\"" + exercise.getName().replace("\"", "\\\"") + "\","
+					+ (exercise.getName() == null ? "null," : "\"" + exercise.getName().replace("\"", "\\\"") + "\",")
 					+ exercise.getType().ordinal() + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -62,37 +62,67 @@ public class OnlineDatabase {
 		return true;
 	}
 
-	static public BodyWeightExercise getFirstBodyWeightExercise(int userID) {
+	static public LinkedList<BodyWeightExercise> getBodyWeightExercises(LinkedList<String> friends, int num) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
+			
+			String whereClause = "";
+			if(friends.size() == 0)
+				return null;
+			else
+			{
+				ListIterator<String> i = friends.listIterator();
+				while(i.hasNext())
+					whereClause += "b.user = \"" + i.next() + "\" OR ";
+				whereClause = whereClause.substring(0, whereClause.length() - 4);
+			}
+			
+
+			String query = "SELECT * FROM bodyweight b WHERE "
+					+ whereClause + " LIMIT " + num + ";";
 
 			ResultSet result = s
-					.executeQuery("SELECT FROM bodyweight b WHERE b.user = "
-							+ userID + " LIMIT 1;");
+					.executeQuery(query);
 
-			if (!result.next())
-				return null;
+			LinkedList<BodyWeightExercise> out = new LinkedList<BodyWeightExercise>();
+			while(result.next())
+				out.add(new BodyWeightExercise(result));
 
-			return new BodyWeightExercise(result);
+			return out;
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
 
-	static public CardioExercise getFirstCardioExercise(int userID) {
+
+	static public LinkedList<CardioExercise> getCardioExercises(LinkedList<String> friends, int num) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
+			
+			String whereClause = "";
+			if(friends.size() == 0)
+				return null;
+			else
+			{
+				ListIterator<String> i = friends.listIterator();
+				while(i.hasNext())
+					whereClause += "c.user = \"" + i.next() + "\" OR ";
+				whereClause = whereClause.substring(0, whereClause.length() - 4);
+			}
+			
 
 			ResultSet result = s
-					.executeQuery("SELECT FROM cardio c WHERE c.user = "
-							+ userID + " LIMIT 1;");
+					.executeQuery("SELECT * FROM cardio c WHERE "
+							+ whereClause + " LIMIT " + num + ";");
 
-			if (!result.next())
-				return null;
+			LinkedList<CardioExercise> out = new LinkedList<CardioExercise>();
+			while(result.next())
+				out.add(new CardioExercise(result));
 
-			return new CardioExercise(result);
+			return out;
 		} catch (SQLException e) {
 			return null;
 		}

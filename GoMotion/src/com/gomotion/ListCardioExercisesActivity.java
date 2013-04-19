@@ -202,7 +202,7 @@ public class ListCardioExercisesActivity extends ListActivity
 				            CardioExercise exercise = db.getCardioExercise(postItem);
 				            
 				            String mapURL = makeGoogleMapsString(db,
-									exercise);
+									exercise, ListCardioExercisesActivity.this);
 				            				
 							String typeVerb = "";
 							
@@ -327,8 +327,8 @@ public class ListCardioExercisesActivity extends ListActivity
     	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 
-	private String makeGoogleMapsString(OfflineDatabase db,
-			CardioExercise exercise) {
+	static public String makeGoogleMapsString(OfflineDatabase db,
+			CardioExercise exercise, Context c) {
 		// Build URL for Google Maps
 		StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
 		String size = "size=500x500";
@@ -356,7 +356,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		params.append(startMarker);
 		params.append(endMarker);*/
 		
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(c);
          
 		String colour = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "3");
 		

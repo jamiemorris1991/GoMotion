@@ -14,19 +14,20 @@ public class BodyWeightExercise extends Exercise
 	public BodyWeightExercise(ResultSet r) throws SQLException
 	{
 		//ID
-		ID = r.getInt(0);
+		ID = r.getInt(1);
 		//timeStamp
-		timeStamp = r.getInt(1);
+		timeStamp = r.getLong(2);
 		//user
-		userID = r.getString(2);
+		userID = r.getString(3);
 		//sets
-		sets = r.getInt(3);
+		sets = r.getInt(4);
 		//reps
-		reps = r.getInt(4);
+		reps = r.getInt(5);
 		//name
-		name = r.getString(6).replace("\\\"", "\"");
+		name = r.getString(6);
+		if(name != null) name = name.replace("\\\"", "\"");
 		//type
-		type = BodyWeightType.values()[r.getInt(5)];
+		type = BodyWeightType.values()[r.getInt(7)];
 	}
 	
 	public BodyWeightExercise(int sets, int reps, BodyWeightType type)
