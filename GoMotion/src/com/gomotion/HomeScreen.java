@@ -67,16 +67,14 @@ public class HomeScreen extends Activity {
 			// idToName = new HashMap<String, String>();
 
 			// make request to the /me API
-			Request.executeMyFriendsRequestAsync(session,
-					new Request.GraphUserListCallback() {
+			Request.executeMyFriendsRequestAsync(session, new Request.GraphUserListCallback() {
 
-						public void onCompleted(List<GraphUser> users,
-								Response response) {
-							friends = users;
-							setSingleWallMessage("Communicating with database");
-							buildWall();
-						}
-					});
+				public void onCompleted(List<GraphUser> users, Response response) {
+					friends = users;
+					setSingleWallMessage("Communicating with database");
+					buildWall();
+				}
+			});
 		}
 	}
 
@@ -302,9 +300,12 @@ public class HomeScreen extends Activity {
 	}
 
 	public void outdoorOptions(View view) {
-		final Item[] items = { new Item("Walk", R.drawable.walk),
+		final Item[] items = { 
+				new Item("Walk", R.drawable.walk),
 				new Item("Run", R.drawable.run),
-				new Item("Cycle", R.drawable.bike), new Item("History", 0), };
+				new Item("Cycle", R.drawable.bike),
+				new Item("History", 0),
+			};
 
 		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this,
 				android.R.layout.select_dialog_item, android.R.id.text1, items) {

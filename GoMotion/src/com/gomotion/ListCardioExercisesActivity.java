@@ -34,6 +34,9 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.PolylineOptionsCreator;
 
 
 public class ListCardioExercisesActivity extends ListActivity 
@@ -258,7 +261,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			    	                              HttpMethod.POST, callback);
 
 			    	        final RequestAsyncTask task = new RequestAsyncTask(request);
-			    	        task.execute();
+			    	        //task.execute();
 						}
 					}
 				});
@@ -327,25 +330,26 @@ public class ListCardioExercisesActivity extends ListActivity
     	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 
-	static public String makeGoogleMapsString(OfflineDatabase db,
-			CardioExercise exercise, Context c) {
+	static public String makeGoogleMapsString(OfflineDatabase db, CardioExercise exercise, Context c) {
+		
 		// Build URL for Google Maps
 		StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
 		String size = "size=500x500";
 		params.append(size);
 		
 		Cursor waypoints = db.getWaypoints(exercise.getID());
+		System.out.println(waypoints.getCount());
 		
 		waypoints.moveToPosition(waypoints.getCount() / 2);
 		
 		// Must center and zoom map until markers can be used
-		params.append("&zoom=15");
-		params.append("&center=" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
+		//params.append("&zoom=15");
+		//params.append("&center=" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
 		
 		waypoints.moveToFirst();
 		
 		// Can't use multiple markers as Facebook removes parameters with the same name
-		/* waypoints.moveToFirst();
+		/*waypoints.moveToFirst();
 		Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
 		waypoints.moveToLast();
 		Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
@@ -355,6 +359,16 @@ public class ListCardioExercisesActivity extends ListActivity
 		String endMarker = String.format("&markers=color:red|label:F|%f,%f", last.getLatitude(), last.getLongitude());
 		params.append(startMarker);
 		params.append(endMarker);*/
+		
+		waypoints.moveToFirst();
+		Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
+		waypoints.moveToLast();
+		Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
+		waypoints.moveToFirst();
+		
+		String markers = String.format("&markers=color:green|%f,%f|%f,%f", first.getLatitude(), first.getLongitude(), last.getLatitude(), last.getLongitude());
+		
+		params.append(markers);
 		
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(c);
          
@@ -376,20 +390,64 @@ public class ListCardioExercisesActivity extends ListActivity
 				break;
 		}
 		
+		//String pathSettings = "&path=color:" + colour + transparency + "|weight:5|enc:";
 		String pathSettings = "&path=color:" + colour + transparency + "|weight:5";
+
 		params.append(pathSettings);
 		
 		int n = 0;
 		int threshold = (int) Math.ceil((waypoints.getCount() / THESHOLD_ACCURACY));
 		do {
 			n++;
-			if(n % threshold == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
+			if(threshold == 0 || n % threshold == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
 			
+//			String lat = encodeSignedNumber(floor1e5(waypoints.getDouble(0)));
+//			String lng = encodeSignedNumber(floor1e5(waypoints.getDouble(1)));
+//			System.out.println(waypoints.getDouble(0) + ", " + waypoints.getDouble(1));
+//			params.append(lat + lng);
 		} while(waypoints.moveToNext());
+
+		System.out.println(params.toString());
 		
 		params.append("&sensor=false");
 		return params.toString();
 	}
+	
+    private static int floor1e5(double coordinate) {
+        return (int)(Math.round(coordinate * 1e5));
+    }
+
+    private static String encodeSignedNumber(int num) {
+        int sgn_num = num << 1;
+        if (num < 0) {
+            sgn_num = ~(sgn_num);
+        }
+        return(encodeNumber(sgn_num));
+    }
+
+    private static String encodeNumber(int num) {
+
+        StringBuffer encodeString = new StringBuffer();
+
+        while (num >= 0x20) {
+                int nextValue = (0x20 | (num & 0x1f)) + 63;
+                if (nextValue == 92) {
+                        encodeString.append((char)(nextValue));
+                }
+                encodeString.append((char)(nextValue));
+            num >>= 5;
+        }
+
+        num += 63;
+        if (num == 92) {
+                encodeString.append((char)(num));
+        }
+
+        encodeString.append((char)(num));
+
+        return encodeString.toString();
+
+    }
 
 
 	public static String formatExerciseType(String s)
@@ -430,7 +488,6 @@ public class ListCardioExercisesActivity extends ListActivity
 			String units = sharedPref.getString(SettingsActivity.UNITS, "1");
 			
 			String accuracy = sharedPref.getString(SettingsActivity.ACCURACY, "1");
-			System.out.println(accuracy);
 			
 			String title = formatExerciseType(cursor.getString(4));
 			TextView type = (TextView) view.getTag(R.id.cardio_type);
