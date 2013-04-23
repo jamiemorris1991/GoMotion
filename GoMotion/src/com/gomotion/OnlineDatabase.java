@@ -1,6 +1,8 @@
 package com.gomotion;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -62,7 +64,7 @@ public class OnlineDatabase {
 		return true;
 	}
 
-	static public LinkedList<BodyWeightExercise> getBodyWeightExercises(LinkedList<String> friends, int num) {
+	static public LinkedList<BodyWeightExercise> getBodyWeightExercises(HashMap<String, FacebookUser> friends, int num) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
@@ -72,7 +74,7 @@ public class OnlineDatabase {
 				return null;
 			else
 			{
-				ListIterator<String> i = friends.listIterator();
+				Iterator<String> i = friends.keySet().iterator();
 				while(i.hasNext())
 					whereClause += "b.user = \"" + i.next() + "\" OR ";
 				whereClause = whereClause.substring(0, whereClause.length() - 4);
@@ -97,7 +99,7 @@ public class OnlineDatabase {
 	}
 
 
-	static public LinkedList<CardioExercise> getCardioExercises(LinkedList<String> friends, int num) {
+	static public LinkedList<CardioExercise> getCardioExercises(HashMap<String, FacebookUser> friends, int num) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
@@ -107,7 +109,7 @@ public class OnlineDatabase {
 				return null;
 			else
 			{
-				ListIterator<String> i = friends.listIterator();
+				Iterator<String> i = friends.keySet().iterator();
 				while(i.hasNext())
 					whereClause += "c.user = \"" + i.next() + "\" OR ";
 				whereClause = whereClause.substring(0, whereClause.length() - 4);

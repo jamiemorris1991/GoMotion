@@ -1,8 +1,10 @@
 package com.gomotion;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,23 +18,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
@@ -42,14 +43,13 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.gomotion.BodyWeightExercise.BodyWeightType;
-import com.google.android.gms.internal.e;
 
 public class HomeScreen extends Activity {
 	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";
 	public static final String BODY_WEIGHT_TYPE = "com.gomotion.BODY_WEIGHT_TYPE";
 
-	// private LinkedList<String> idList;
-	List<GraphUser> friends;
+	private HashMap<String, FacebookUser> friends;
+	//List<GraphUser> friends;
 
 	private Session session;
 
@@ -62,35 +62,95 @@ public class HomeScreen extends Activity {
 
 		session = Session.getActiveSession();
 
-		if (session != null) {
-			// idList = new LinkedList<String>();
-			// idToName = new HashMap<String, String>();
+//		if (session != null) {
+//			// idList = new LinkedList<String>();
+//			// idToName = new HashMap<String, String>();
+//
+//			// make request to the /me API
+//			Request.executeMyFriendsRequestAsync(session, new Request.GraphUserListCallback() {
+//
+//				public void onCompleted(List<GraphUser> users, Response response) {
+//					friends = users;
+//					setSingleWallMessage("Communicating with database");
+//					buildWall();
+//				}
+//			});
+//		}
+
+		if(session != null)
+		{	
+			friends = new HashMap<String, FacebookUser>();
 
 			// make request to the /me API
-			Request.executeMyFriendsRequestAsync(session, new Request.GraphUserListCallback() {
+			Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
 
-				public void onCompleted(List<GraphUser> users, Response response) {
-					friends = users;
-					setSingleWallMessage("Communicating with database");
-					buildWall();
+				// callback after Graph API response with user object
+				public void onCompleted(GraphUser user, Response response) {
+					if(user != null)
+					{
+						final Bundle postParams = new Bundle();
+
+						postParams.putString("fields", "name,picture");
+
+						Request.Callback callback = new Request.Callback() {
+							public void onCompleted(Response response) {
+
+								JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
+
+								try {
+									JSONArray jsonList = graphResponse.getJSONArray("data");
+
+									for(int i = 0; i < jsonList.length(); i++)
+									{
+										JSONObject obj = jsonList.getJSONObject(i);
+										String id = obj.getString("id");
+										String name = obj.getString("name");										
+										String pictureURL = obj.getJSONObject("picture").getJSONObject("data").getString("url");
+										
+										friends.put(id, new FacebookUser(id, name, pictureURL));
+									}
+
+									System.out.println(friends);
+
+								} catch (JSONException e) {
+									Log.i("JSON Error",
+											"JSON error "+ e.getMessage());
+								}	
+								FacebookRequestError error = response.getError();
+								if (error != null) {
+									System.out.println(error.getErrorMessage());
+								} else {
+									System.out.println("Friend IDs retrieved successfully");
+								}
+							}
+						};
+
+						Request request = new Request(session, "me/friends", postParams,
+								HttpMethod.GET, callback);
+
+						final RequestAsyncTask task = new RequestAsyncTask(request);
+						task.execute();
+						
+						setSingleWallMessage("Communicating with database");
+						buildWall();
+					}					
 				}
 			});
 		}
 	}
 
-	private void buildWall() {
+	private void buildWall()
+	{
 
 		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
 			@Override
 			protected Void doInBackground(Void... params) {
 
-				LinkedList<String> idList = getFriendIDs();
-
 				LinkedList<BodyWeightExercise> bwe = OnlineDatabase
-						.getBodyWeightExercises(idList, 10);
+						.getBodyWeightExercises(friends, 10);
 				LinkedList<CardioExercise> ce = OnlineDatabase
-						.getCardioExercises(idList, 10);
+						.getCardioExercises(friends, 10);
 
 				if (bwe == null || ce == null) {
 					setSingleWallMessageInMainThread("Failed communicate with database");
@@ -132,33 +192,63 @@ public class HomeScreen extends Activity {
 			}
 
 		};
-
+		
 		task.execute();
 	}
 
-	private GraphUser getFriend(String id) {
-		ListIterator<GraphUser> i = friends.listIterator();
-		while (i.hasNext()) {
-			GraphUser u = i.next();
-			if (u.getId().equals(id))
-				return u;
-		}
-		return null;
-	}
-
-	private void buildWallFromExcercises(List<Exercise> exercises) {
+	private void buildWallFromExcercises(List<Exercise> exercises)
+	{
 		LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
 		wall.removeAllViews();
 
 		ListIterator<Exercise> i = exercises.listIterator();
 		while (i.hasNext()) {
-			Exercise exercise = i.next();
-			GraphUser friend = getFriend(exercise.getUserID());
+			final Exercise exercise = i.next();
+			
+			final LinearLayout post = new LinearLayout(this);
+			post.setOrientation(LinearLayout.HORIZONTAL);
+			
+			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
-			TextView text = new TextView(getApplicationContext());
+				@Override
+				protected Void doInBackground(Void... params) {
+					
+					try	{
+						System.out.println(friends.get(exercise.getUserID()).getPictureURL());
+						URL newurl = new URL(friends.get(exercise.getUserID()).getPictureURL());
+						final Bitmap bm = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+						System.out.println(bm.toString());
+						
+						runOnUiThread(new Runnable() {
+							public void run() {
+								System.out.println("Adding pic to post");
+								//ImageView profilePic = new ImageView(HomeScreen.this);	
+								//profilePic.setImageBitmap(bm);				
+								//post.addView(profilePic);
+								TextView t = new TextView(HomeScreen.this);
+								t.setText(bm.toString());
+								post.addView(t);
+								
+								System.out.println("Added");
+							}
+						});
+						
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (IOException e)	{
+						e.printStackTrace();
+					}
+					
+					return null;
+				} 
+			};
+			
+			task.execute();
+
+			TextView text = new TextView(this);
 			text.setTextColor(Color.BLACK);
-			text.setTextSize(20);
-			text.setBackgroundColor(getResources().getColor(R.color.buttons));
+			text.setTextSize(14);
+			//text.setBackgroundColor(getResources().getColor(R.color.buttons));
 			text.setPadding(4, 0, 4, 8);
 
 			long time = System.currentTimeMillis() - exercise.getTimeStamp();
@@ -168,7 +258,7 @@ public class HomeScreen extends Activity {
 			//DEBUG
 			//message += "(Timestamp: " + exercise.getTimeStamp() + ")\n";
 			
-			message += friend.getName() + " completed a \"";
+			message += friends.get( exercise.getUserID() ).getName() + " completed a \"";
 			if(exercise instanceof BodyWeightExercise)
 			{
 				BodyWeightExercise b = (BodyWeightExercise) exercise;
@@ -204,7 +294,8 @@ public class HomeScreen extends Activity {
 			}
 			
 			text.setText(message);
-			wall.addView(text);
+			post.addView(text);
+			wall.addView(post);
 		}
 	}
 
@@ -452,14 +543,5 @@ public class HomeScreen extends Activity {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-	}
-
-	private LinkedList<String> getFriendIDs() {
-		LinkedList<String> idList;
-		idList = new LinkedList<String>();
-		ListIterator<GraphUser> friendIterator = friends.listIterator();
-		while (friendIterator.hasNext())
-			idList.add(friendIterator.next().getId());
-		return idList;
 	}
 }
