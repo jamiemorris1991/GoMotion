@@ -222,12 +222,9 @@ public class HomeScreen extends Activity {
 						runOnUiThread(new Runnable() {
 							public void run() {
 								System.out.println("Adding pic to post");
-								//ImageView profilePic = new ImageView(HomeScreen.this);	
-								//profilePic.setImageBitmap(bm);				
-								//post.addView(profilePic);
-								TextView t = new TextView(HomeScreen.this);
-								t.setText(bm.toString());
-								post.addView(t);
+								ImageView profilePic = new ImageView(HomeScreen.this);	
+								profilePic.setImageBitmap(bm);				
+								post.addView(profilePic);
 								
 								System.out.println("Added");
 							}
