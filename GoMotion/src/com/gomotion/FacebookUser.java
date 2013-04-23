@@ -40,5 +40,8 @@ public class FacebookUser
 		this.pictureURL = pictureURL;
 	}
 
-	
+	public String toString()
+	{
+		return this.name;
+	}
 }

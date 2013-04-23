@@ -90,7 +90,7 @@ public class HomeScreen extends Activity {
 					{
 						final Bundle postParams = new Bundle();
 
-						postParams.putString("fields", "name,picture");
+						postParams.putString("fields", "name,installed,picture");
 
 						Request.Callback callback = new Request.Callback() {
 							public void onCompleted(Response response) {
@@ -103,11 +103,15 @@ public class HomeScreen extends Activity {
 									for(int i = 0; i < jsonList.length(); i++)
 									{
 										JSONObject obj = jsonList.getJSONObject(i);
-										String id = obj.getString("id");
-										String name = obj.getString("name");										
-										String pictureURL = obj.getJSONObject("picture").getJSONObject("data").getString("url");
-										
-										friends.put(id, new FacebookUser(id, name, pictureURL));
+
+										if(!obj.isNull("installed")) 
+										{						
+											String id = obj.getString("id");
+											String name = obj.getString("name");										
+											String pictureURL = obj.getJSONObject("picture").getJSONObject("data").getString("url");
+											
+											friends.put(id, new FacebookUser(id, name, pictureURL));
+										}
 									}
 
 									System.out.println(friends);
