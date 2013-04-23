@@ -167,7 +167,10 @@ public class HomeScreen extends Activity {
 
 			String message = "";
 			
-			message = friend.getName() + " completed a \"";
+			//DEBUG
+			//message += "(Timestamp: " + exercise.getTimeStamp() + ")\n";
+			
+			message += friend.getName() + " completed a \"";
 			if(exercise instanceof BodyWeightExercise)
 			{
 				BodyWeightExercise b = (BodyWeightExercise) exercise;
