@@ -321,7 +321,8 @@ public class HomeScreen extends Activity {
 	}
 	
 	
-	private String getTimestampString(long millis) {
+	private String getTimestampString(long millis)
+	{
 		// Seconds
 		millis /= 1000;
 		if (millis < 120) {
@@ -353,7 +354,8 @@ public class HomeScreen extends Activity {
 		return millis + " month" + (millis == 1 ? "" : "s");
 	}
 
-	private void setSingleWallMessageInMainThread(final String m) {
+	private void setSingleWallMessageInMainThread(final String m)
+	{
 		this.runOnUiThread(new Runnable() {
 			public void run() {
 				setSingleWallMessage(m);
@@ -361,7 +363,8 @@ public class HomeScreen extends Activity {
 		});
 	}
 
-	private void setSingleWallMessage(String m) {
+	private void setSingleWallMessage(String m)
+	{
 		LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
 		TextView text = new TextView(getApplicationContext());
 		text.setText(m);
@@ -370,7 +373,8 @@ public class HomeScreen extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		if (session != null && session.isOpened())
 			getMenuInflater().inflate(R.menu.activity_home_screen_online, menu);
 		else
@@ -379,7 +383,8 @@ public class HomeScreen extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
 			Intent intent = new Intent(this, SettingsActivity.class);
@@ -394,7 +399,8 @@ public class HomeScreen extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void outdoorOptions(View view) {
+	public void outdoorOptions(View view)
+	{
 		final Item[] items = { 
 				new Item("Walk", R.drawable.walk),
 				new Item("Run", R.drawable.run),
@@ -461,10 +467,38 @@ public class HomeScreen extends Activity {
 	}
 
 	public void indoorOptions(View view) {
-		String[] items = { "Push Ups", "Sit Ups", "Custom", "History" };
+		final Item[] items = { 
+				new Item("Push Ups", R.drawable.pressup),
+				new Item("Sit Ups", R.drawable.situp),
+				new Item("Custom", 0),
+				new Item("History", 0),
+			};
+		
+		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this,
+				android.R.layout.select_dialog_item, android.R.id.text1, items) {
+			public View getView(int position, View convertView,
+					ViewGroup viewGroup) {
+				// User super class to create the View
+				View v = super.getView(position, convertView, viewGroup);
+				TextView tv = (TextView) v.findViewById(android.R.id.text1);
+
+				// Put the image on the TextView
+				tv.setCompoundDrawablesWithIntrinsicBounds(
+						items[position].icon, 0, 0, 0);
+
+				// Add margin between image and text (support various screen
+				// densities)
+				int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+				tv.setCompoundDrawablePadding(dp5);
+				tv.setTextSize(18);
+
+				return v;
+			}
+		};
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		builder.setTitle("Indoor options").setItems(items,
+		builder.setTitle("Indoor options").setAdapter(adapter,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int i) {
 
