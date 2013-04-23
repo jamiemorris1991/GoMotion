@@ -381,6 +381,11 @@ public class CardioActivity extends Activity
 			.setTitle("Warning")
 			.setMessage("Are you sure you have finished this exercise and do not wish to continue? (any further progress will be lost)")
 			.setCancelable(true)
+			.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						})
 			.setPositiveButton("Finish exercise", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					

@@ -47,7 +47,7 @@ public class ListCardioExercisesActivity extends ListActivity
 	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
 	private static final String POST_ITEM = "postItem";
 
-	protected static final int THESHOLD_ACCURACY = 20;
+	protected static final int THESHOLD_ACCURACY = 60;
 	
 	private boolean pendingPublishReauthorization = false;
 	private int postItem;
@@ -175,6 +175,70 @@ public class ListCardioExercisesActivity extends ListActivity
         outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
     }
     
+   
+    
+    public void postRouteGoMotion()
+    {
+		AsyncTask<CardioExercise, Void, Boolean> task;
+		task = new AsyncTask<CardioExercise, Void, Boolean>() {
+	
+			@Override
+			protected Boolean doInBackground(CardioExercise... params) {
+				if(Session.getActiveSession() == null)
+					return false;
+				Request request = Request.newMeRequest(Session.getActiveSession(), null);
+				Response response = request.executeAndWait();
+				params[0].setUserID((String)response.getGraphObject().getProperty("id"));
+				//#ADD URL
+				return OnlineDatabase.add(params[0]);
+			}
+	
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if (result)
+					ListCardioExercisesActivity.this
+							.runOnUiThread(new Runnable() {
+								public void run() {
+									Toast.makeText(
+											ListCardioExercisesActivity.this,
+											"Exercise post successful",
+											Toast.LENGTH_SHORT).show();
+								}
+							});
+				else
+					ListCardioExercisesActivity.this
+							.runOnUiThread(new Runnable() {
+								public void run() {
+									Toast.makeText(
+											ListCardioExercisesActivity.this,
+											"Failed to communicate with database",
+											Toast.LENGTH_SHORT).show();
+								}
+							});
+	
+			}
+		};
+		
+		task.execute(db.getCardioExercise(postItem));
+	}
+    
+    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset)
+    {
+        for (String string : subset) {
+            if (!superset.contains(string)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+    }
+    
     public void postRouteFacebook()
     {
     	    if (session != null){
@@ -261,7 +325,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			    	                              HttpMethod.POST, callback);
 
 			    	        final RequestAsyncTask task = new RequestAsyncTask(request);
-			    	        //task.execute();
+			    	        task.execute();
 						}
 					}
 				});
@@ -269,68 +333,9 @@ public class ListCardioExercisesActivity extends ListActivity
 				System.out.println("Status posted.");
     	    }
     }
-    
-    public void postRouteGoMotion() {
-		AsyncTask<CardioExercise, Void, Boolean> task;
-		task = new AsyncTask<CardioExercise, Void, Boolean>() {
-	
-			@Override
-			protected Boolean doInBackground(CardioExercise... params) {
-				if(Session.getActiveSession() == null)
-					return false;
-				Request request = Request.newMeRequest(Session.getActiveSession(), null);
-				Response response = request.executeAndWait();
-				params[0].setUserID((String)response.getGraphObject().getProperty("id"));
-				//#ADD URL
-				return OnlineDatabase.add(params[0]);
-			}
-	
-			@Override
-			protected void onPostExecute(Boolean result) {
-				if (result)
-					ListCardioExercisesActivity.this
-							.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(
-											ListCardioExercisesActivity.this,
-											"Exercise post successful",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-				else
-					ListCardioExercisesActivity.this
-							.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(
-											ListCardioExercisesActivity.this,
-											"Failed to communicate with database",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-	
-			}
-		};
-		
-		task.execute(db.getCardioExercise(postItem));
-	}
-    
-    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
-        for (String string : subset) {
-            if (!superset.contains(string)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-    	super.onActivityResult(requestCode, resultCode, data);
-    	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-    }
-
-	static public String makeGoogleMapsString(OfflineDatabase db, CardioExercise exercise, Context c) {
+	static public String makeGoogleMapsString(OfflineDatabase db, CardioExercise exercise, Context c)
+	{
 		
 		// Build URL for Google Maps
 		StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
@@ -338,13 +343,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		params.append(size);
 		
 		Cursor waypoints = db.getWaypoints(exercise.getID());
-		System.out.println(waypoints.getCount());
-		
-		waypoints.moveToPosition(waypoints.getCount() / 2);
-		
-		// Must center and zoom map until markers can be used
-		//params.append("&zoom=15");
-		//params.append("&center=" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
+		//System.out.println(waypoints.getCount());
 		
 		waypoints.moveToFirst();
 		
@@ -366,7 +365,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
 		waypoints.moveToFirst();
 		
-		String markers = String.format("&markers=color:green|%f,%f|%f,%f", first.getLatitude(), first.getLongitude(), last.getLatitude(), last.getLongitude());
+		String markers = String.format("&markers=color:blue|%f,%f|%f,%f", first.getLatitude(), first.getLongitude(), last.getLatitude(), last.getLongitude());
 		
 		params.append(markers);
 		
@@ -390,21 +389,28 @@ public class ListCardioExercisesActivity extends ListActivity
 				break;
 		}
 		
-		//String pathSettings = "&path=color:" + colour + transparency + "|weight:5|enc:";
-		String pathSettings = "&path=color:" + colour + transparency + "|weight:5";
+		String pathSettings = "&path=color:" + colour + transparency + "|weight:5|enc:";
 
 		params.append(pathSettings);
 		
-		int n = 0;
+		Waypoint lastPoint = new Waypoint(0, 0);
+		int n = -1;
 		int threshold = (int) Math.ceil((waypoints.getCount() / THESHOLD_ACCURACY));
 		do {
 			n++;
-			if(threshold == 0 || n % threshold == 0) params.append("|" + waypoints.getDouble(0) + "," + waypoints.getDouble(1));
-			
-//			String lat = encodeSignedNumber(floor1e5(waypoints.getDouble(0)));
-//			String lng = encodeSignedNumber(floor1e5(waypoints.getDouble(1)));
-//			System.out.println(waypoints.getDouble(0) + ", " + waypoints.getDouble(1));
-//			params.append(lat + lng);
+			if(threshold == 0 || n % threshold == 0) 
+			{			
+				String lat = "";
+				String lng = "";
+				
+				lat = encodeSignedNumber(floor1e5(waypoints.getDouble(0) - lastPoint.getLatitude()));
+				lng = encodeSignedNumber(floor1e5(waypoints.getDouble(1) - lastPoint.getLongitude()));
+				
+				//System.out.println(n + ":" + lat + lng);
+				params.append(lat + lng);
+				lastPoint = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
+				
+			}
 		} while(waypoints.moveToNext());
 
 		System.out.println(params.toString());
