@@ -8,4 +8,5 @@
     <color name="background">#FFFFFF</color>
     <color name="timerBackground">#435888</color>
     <color name="blueBackground">#E4E4FF</color>
+    <color name="hoverBlue">#0000FF</color>
 </resources>

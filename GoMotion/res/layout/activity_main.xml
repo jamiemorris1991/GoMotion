@@ -5,105 +5,105 @@
     android:background="@color/blueBackground"
     android:orientation="vertical"
     tools:context=".MainActivity" >
-
+    	
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:maxHeight="280dp"
+        android:maxWidth="200dp"
+        android:minHeight="240dp"
+        android:minWidth="175dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_logonew2" />
     
+<!--      <LinearLayout -->
+<!--         android:id="@+id/linearLayout1" -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:orientation="horizontal" -->
+<!--         android:layout_below="@+id/logo" > -->
+	
+	    
+	    <ImageView
+	        android:id="@+id/situp_image"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/ic_situp"
+	        android:layout_below="@+id/logo"
+	        android:layout_centerHorizontal="true" />	    
+	    
+	    <ImageView
+	        android:id="@+id/bike_image"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/ic_bike"
+	        android:layout_below="@+id/logo"
+	        android:layout_toLeftOf="@id/situp_image"
+	        android:layout_marginRight="20dp" />
+	    
+	    <ImageView
+	        android:id="@+id/run_image"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/ic_run"
+	        android:layout_below="@+id/logo" 
+	        android:layout_toRightOf="@id/situp_image" 
+	        android:layout_marginLeft="20dp"/>
+	
+    
+<!--      </LinearLayout> -->
+     
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView2"
-        android:layout_marginTop="14dp"
-        android:paddingLeft="15dp"
-        android:text="Test your fitness against yourself and friends, better yourself," />
+        android:layout_centerHorizontal="true"  
+        android:layout_below="@id/situp_image"
+        android:layout_margin="20dp"      
+        android:text="Test your fitness against yourself, your friends and better yourself." />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:text="Get up and GoMotion" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
+        android:layout_below="@id/textView2"    
+        android:text="Get up and GoMotion." />  
+        
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_marginRight="25dp"
-        android:layout_toLeftOf="@+id/imageView2"
-        android:src="@drawable/ic_bike" />
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true" >
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_marginLeft="24dp"
-        android:layout_toRightOf="@+id/imageView2"
-        android:src="@drawable/ic_run" />
+	    <Button
+	        android:id="@+id/btnOffline"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:background="@color/goBlue"
+	        android:text="Offline Mode"
+	        android:textColor="@color/buttonsText"
+	        android:layout_weight="1"
+	        android:layout_marginRight="1dp"
+	        android:onClick="offlineMode" />
+	
+	    <Button
+	        android:id="@+id/btnFb"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:background="@color/goBlue"
+	        android:layout_weight="1"
+	        android:text="Facebook"	        
+	        android:textColor="@color/buttonsText"
+	        android:onClick="loginFacebook" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_situp" />
-
-
-    <Button
-        android:id="@+id/btnOffline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/imageView2"
-        android:background="@color/goBlue"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:text="Offline Mode"
-        android:textColor="@color/buttonsText"
-        android:onClick="offlineMode" />
-
-    <Button
-        android:id="@+id/btnFb"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="1dp"
-        android:layout_toRightOf="@+id/btnOffline"
-        android:background="@color/goBlue"
-        android:text="Facebook"
-        android:textColor="@color/buttonsText"
-        android:onClick="loginFacebook" />
-
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
-        android:ems="10"
-        android:hint="Enter Your Name"
-        android:inputType="textPersonName" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="200dp"
-        android:layout_height="280dp"
-        android:layout_above="@+id/imageView4"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_logonew2" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView5"
-        android:layout_marginRight="35dp"
-        android:layout_toLeftOf="@+id/editText1" />
+    </LinearLayout>  
+    
 
 </RelativeLayout>
 

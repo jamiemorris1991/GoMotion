@@ -15,6 +15,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+	        android:background="@color/goBlue"
+	        android:layout_marginRight="1dp"
+	        android:textColor="@color/buttonsText"
             android:onClick="outdoorOptions"
             android:text="Outdoor"
             tools:ignore="ButtonStyle,HardcodedText" />
@@ -24,6 +27,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+   	        android:background="@color/goBlue"
+	        android:textColor="@color/buttonsText"
             android:onClick="indoorOptions"
             android:text="Indoor"
             tools:ignore="ButtonStyle,HardcodedText" />

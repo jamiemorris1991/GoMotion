@@ -101,7 +101,7 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 		restSpinner.setAdapter(restList);		
 		
 		builder.setView(v)
-			.setTitle("Push Up Settings")
+			.setTitle("Exercise Settings")
 			.setPositiveButton(R.string.start, new DialogInterface.OnClickListener()
 			{	
 				public void onClick(DialogInterface dialog, int which)
