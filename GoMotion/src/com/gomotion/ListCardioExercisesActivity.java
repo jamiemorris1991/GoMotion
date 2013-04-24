@@ -189,6 +189,7 @@ public class ListCardioExercisesActivity extends ListActivity
 				Request request = Request.newMeRequest(Session.getActiveSession(), null);
 				Response response = request.executeAndWait();
 				params[0].setUserID((String)response.getGraphObject().getProperty("id"));
+				params[0].setMapURL(makeGoogleMapsString(params[0]));
 				//#ADD URL
 				return OnlineDatabase.add(params[0]);
 			}
@@ -268,8 +269,7 @@ public class ListCardioExercisesActivity extends ListActivity
 				            OfflineDatabase db = new OfflineDatabase(ListCardioExercisesActivity.this);
 				            CardioExercise exercise = db.getCardioExercise(postItem);
 				            
-				            String mapURL = makeGoogleMapsString(db,
-									exercise, ListCardioExercisesActivity.this);
+				            String mapURL = makeGoogleMapsString(exercise);
 				            				
 							String typeVerb = "";
 							
@@ -290,13 +290,19 @@ public class ListCardioExercisesActivity extends ListActivity
 							 * MUST ACCOUNT FOR HOURS AND IMPERIAL UNITS ALSO
 							 * DON'T FORGET!
 							 *  **/
-							double distance = ((double) exercise.getDistance()) / 1000; // kilometres				
+							double distance = ((double) exercise.getDistance()) / 1000; // kilometres	
+							
 							int timeLength = exercise.getTimeLength();
-							int mins = timeLength / 60;
-							int secs = timeLength % 60;
-				            	            
-				            String descriptionTemplate = "%s has just %s %.2f km in %d:%d, view the route they travelled here!";
-				            String description = String.format(descriptionTemplate, name, typeVerb, distance, mins, secs);
+							int hours = timeLength / (60 * 60);
+							int mins = (hours == 0) ? timeLength / 60 : (timeLength % (hours * 60*60)) / 60;
+							int secs = (hours ==0 && mins == 0) ? timeLength : timeLength % ((hours*60*60) + (mins*60));
+
+							String timeLengthFormatted = "";							
+							if(hours == 0) timeLengthFormatted = String.format("%02d:%02d", mins, secs).toString();
+							else timeLengthFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
+											            	            
+				            String descriptionTemplate = "%s has just %s %.2f km in %s, view the route they travelled here!";
+				            String description = String.format(descriptionTemplate, name, typeVerb, distance, timeLengthFormatted);
 
 			    	        final Bundle postParams = new Bundle();
 			    	        postParams.putString("name", "GoMotion Fitness App for Android");
@@ -334,8 +340,9 @@ public class ListCardioExercisesActivity extends ListActivity
     	    }
     }
 
-	static public String makeGoogleMapsString(OfflineDatabase db, CardioExercise exercise, Context c)
+	public String makeGoogleMapsString(CardioExercise exercise)
 	{
+		OfflineDatabase db = new OfflineDatabase(this);
 		
 		// Build URL for Google Maps
 		StringBuilder params = new StringBuilder("http://maps.googleapis.com/maps/api/staticmap?");
@@ -369,7 +376,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		
 		params.append(markers);
 		
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(c);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
          
 		String colour = sharedPref.getString(SettingsActivity.ROUTE_COLOUR, "3");
 		
@@ -516,7 +523,7 @@ public class ListCardioExercisesActivity extends ListActivity
 				
 			
 			double dist = Double.valueOf(cursor.getString(2)) / 1000;
-			String distUnits = " km ";
+			String distUnits = "km ";
 			String paceUnits = " min/km";
 			
 			if(Integer.valueOf(units) == 2)

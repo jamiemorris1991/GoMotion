@@ -61,7 +61,7 @@ public class CardioActivity extends Activity
 	private boolean started;
 	private Timer timer;
 	private String timeFormatted;
-	private int time;
+	private int time = 0;
 	private double distance;
 	private long lastTime;
 
@@ -77,7 +77,6 @@ public class CardioActivity extends Activity
 	private TextView timeView;
 	private TextView distanceView;
 	private TextView paceView;
-	private TextView speedView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -110,10 +109,8 @@ public class CardioActivity extends Activity
 		timeView = (TextView) findViewById(R.id.cardio_time);
 		distanceView = (TextView) findViewById(R.id.cardio_distance);
 		paceView = (TextView) findViewById(R.id.cardio_pace);
-		speedView = (TextView) findViewById(R.id.cardio_speed);
 
 		timeView.setText("00:00");
-		speedView.setText("0 MPH"); // Needs to be imperial and metric.
 		distanceView.setText("0m");
 		paceView.setText("0 mins/mile");
 
@@ -195,10 +192,6 @@ public class CardioActivity extends Activity
 			{				
 				if(started)
 				{		
-					long timestamp = time;
-					long timeGap = timestamp - lastTime;
-					lastTime = timestamp;
-					
 					int size = waypoints.size();
 					double dist = waypoints.get(size - 1).distanceTo(location);
 
@@ -218,9 +211,6 @@ public class CardioActivity extends Activity
 
 						String paceString = String.format("%02d:%02d", mins, secs);
 						paceView.setText(paceString + " min/mile");
-						
-						int speed  = (int) (dist/timeGap);
-						speedView.setText(String.valueOf(speed) + " metres/s");
 					}					
 				}
 				else

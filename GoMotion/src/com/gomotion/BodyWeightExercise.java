@@ -26,6 +26,7 @@ public class BodyWeightExercise extends Exercise
 		//name
 		name = r.getString(6);
 		if(name != null) name = name.replace("\\\"", "\"");
+		else name = "";
 		//type
 		type = BodyWeightType.values()[r.getInt(7)];
 	}

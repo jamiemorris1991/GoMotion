@@ -18,12 +18,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -266,10 +268,9 @@ public class HomeScreen extends Activity {
 								else
 								{
 									CardioExercise ce = (CardioExercise) exercise;
-									String format = "%s %s %s%s in %d:%d, %s ago.";
+									String format = "%s %s %s%s in %s, %s ago.";
 									String name = friends.get(ce.getUserID()).getName();
-									int dist = ce.getDistance() / 1000; // kilometres
-									String units = "km";
+									double dist = (double) (ce.getDistance() / 1000); // kilometres
 									int timeLength = ce.getTimeLength();
 									
 									String typeVerb = "";
@@ -287,12 +288,30 @@ public class HomeScreen extends Activity {
 											break;
 									}
 									
-									int mins = timeLength / 60;
-									int secs = timeLength % 60;
+									int hours = timeLength / (60 * 60);
+									int mins = (hours == 0) ? timeLength / 60 : (timeLength % (hours * 60*60)) / 60;
+									int secs = (hours ==0 && mins == 0) ? timeLength : timeLength % ((hours*60*60) + (mins*60));
+
+									String timeLengthFormatted = "";
 									
+									if(hours == 0) timeLengthFormatted = String.format("%02d:%02d", mins, secs).toString();
+									else timeLengthFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
+									
+									SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(HomeScreen.this);
+									String units = sharedPref.getString(SettingsActivity.UNITS, "1");
+									
+									String distUnits = "km";
+									
+									if(Integer.valueOf(units) == 2)
+									{
+										dist = dist * 0.621371192;
+										distUnits = " mi";
+									}			
+
+									String distStr = String.format("%.2f", dist);									
 									String timeString = getTimestampString(time + (timeLength * 1000));
 									
-									message = String.format(format, name, typeVerb, dist, units, mins, secs, timeString);
+									message = String.format(format, name, typeVerb, distStr, distUnits, timeLengthFormatted, timeString);
 								}
 								
 								
@@ -334,7 +353,6 @@ public class HomeScreen extends Activity {
 								TextView text = new TextView(HomeScreen.this);
 								text.setTextColor(Color.BLACK);
 								text.setTextSize(14);
-								//text.setBackgroundColor(getResources().getColor(R.color.buttons));
 								text.setPadding(20, 0, 0, 8);
 								
 								
