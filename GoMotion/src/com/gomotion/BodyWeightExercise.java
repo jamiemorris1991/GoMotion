@@ -47,7 +47,7 @@ public class BodyWeightExercise extends Exercise
 	}
 
 	public BodyWeightExercise(int ID, long timeStamp, int sets,
-			int reps, BodyWeightType type)
+			int reps, BodyWeightType type, String name)
 	{
 		this.ID = ID;
 		this.timeStamp = timeStamp;
@@ -55,6 +55,7 @@ public class BodyWeightExercise extends Exercise
 		this.sets = sets;
 		this.reps = reps;
 		this.type = type;
+		this.name = name;
 	}
 
 	public int getReps()

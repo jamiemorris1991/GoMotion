@@ -287,7 +287,6 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 
 			}
 		};
-		
 		task.execute(db.getBodyWeightExercise(postItem));
 	}
 

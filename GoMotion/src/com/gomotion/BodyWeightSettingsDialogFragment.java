@@ -118,10 +118,22 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 					{
 						EditText field = (EditText) v.findViewById(R.id.custom_exercise_name);
 						String exerciseName = field.getText().toString();
-						intent.putExtra(EXERCISE_NAME, exerciseName);
+						if(exerciseName.length() < 3) 
+						{
+							new AlertDialog.Builder(BodyWeightSettingsDialogFragment.this.getActivity())
+							.setTitle("Error")
+							.setMessage("Custom exercises must have a name over 3 characters long.")
+							.setCancelable(true)
+							.setNegativeButton("Cancel", null)
+							.show();
+						}
+						else
+						{
+							intent.putExtra(EXERCISE_NAME, exerciseName);
+							startActivity(intent);
+						}
 					}
-					
-					startActivity(intent);
+					else startActivity(intent);
 					
 				 					
 //					EditText setsEditText = (EditText) v.findViewById(R.id.set_choice);

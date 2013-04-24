@@ -111,7 +111,7 @@ public class OfflineDatabase extends SQLiteOpenHelper
 		SQLiteDatabase db = this.getReadableDatabase();
 		
 		Cursor cursor = db.query(TABLE_BODYWEIGHT, new String[] { KEY_ID, KEY_TIMESTAMP, 
-				KEY_SETS, KEY_REPS, KEY_TYPE }, KEY_ID + "=?",
+				KEY_SETS, KEY_REPS, KEY_TYPE, KEY_NAME }, KEY_ID + "=?",
 	            new String[] { String.valueOf(id) }, null, null, null, null);
 
 		if(cursor.moveToFirst()) 
@@ -121,7 +121,8 @@ public class OfflineDatabase extends SQLiteOpenHelper
 					Long.parseLong(cursor.getString(1)), 
 					Integer.parseInt(cursor.getString(2)),
 					Integer.parseInt(cursor.getString(3)),
-					BodyWeightExercise.BodyWeightType.valueOf(cursor.getString(4)));
+					BodyWeightExercise.BodyWeightType.valueOf(cursor.getString(4)),
+					cursor.getString(5));
 			
 			cursor.close();
 			

@@ -219,10 +219,8 @@ public class HomeScreen extends Activity {
 				protected Void doInBackground(Void... params) {
 					
 					try	{
-						System.out.println(friends.get(exercise.getUserID()).getPictureURL());
 						URL newurl = new URL(friends.get(exercise.getUserID()).getPictureURL());
 						final Bitmap bm = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-						System.out.println(bm.toString());
 						
 						runOnUiThread(new Runnable() {
 							public void run() {

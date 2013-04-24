@@ -30,14 +30,17 @@ public class OnlineDatabase {
 		try {
 			// Try to get a connection
 			getConnection();
-			Statement s = connection.createStatement();
+			Statement s = connection.createStatement();			
+						
 			s.executeUpdate("INSERT INTO bodyweight VALUES (" + "null,"
 					+ exercise.getTimeStamp() + ","
 					+ exercise.getUserID() + ","
 					+ exercise.getSets() + ","
 					+ exercise.getReps() + ","
-					+ (exercise.getName() == null ? "null," : "\"" + exercise.getName().replace("\"", "\\\"") + "\",")
+					+ (exercise.getName() == null ? "null," :  "\"" + exercise.getName().replace("\"", "\\\"") + "\",")
 					+ exercise.getType().ordinal() + ");");
+
+			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -58,6 +61,8 @@ public class OnlineDatabase {
 					+ exercise.getDistance() + ","
 					+ "\"" + exercise.getMapURL().replace("\"", "\\\"") + "\","
 					+ exercise.getType().ordinal() + ");");
+			
+			connection.close();
 		} catch (SQLException e) {
 			return false;
 		}
@@ -90,7 +95,8 @@ public class OnlineDatabase {
 			LinkedList<BodyWeightExercise> out = new LinkedList<BodyWeightExercise>();
 			while(result.next())
 				out.add(new BodyWeightExercise(result));
-
+			
+			connection.close();
 			return out;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -123,7 +129,8 @@ public class OnlineDatabase {
 			LinkedList<CardioExercise> out = new LinkedList<CardioExercise>();
 			while(result.next())
 				out.add(new CardioExercise(result));
-
+			
+			connection.close();
 			return out;
 		} catch (SQLException e) {
 			return null;
