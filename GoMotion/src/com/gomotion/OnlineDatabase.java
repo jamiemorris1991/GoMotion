@@ -73,7 +73,7 @@ public class OnlineDatabase {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
-			
+						
 			String whereClause = "";
 			if(friends.size() == 0)
 				return null;
@@ -91,8 +91,10 @@ public class OnlineDatabase {
 
 			ResultSet result = s
 					.executeQuery(query);
-
+			
 			LinkedList<BodyWeightExercise> out = new LinkedList<BodyWeightExercise>();
+			
+
 			while(result.next())
 				out.add(new BodyWeightExercise(result));
 			
@@ -110,6 +112,8 @@ public class OnlineDatabase {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
 			
+			System.out.println("Creating cardio statement");
+
 			String whereClause = "";
 			if(friends.size() == 0)
 				return null;
@@ -119,17 +123,24 @@ public class OnlineDatabase {
 				while(i.hasNext())
 					whereClause += "c.user = \"" + i.next() + "\" OR ";
 				whereClause = whereClause.substring(0, whereClause.length() - 4);
-			}
+			}		
 			
+			System.out.println("SELECT * FROM cardio c WHERE "
+					+ whereClause + " LIMIT " + num + ";");
 
 			ResultSet result = s
 					.executeQuery("SELECT * FROM cardio c WHERE "
-							+ whereClause + " LIMIT " + num + ";");
+							+ whereClause + " LIMIT " + num + ";");			
 
 			LinkedList<CardioExercise> out = new LinkedList<CardioExercise>();
+
 			while(result.next())
+			{
 				out.add(new CardioExercise(result));
+			}
 			
+			System.out.println(out);
+
 			connection.close();
 			return out;
 		} catch (SQLException e) {

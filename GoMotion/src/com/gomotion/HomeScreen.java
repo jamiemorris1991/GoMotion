@@ -64,21 +64,6 @@ public class HomeScreen extends Activity {
 
 		session = Session.getActiveSession();
 
-//		if (session != null) {
-//			// idList = new LinkedList<String>();
-//			// idToName = new HashMap<String, String>();
-//
-//			// make request to the /me API
-//			Request.executeMyFriendsRequestAsync(session, new Request.GraphUserListCallback() {
-//
-//				public void onCompleted(List<GraphUser> users, Response response) {
-//					friends = users;
-//					setSingleWallMessage("Communicating with database");
-//					buildWall();
-//				}
-//			});
-//		}
-
 		if(session != null)
 		{	
 			friends = new HashMap<String, FacebookUser>();
@@ -91,8 +76,33 @@ public class HomeScreen extends Activity {
 					if(user != null)
 					{
 						final Bundle postParams = new Bundle();
-
 						postParams.putString("fields", "name,installed,picture");
+						
+						Request meRequest = new Request(session, "me", postParams, HttpMethod.GET, new Request.Callback() {
+							
+							public void onCompleted(Response response) {
+								JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
+
+								try {
+
+									String id = graphResponse.getString("id");
+									String name = graphResponse.getString("name");
+									String picURL = graphResponse.getJSONObject("picture").getJSONObject("data").getString("url");
+									
+									friends.put(id, new FacebookUser(id, name, picURL));
+									
+								} catch (JSONException e) {
+									Log.i("JSON Error",
+											"JSON error "+ e.getMessage());
+								}	
+								FacebookRequestError error = response.getError();
+								if (error != null) {
+									System.out.println(error.getErrorMessage());
+								} else {
+									System.out.println("Friend IDs retrieved successfully");
+								}
+							}
+						});
 
 						Request.Callback callback = new Request.Callback() {
 							public void onCompleted(Response response) {
@@ -134,7 +144,9 @@ public class HomeScreen extends Activity {
 						Request request = new Request(session, "me/friends", postParams,
 								HttpMethod.GET, callback);
 
+						final RequestAsyncTask meTask = new RequestAsyncTask(meRequest);
 						final RequestAsyncTask task = new RequestAsyncTask(request);
+						meTask.execute();
 						task.execute();
 						
 						setSingleWallMessage("Communicating with database");
@@ -159,7 +171,7 @@ public class HomeScreen extends Activity {
 						.getCardioExercises(friends, 10);
 
 				if (bwe == null || ce == null) {
-					setSingleWallMessageInMainThread("Failed communicate with database");
+					setSingleWallMessageInMainThread("Failed to communicate with database");
 					return null;
 				}
 
@@ -268,7 +280,7 @@ public class HomeScreen extends Activity {
 									CardioExercise ce = (CardioExercise) exercise;
 									String format = "%s %s %s%s in %s, %s ago.";
 									String name = friends.get(ce.getUserID()).getName();
-									double dist = (double) (ce.getDistance() / 1000); // kilometres
+									double dist = (double) (ce.getDistance()) / 1000; // kilometres
 									int timeLength = ce.getTimeLength();
 									
 									String typeVerb = "";
@@ -481,7 +493,7 @@ public class HomeScreen extends Activity {
 				new Item("Walk", R.drawable.walk),
 				new Item("Run", R.drawable.run),
 				new Item("Cycle", R.drawable.bike),
-				new Item("History", 0),
+				new Item("History", R.drawable.history),
 			};
 
 		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this,
@@ -546,8 +558,8 @@ public class HomeScreen extends Activity {
 		final Item[] items = { 
 				new Item("Push Ups", R.drawable.pressup),
 				new Item("Sit Ups", R.drawable.situp),
-				new Item("Custom", 0),
-				new Item("History", 0),
+				new Item("Custom", R.drawable.custom),
+				new Item("History", R.drawable.history),
 			};
 		
 		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this,

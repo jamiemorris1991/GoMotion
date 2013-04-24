@@ -24,19 +24,19 @@ public class CardioExercise extends Exercise
     public CardioExercise(ResultSet r) throws SQLException
     {
 		//ID
-		ID = r.getInt(0);
+		ID = r.getInt(1);
 		//timeStamp
-		timeStamp = r.getLong(1);
+		timeStamp = r.getLong(2);
 		//user
-		userID = r.getString(2);
+		userID = r.getString(3);
 		//timeLength
-		timeLength = r.getInt(3);
+		timeLength = r.getInt(4);
 		//distance
-		distance = r.getInt(4);
+		distance = r.getInt(5);
 		//URL
 		mapURL = r.getString(6).replace("\\\"", "\"");
 		//type
-		type = CardioType.values()[r.getInt(6)];
+		type = CardioType.values()[r.getInt(7)];
     }
     
     public CardioExercise(int distance, int timeLength, CardioType type, LinkedList<Location> waypoints)
