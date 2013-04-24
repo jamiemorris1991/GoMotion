@@ -202,18 +202,17 @@ public class HomeScreen extends Activity {
 
 	private void buildWallFromExcercises(List<Exercise> exercises)
 	{
-		LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
+		final LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
 		wall.removeAllViews();
 
-		ListIterator<Exercise> i = exercises.listIterator();
-		while (i.hasNext()) {
-			final Exercise exercise = i.next();
-			
-			final LinearLayout post = new LinearLayout(this);
-			post.setOrientation(LinearLayout.HORIZONTAL);
-			
+		final ListIterator<Exercise> i = exercises.listIterator();
+		while (i.hasNext()) 
+		{			
 			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
+				Exercise exercise = i.next();
+				String message = "";
+				
 				@Override
 				protected Void doInBackground(Void... params) {
 					
@@ -225,12 +224,124 @@ public class HomeScreen extends Activity {
 						
 						runOnUiThread(new Runnable() {
 							public void run() {
-								System.out.println("Adding pic to post");
+
+								LinearLayout post = new LinearLayout(HomeScreen.this);
+								post.setOrientation(LinearLayout.HORIZONTAL);
+								post.setPadding(10, 10, 10, 10);
+								
 								ImageView profilePic = new ImageView(HomeScreen.this);	
-								profilePic.setImageBitmap(bm);				
+								profilePic.setImageBitmap(bm);	
+								profilePic.setScaleX(1.5f);
+								profilePic.setScaleY(1.5f);								
 								post.addView(profilePic);
 								
-								System.out.println("Added");
+								long time = System.currentTimeMillis() - exercise.getTimeStamp();
+								
+								if(exercise instanceof BodyWeightExercise)
+								{
+									BodyWeightExercise bwe = (BodyWeightExercise) exercise;
+									String format = "%s completed %d sets of %d %s %s ago.";
+									String name = friends.get(bwe.getUserID()).getName();
+									int sets = bwe.getSets();
+									int reps = bwe.getReps();
+									
+									String exerciseType = "";
+
+									switch (bwe.getType()) {
+									case PUSHUPS:
+										exerciseType = "push ups";
+										break;
+									case SITUPS:
+										exerciseType = "sit ups";
+										break;
+									case CUSTOM:
+										exerciseType = bwe.getName().toLowerCase();
+										break;
+									}
+
+									String timeString = getTimestampString(time);
+									
+									message = String.format(format, name, sets, reps, exerciseType, timeString);
+								}
+								else
+								{
+									CardioExercise ce = (CardioExercise) exercise;
+									String format = "%s %s %s%s in %d:%d, %s ago.";
+									String name = friends.get(ce.getUserID()).getName();
+									int dist = ce.getDistance() / 1000; // kilometres
+									String units = "km";
+									int timeLength = ce.getTimeLength();
+									
+									String typeVerb = "";
+									
+									switch(ce.getType())
+									{
+										case WALK:
+											typeVerb = "walked";
+											break;
+										case RUN:
+											typeVerb = "ran";
+											break;
+										case CYCLE:
+											typeVerb = "cycled";
+											break;
+									}
+									
+									int mins = timeLength / 60;
+									int secs = timeLength % 60;
+									
+									String timeString = getTimestampString(time + (timeLength * 1000));
+									
+									message = String.format(format, name, typeVerb, dist, units, mins, secs, timeString);
+								}
+								
+								
+//								message += friends.get( exercise.getUserID() ).getName() + " completed a \"";
+//								if(exercise instanceof BodyWeightExercise)
+//								{
+//									BodyWeightExercise b = (BodyWeightExercise) exercise;
+//									if(b.getType() == BodyWeightType.CUSTOM)
+//										message += b.getName().toLowerCase();
+//									else
+//										message += b.getType().toString().toLowerCase();
+//								}
+//								else
+//									message += ((CardioExercise)exercise).getType().toString().toLowerCase();
+//								
+//								message += "\" exercise " + getTimestampString(time) + " ago.\nStats: ";
+//								
+//								if(exercise instanceof BodyWeightExercise)
+//								{
+//									BodyWeightExercise b = (BodyWeightExercise) exercise;
+//									message += "Sets: " + b.getSets() + " Reps: " + b.getReps();
+//								}
+//								else
+//								{
+//									final CardioExercise c = (CardioExercise) exercise;
+//									message += "Distance: " + c.getDistance() + " Time: " + getCardioTimeString(c.getTimeLength());
+//									message += "\nClick to view route";
+//									
+//									text.setOnClickListener(new OnClickListener() {
+//										
+//										public void onClick(View arg0) {
+//											Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//													Uri.parse(c.getMapURL()));
+//											startActivity(browserIntent);
+//										}
+//									});
+//								}
+								
+								TextView text = new TextView(HomeScreen.this);
+								text.setTextColor(Color.BLACK);
+								text.setTextSize(14);
+								//text.setBackgroundColor(getResources().getColor(R.color.buttons));
+								text.setPadding(20, 0, 0, 8);
+								
+								
+								text.setText(message);
+								post.addView(text);
+								wall.addView(post);
+
 							}
 						});
 						
@@ -246,57 +357,6 @@ public class HomeScreen extends Activity {
 			
 			task.execute();
 
-			TextView text = new TextView(this);
-			text.setTextColor(Color.BLACK);
-			text.setTextSize(14);
-			//text.setBackgroundColor(getResources().getColor(R.color.buttons));
-			text.setPadding(4, 0, 4, 8);
-
-			long time = System.currentTimeMillis() - exercise.getTimeStamp();
-
-			String message = "";
-			
-			//DEBUG
-			//message += "(Timestamp: " + exercise.getTimeStamp() + ")\n";
-			
-			message += friends.get( exercise.getUserID() ).getName() + " completed a \"";
-			if(exercise instanceof BodyWeightExercise)
-			{
-				BodyWeightExercise b = (BodyWeightExercise) exercise;
-				if(b.getType() == BodyWeightType.CUSTOM)
-					message += b.getName().toLowerCase();
-				else
-					message += b.getType().toString().toLowerCase();
-			}
-			else
-				message += ((CardioExercise)exercise).getType().toString().toLowerCase();
-			
-			message += "\" exercise " + getTimestampString(time) + " ago.\nStats: ";
-			
-			if(exercise instanceof BodyWeightExercise)
-			{
-				BodyWeightExercise b = (BodyWeightExercise) exercise;
-				message += "Sets: " + b.getSets() + " Reps: " + b.getReps();
-			}
-			else
-			{
-				final CardioExercise c = (CardioExercise) exercise;
-				message += "Distance: " + c.getDistance() + " Time: " + getCardioTimeString(c.getTimeLength());
-				message += "\nClick to view route";
-				
-				text.setOnClickListener(new OnClickListener() {
-					
-					public void onClick(View arg0) {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-								Uri.parse(c.getMapURL()));
-						startActivity(browserIntent);
-					}
-				});
-			}
-			
-			text.setText(message);
-			post.addView(text);
-			wall.addView(post);
 		}
 	}
 
@@ -325,7 +385,7 @@ public class HomeScreen extends Activity {
 	{
 		// Seconds
 		millis /= 1000;
-		if (millis < 120) {
+		if (millis < 60) {
 			return millis + " second" + (millis == 1 ? "" : "s");
 		}
 

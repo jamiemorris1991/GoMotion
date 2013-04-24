@@ -49,9 +49,9 @@
             android:name="com.gomotion.PushUpsActivity"
             android:label="@string/title_activity_push_ups"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gomotion.HomeScreen" />
         </activity>
         <activity
             android:name="com.gomotion.SitUpsActivity"
