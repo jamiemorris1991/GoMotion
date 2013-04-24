@@ -35,6 +35,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.facebook.FacebookRequestError;
@@ -60,12 +63,12 @@ public class HomeScreen extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
 
-		setSingleWallMessage("Communicating with Facebook");
-
 		session = Session.getActiveSession();
 
 		if(session != null)
 		{	
+			setSingleWallMessage("Communicating with Facebook");
+
 			friends = new HashMap<String, FacebookUser>();
 
 			// make request to the /me API
@@ -166,9 +169,11 @@ public class HomeScreen extends Activity {
 			protected Void doInBackground(Void... params) {
 
 				LinkedList<BodyWeightExercise> bwe = OnlineDatabase
-						.getBodyWeightExercises(friends, 10);
+						.getBodyWeightExercises(friends, 30);
 				LinkedList<CardioExercise> ce = OnlineDatabase
-						.getCardioExercises(friends, 10);
+						.getCardioExercises(friends, 30);
+				
+				System.out.println(bwe.size());
 
 				if (bwe == null || ce == null) {
 					setSingleWallMessageInMainThread("Failed to communicate with database");
@@ -218,7 +223,7 @@ public class HomeScreen extends Activity {
 	{
 		final LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
 		wall.removeAllViews();
-
+		
 		final ListIterator<Exercise> i = exercises.listIterator();
 		while (i.hasNext()) 
 		{			
@@ -236,8 +241,8 @@ public class HomeScreen extends Activity {
 						
 						runOnUiThread(new Runnable() {
 							public void run() {
-
-								LinearLayout post = new LinearLayout(HomeScreen.this);
+								
+								LinearLayout post = new LinearLayout(HomeScreen.this);	
 								post.setOrientation(LinearLayout.HORIZONTAL);
 								post.setPadding(10, 10, 10, 10);
 								
@@ -453,11 +458,11 @@ public class HomeScreen extends Activity {
 
 	private void setSingleWallMessage(String m)
 	{
-		LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
-		TextView text = new TextView(getApplicationContext());
-		text.setText(m);
-		wall.removeAllViews();
-		wall.addView(text);
+//		ScrollView wall = (ScrollView) findViewById(R.id.scroll);
+//		TextView text = new TextView(getApplicationContext());
+//		text.setText(m);
+//		wall.removeAllViews();
+//		wall.addView(text);
 	}
 
 	@Override

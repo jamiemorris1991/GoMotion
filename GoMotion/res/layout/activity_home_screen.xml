@@ -14,12 +14,12 @@
             android:id="@+id/cardio_options"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
             android:layout_weight="1"
-	        android:background="@color/goBlue"
-	        android:layout_marginRight="1dp"
-	        android:textColor="@color/buttonsText"
+            android:background="@color/goBlue"
             android:onClick="outdoorOptions"
             android:text="Outdoor"
+            android:textColor="@color/buttonsText"
             tools:ignore="ButtonStyle,HardcodedText" />
 
         <Button
@@ -27,25 +27,41 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-   	        android:background="@color/goBlue"
-	        android:textColor="@color/buttonsText"
+            android:background="@color/goBlue"
             android:onClick="indoorOptions"
             android:text="Indoor"
+            android:textColor="@color/buttonsText"
             tools:ignore="ButtonStyle,HardcodedText" />
-
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/wall"
-        android:layout_width="wrap_content"
+    <!-- <LinearLayout -->
+    <!-- android:id="@+id/wall" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignParentBottom="true" -->
+    <!-- android:layout_alignParentLeft="true" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_below="@+id/linearLayout1" -->
+    <!-- android:dividerPadding="@dimen/activity_horizontal_margin" -->
+    <!-- android:orientation="vertical" > -->
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/linearLayout1"
-        android:dividerPadding="@dimen/activity_horizontal_margin"
-        android:orientation="vertical" >
+        android:layout_below="@id/linearLayout1"
+        android:fillViewport="true" >
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/wall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            
+        </LinearLayout>
+        
+    </ScrollView>
+
+    <!-- </LinearLayout> -->
 
 </RelativeLayout>
