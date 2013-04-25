@@ -141,7 +141,7 @@
         android:layout_marginTop="108dp"
         android:text="00:00"
         android:textColor="@color/buttonsText"
-        android:textSize="32sp" />
+        android:textSize="50sp" />
 
     <TextView
         android:id="@+id/waypoint_count"
