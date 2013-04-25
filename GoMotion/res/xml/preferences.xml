@@ -24,7 +24,7 @@
         android:key="transparency"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="Route transparency"
+        android:title="Route opacity"
         android:defaultValue="80" />
         
     <ListPreference

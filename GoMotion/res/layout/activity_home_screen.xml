@@ -32,7 +32,6 @@
             android:text="Indoor"
             android:textColor="@color/buttonsText"
             tools:ignore="ButtonStyle,HardcodedText" />
-
     </LinearLayout>
 
     <!-- <LinearLayout -->
@@ -53,36 +52,54 @@
         android:layout_below="@id/linearLayout1"
         android:fillViewport="true" >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:adjustViewBounds="true"
+                android:layout_width="240dp"
+                android:layout_height="350dp"
+                android:src="@drawable/ic_logonew2"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/greeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/logo"
+                android:layout_centerHorizontal="true"
+                android:text="How about going for a run?"
+                android:textSize="16sp"
+                android:visibility="invisible" />
+            
         <LinearLayout
+            android:id="@+id/wall"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
-            
-            <Button
-                android:id="@+id/changeWallButton"
-                android:layout_width="fill_parent"
-                android:layout_height="28dp"
-                android:layout_margin="1dp"
-                android:layout_marginRight="1dp"
-                android:background="@color/goBlue"
-                android:onClick="leaderboardOptions"
-                android:text="Timeline"
-                android:textColor="@color/buttonsText"
-                tools:ignore="ButtonStyle,HardcodedText" />
-
-            <LinearLayout
-                android:id="@+id/wall"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="133.06"
-                android:orientation="vertical"
-                android:showDividers="middle"
-                tools:ignore="InefficientWeight" >
-
-            </LinearLayout>
-
+            android:orientation="vertical"
+            android:showDividers="middle"
+            tools:ignore="InefficientWeight" >
         </LinearLayout>
         
+        </RelativeLayout>
+
+        <!-- <Button -->
+        <!-- android:id="@+id/changeWallButton" -->
+        <!-- android:layout_width="fill_parent" -->
+        <!-- android:layout_height="28dp" -->
+        <!-- android:layout_margin="1dp" -->
+        <!-- android:layout_marginRight="1dp" -->
+        <!-- android:background="@color/goBlue" -->
+        <!-- android:onClick="leaderboardOptions" -->
+        <!-- android:text="Timeline" -->
+        <!-- android:textColor="@color/buttonsText" -->
+        <!-- tools:ignore="ButtonStyle,HardcodedText" /> -->
+
     </ScrollView>
 
     <!-- </LinearLayout> -->

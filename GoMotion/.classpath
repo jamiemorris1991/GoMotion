@@ -2,8 +2,9 @@
 <classpath>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="libs/mysql-connector-java-3.0.17-ga-bin.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="libs/mysql-connector-java-3.0.17-ga-bin.jar"/>
+	<classpathentry kind="lib" path="F:/Downloads/httpcomponents-client-4.2.5/lib/httpclient-4.2.5.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

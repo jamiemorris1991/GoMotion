@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -89,17 +90,14 @@ public class SitUpsActivity extends Activity
 					if(!down && event.values[0] < -8)
 					{
 						down = true;
-						System.out.println("down");
 					}
 					else if(down && !up && event.values[0] > -2)
 					{
 						up = true;
-						System.out.println("up");
 					}
 					
 					if(up && down)
 					{
-						System.out.println("Full sit up");
 						doRep();
 						down = up = false;
 					}
@@ -135,6 +133,9 @@ public class SitUpsActivity extends Activity
 	
 	private void doRep()
 	{
+    	Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    	v.vibrate(50);
+    	
     	if(repCount > 1)
     	{
 	    	repCount--;
@@ -143,6 +144,7 @@ public class SitUpsActivity extends Activity
     	}
     	else if(setCount == 1 && repCount == 1) // finished
     	{
+    		sensorManager.unregisterListener(listener);
     		finishExercise();
     	}
     	else // finish set
@@ -222,8 +224,7 @@ public class SitUpsActivity extends Activity
     {	
 		OfflineDatabase db = new OfflineDatabase(this);    	
 		db.add(exercise);
-		db.close();
-		
+		db.close();		
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("GoMotion")

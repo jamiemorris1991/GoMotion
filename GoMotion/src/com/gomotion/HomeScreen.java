@@ -1,6 +1,7 @@
 package com.gomotion;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
@@ -58,23 +61,39 @@ public class HomeScreen extends Activity {
 	public static final String BODY_WEIGHT_TYPE = "com.gomotion.BODY_WEIGHT_TYPE";
 	public static final int POSTS_TO_SHOW = 16;
 	
-	static public enum WallSortMode{timeline, indoor, outdoorDistance, outdoorSpeed};
+	public static enum WallSortMode{timeline, indoor, outdoorDistance, outdoorSpeed};
+	public static String[] greetings = {"How about going for a run?", "How about doing a few sets of push ups?", "How about doing a few sets of sit ups?",
+										"How about going for a walk?", "How about going out for a bike ride?", "How about seeing if you can beat a personal best?"};
 	
 	private HashMap<String, FacebookUser> friends;
+	private HashMap<String, Bitmap> profilePics;
+	
 	private Session session;
 	private WallSortMode wallSortMode = WallSortMode.timeline;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home_screen);
+		setContentView(R.layout.activity_home_screen);		
 
 		session = Session.getActiveSession();
 
-		if(session != null)
+		if(session == null || (session != null && session.isClosed()))
+		{
+			ImageView logo = (ImageView) findViewById(R.id.logo);
+			TextView greeting = (TextView) findViewById(R.id.greeting);
+			
+			String greetingStr = greetings[new Random().nextInt(greetings.length)];
+			
+			greeting.setText(greetingStr);
+			
+			logo.setVisibility(View.VISIBLE);
+			greeting.setVisibility(View.VISIBLE);
+		}
+		else
 		{	
-
 			friends = new HashMap<String, FacebookUser>();
+			profilePics = new HashMap<String, Bitmap>();
 
 			// make request to the /me API
 			Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
@@ -209,9 +228,9 @@ public class HomeScreen extends Activity {
 				Collections.sort(allExcercises, new Comparator<Exercise>() {
 
 					public int compare(Exercise lhs, Exercise rhs) {
-						if (lhs.timeStamp > rhs.timeStamp)
+						if (lhs.dbTimestamp > rhs.dbTimestamp)
 							return -1;
-						else if (lhs.timeStamp < rhs.timeStamp)
+						else if (lhs.dbTimestamp < rhs.dbTimestamp)
 							return 1;
 						else
 							return 0;
@@ -247,6 +266,7 @@ public class HomeScreen extends Activity {
 			AsyncTask<WallSortMode, Void, Void> task = new AsyncTask<WallSortMode, Void, Void>() {
 
 				Exercise exercise = i.next();
+				Bitmap bm;
 				String message = "";
 				
 				@Override
@@ -254,8 +274,17 @@ public class HomeScreen extends Activity {
 					final WallSortMode myWallSortMode = params[0];
 					
 					try	{
-						URL newurl = new URL(friends.get(exercise.getUserID()).getPictureURL());
-						final Bitmap bm = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+						
+						if(profilePics.get(exercise.getUserID()) == null)
+						{
+							URL newurl = new URL(friends.get(exercise.getUserID()).getPictureURL());
+							bm = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+							profilePics.put(exercise.getUserID(), bm);
+						}
+						else 
+						{
+							bm = profilePics.get(exercise.getUserID());
+						}
 						
 						runOnUiThread(new Runnable() {
 							public void run() {
@@ -301,7 +330,7 @@ public class HomeScreen extends Activity {
 								else
 								{
 									CardioExercise ce = (CardioExercise) exercise;
-									String format = "%s %s %s%s in %s, %s ago.";
+									String format = "%s %s %s%s in %s, %s ago. Click here to view the route travelled.";
 									String name = friends.get(ce.getUserID()).getName();
 									double dist = (double) (ce.getDistance()) / 1000; // kilometres
 									int timeLength = ce.getTimeLength();
@@ -506,7 +535,18 @@ public class HomeScreen extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	{		
+	    try {
+	        ViewConfiguration config = ViewConfiguration.get(this);
+	        Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+	        if(menuKeyField != null) {
+	            menuKeyField.setAccessible(true);
+	            menuKeyField.setBoolean(config, false);
+	        }
+	    } catch (Exception ex) {
+	        // Ignore
+	    }
+	    
 		if (session != null && session.isOpened())
 			getMenuInflater().inflate(R.menu.activity_home_screen_online, menu);
 		else
@@ -518,13 +558,19 @@ public class HomeScreen extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId()) {
+		case R.id.menu_leaderboards:
+			leaderboardOptions();
+			break;
 		case R.id.menu_settings:
 			Intent intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
 			break;
+		case R.id.menu_refresh:
+			recreate();
+			break;
 		case R.id.menu_logout:
-			session.close();
-			invalidateOptionsMenu();
+			session.closeAndClearTokenInformation();
+			recreate();
 			break;
 		}
 
@@ -655,7 +701,7 @@ public class HomeScreen extends Activity {
 	}
 
 	
-	public void leaderboardOptions(View view)
+	public void leaderboardOptions()
 	{
 		final Item[] items = { 
 				new Item("Time", R.drawable.history),
@@ -692,26 +738,26 @@ public class HomeScreen extends Activity {
 				new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int i) {
-						
-						Button wallSortButton = (Button)
-								findViewById(R.id.changeWallButton);
-
-						wallSortMode = WallSortMode.values()[i];
-						
-						switch (wallSortMode) {
-						case timeline:
-							wallSortButton.setText("Timeline");
-							break;
-						case indoor:
-							wallSortButton.setText("Indoor Leaderboard");
-							break;
-						case outdoorDistance:
-							wallSortButton.setText("Outdoor Leaderboard - Distance");
-							break;
-						case outdoorSpeed:
-							wallSortButton.setText("Outdoor Leaderboard - Speed");
-							break;
-						}
+//						
+//						Button wallSortButton = (Button)
+//								findViewById(R.id.changeWallButton);
+//
+//						wallSortMode = WallSortMode.values()[i];
+//						
+//						switch (wallSortMode) {
+//						case timeline:
+//							wallSortButton.setText("Timeline");
+//							break;
+//						case indoor:
+//							wallSortButton.setText("Indoor Leaderboard");
+//							break;
+//						case outdoorDistance:
+//							wallSortButton.setText("Outdoor Leaderboard - Distance");
+//							break;
+//						case outdoorSpeed:
+//							wallSortButton.setText("Outdoor Leaderboard - Speed");
+//							break;
+//						}
 						
 						buildWall();
 						

@@ -34,6 +34,19 @@ public class SeekBarPreference extends DialogPreference
     {
     	seekBar = (SeekBar) view.findViewById(R.id.route_accuracy);
     	seekBar.setProgress(value);
+
+    	seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			
+			public void onStopTrackingTouch(SeekBar seekBar) {				
+			}
+			
+			public void onStartTrackingTouch(SeekBar seekBar) {				
+			}
+			
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				if(progress < 20) seekBar.setProgress(20);
+			}
+		});
     	
 		super.onBindDialogView(view);
 	}

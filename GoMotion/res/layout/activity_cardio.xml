@@ -63,6 +63,7 @@
             android:id="@+id/cardio_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:text="distance"
             android:textColor="@color/buttonsText"
             android:textSize="20sp" />
@@ -82,6 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pace:"
+            android:layout_marginRight="5dp"
             android:textColor="@color/buttonsText"
             android:textSize="20sp" />
 
@@ -141,7 +143,7 @@
         android:layout_marginTop="108dp"
         android:text="00:00"
         android:textColor="@color/buttonsText"
-        android:textSize="50sp" />
+        android:textSize="48sp" />
 
     <TextView
         android:id="@+id/waypoint_count"

@@ -88,7 +88,7 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 		
 		/** Add numbers to rest chooser **/
 		List<String> restNums = new LinkedList<String>();
-		for(int i = 1; i <= 300; i++)
+		for(int i = 1; i <= 59; i++)
 		{
 			restNums.add(String.valueOf(i));
 		}

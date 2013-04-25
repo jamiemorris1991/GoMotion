@@ -1,10 +1,23 @@
 package com.gomotion;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -34,9 +47,6 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.PolylineOptionsCreator;
 
 
 public class ListCardioExercisesActivity extends ListActivity 
@@ -242,102 +252,164 @@ public class ListCardioExercisesActivity extends ListActivity
     
     public void postRouteFacebook()
     {
-    	    if (session != null){
+    	if (session != null)
+    	{
+    		// Check for publish permissions    
+    		List<String> permissions = session.getPermissions();
+    		if (!isSubsetOf(PERMISSIONS, permissions))
+    		{
+    			pendingPublishReauthorization = true;
+    			Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(ListCardioExercisesActivity.this, PERMISSIONS);
+    			session.requestNewPublishPermissions(newPermissionsRequest);
+    			return;
+    		}
+    		
+			//Get database items
+			OfflineDatabase db = new OfflineDatabase(ListCardioExercisesActivity.this);
+			final CardioExercise exercise = db.getCardioExercise(postItem);
+			final String longUrl = makeGoogleMapsString(exercise);
 
-    	        // Check for publish permissions    
-    	        List<String> permissions = session.getPermissions();
-    	        if (!isSubsetOf(PERMISSIONS, permissions))
-    	        {
-    	            pendingPublishReauthorization = true;
-    	            Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(this, PERMISSIONS);
-    	            session.requestNewPublishPermissions(newPermissionsRequest);
-    	            return;
-    	        }
+    		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+    			
+    			String shortUrl = "";
 
-				// make request to the /me API
-				Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+    			@Override			
+    			protected String doInBackground(Void... params) {
 
-					// callback after Graph API response with user object
-					public void onCompleted(GraphUser user, Response response) {
-						if(user != null)
-						{
-							name = user.getFirstName();
+    				HttpClient httpClient = new DefaultHttpClient();
 
-				            System.out.println("Creating request.");
-				            
-				            //Get database items
-				            OfflineDatabase db = new OfflineDatabase(ListCardioExercisesActivity.this);
-				            CardioExercise exercise = db.getCardioExercise(postItem);
-				            
-				            String mapURL = makeGoogleMapsString(exercise);
-				            				
-							String typeVerb = "";
-							
-							switch(exercise.getType())
-							{
-								case WALK:
-									typeVerb = "walked";
-									break;
-								case RUN:
-									typeVerb = "ran";
-									break;
-								case CYCLE:
-									typeVerb = "cycled";
-									break;
-							}
-							
-							/**
-							 * MUST ACCOUNT FOR HOURS AND IMPERIAL UNITS ALSO
-							 * DON'T FORGET!
-							 *  **/
-							double distance = ((double) exercise.getDistance()) / 1000; // kilometres	
-							
-							int timeLength = exercise.getTimeLength();
-							int hours = timeLength / (60 * 60);
-							int mins = (hours == 0) ? timeLength / 60 : (timeLength % (hours * 60*60)) / 60;
-							int secs = (hours ==0 && mins == 0) ? timeLength : timeLength % ((hours*60*60) + (mins*60));
+    				try {
+    					System.out.println("Starting shortener request");
+    					HttpPost request = new HttpPost("https://www.googleapis.com/urlshortener/v1/url");
+    					request.addHeader("Content-Type", "application/json");
+    					request.setHeader("Accept", "application/json");  
 
-							String timeLengthFormatted = "";							
-							if(hours == 0) timeLengthFormatted = String.format("%02d:%02d", mins, secs).toString();
-							else timeLengthFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
-											            	            
-				            String descriptionTemplate = "%s has just %s %.2f km in %s, view the route they travelled here!";
-				            String description = String.format(descriptionTemplate, name, typeVerb, distance, timeLengthFormatted);
+    					JSONObject obj = new JSONObject();  
+    					obj.put("longUrl", longUrl);  
+    					request.setEntity(new StringEntity(obj.toString(), "UTF-8"));  
 
-			    	        final Bundle postParams = new Bundle();
-			    	        postParams.putString("name", "GoMotion Fitness App for Android");
-			    	        postParams.putString("caption", "Cardio exercise completed");
-			    	        postParams.putString("description", description);
-			    	        postParams.putString("link", mapURL);
-			    	        postParams.putString("picture", mapURL);
-							
-							Request.Callback callback = new Request.Callback() {
-			    	            public void onCompleted(Response response) {
+    					HttpResponse resp = httpClient.execute(request);
+    					System.out.println("Requested shortener URL");
 
-			    	                FacebookRequestError error = response.getError();
-			    	                if (error != null) {
-			    	                    Toast.makeText(ListCardioExercisesActivity.this,
-			    	                         error.getErrorMessage(),
-			    	                         Toast.LENGTH_SHORT).show();
-			    	                    } else {
-			    	                        Toast.makeText(ListCardioExercisesActivity.this, 
-			    	                             "Post successful",
-			    	                             Toast.LENGTH_LONG).show();
-			    	                }
-			    	            }
-			    	        };
 
-			    	        Request request = new Request(session, "me/feed", postParams, 
-			    	                              HttpMethod.POST, callback);
+    					if ( resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK )  
+    					{  
+    						ByteArrayOutputStream out = new ByteArrayOutputStream();  
+    						resp.getEntity().writeTo(out);  
+    						out.close();       
+    						shortUrl   = new JSONObject(out.toString()).getString("id");
+    					}  
+    					else
+    					{
+    						System.out.println(resp.getStatusLine().getStatusCode());
+    					}
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    				    				
+    				return shortUrl;
+    			}
 
-			    	        final RequestAsyncTask task = new RequestAsyncTask(request);
-			    	        task.execute();
-						}
-					}
-				});
+    			@Override
+    			protected void onPostExecute(final String shortUrl) {
+    				super.onPostExecute(shortUrl);
 
-				System.out.println("Status posted.");
-    	    }
+    				// make request to the /me API
+    				Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+
+    					// callback after Graph API response with user object
+    					public void onCompleted(GraphUser user, Response response) {
+    						if(user != null)
+    						{
+    							name = user.getFirstName();
+
+    							System.out.println("Creating request.");
+    							
+    							String typeVerb = "";
+
+    							switch(exercise.getType())
+    							{
+    							case WALK:
+    								typeVerb = "walked";
+    								break;
+    							case RUN:
+    								typeVerb = "ran";
+    								break;
+    							case CYCLE:
+    								typeVerb = "cycled";
+    								break;
+    							}
+
+    							/**
+    							 * MUST ACCOUNT FOR HOURS AND IMPERIAL UNITS ALSO
+    							 * DON'T FORGET!
+    							 *  **/
+    							double distance = ((double) exercise.getDistance()) / 1000; // kilometres	
+
+    							int timeLength = exercise.getTimeLength();
+    							int hours = timeLength / (60 * 60);
+    							int mins = (hours == 0) ? timeLength / 60 : (timeLength % (hours * 60*60)) / 60;
+    							int secs = (hours ==0 && mins == 0) ? timeLength : timeLength % ((hours*60*60) + (mins*60));
+
+    							String timeLengthFormatted = "";							
+    							if(hours == 0) timeLengthFormatted = String.format("%02d:%02d", mins, secs).toString();
+    							else timeLengthFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
+    							
+    							SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
+    							String units = sharedPref.getString(SettingsActivity.UNITS, "1");
+    							
+    							double dist = distance / 1000;
+    							String distUnits = "km";
+    							
+    							if(Integer.valueOf(units) == 2)
+    							{
+    								dist = dist * 0.621371192;
+    								distUnits = " mi";
+    							}			
+
+    							String distStr = String.format("%.2f", dist);
+
+    							String descriptionTemplate = "%s has just %s %.2f %s in %s, view the route they travelled here!";
+    							String description = String.format(descriptionTemplate, name, typeVerb, distance, distUnits, timeLengthFormatted);
+
+    							final Bundle postParams = new Bundle();
+    							postParams.putString("name", "GoMotion Fitness App for Android");
+    							postParams.putString("caption", "Cardio exercise completed");
+    							postParams.putString("description", description);
+    							postParams.putString("link", shortUrl);
+    							postParams.putString("picture", shortUrl);
+
+    							Request.Callback callback = new Request.Callback() {
+    								public void onCompleted(Response response) {
+
+    									FacebookRequestError error = response.getError();
+    									if (error != null) {
+    										Toast.makeText(ListCardioExercisesActivity.this,
+    												error.getErrorMessage(),
+    												Toast.LENGTH_SHORT).show();
+    									} else {
+    										Toast.makeText(ListCardioExercisesActivity.this, 
+    												"Post successful",
+    												Toast.LENGTH_LONG).show();
+    									}
+    								}
+    							};
+
+    							Request request = new Request(session, "me/feed", postParams, 
+    									HttpMethod.POST, callback);
+
+    							final RequestAsyncTask task = new RequestAsyncTask(request);
+    							task.execute();
+    						}
+    					}
+    				});
+
+    				System.out.println("Status posted.");
+    			}    		
+    		};
+
+    		task.execute();
+    	}
     }
 
 	public String makeGoogleMapsString(CardioExercise exercise)
@@ -351,21 +423,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		
 		Cursor waypoints = db.getWaypoints(exercise.getID());
 		//System.out.println(waypoints.getCount());
-		
-		waypoints.moveToFirst();
-		
-		// Can't use multiple markers as Facebook removes parameters with the same name
-		/*waypoints.moveToFirst();
-		Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
-		waypoints.moveToLast();
-		Waypoint last = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
-		waypoints.moveToFirst();
-		
-		String startMarker = String.format("&markers=color:green|label:S|%f,%f", first.getLatitude(), first.getLongitude());
-		String endMarker = String.format("&markers=color:red|label:F|%f,%f", last.getLatitude(), last.getLongitude());
-		params.append(startMarker);
-		params.append(endMarker);*/
-		
+				
 		waypoints.moveToFirst();
 		Waypoint first = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
 		waypoints.moveToLast();
@@ -410,10 +468,10 @@ public class ListCardioExercisesActivity extends ListActivity
 				String lat = "";
 				String lng = "";
 				
-				lat = encodeSignedNumber(floor1e5(waypoints.getDouble(0) - lastPoint.getLatitude()));
-				lng = encodeSignedNumber(floor1e5(waypoints.getDouble(1) - lastPoint.getLongitude()));
+				lat = encodeSignedNumber(floor1e5(waypoints.getDouble(0) - lastPoint.getLatitude())).replace("\\\\", "\\");
+				lng = encodeSignedNumber(floor1e5(waypoints.getDouble(1) - lastPoint.getLongitude())).replace("\\\\", "\\");
 				
-				//System.out.println(n + ":" + lat + lng);
+				System.out.println(n + ":" + lat + lng);
 				params.append(lat + lng);
 				lastPoint = new Waypoint(waypoints.getDouble(0), waypoints.getDouble(1));
 				
@@ -423,7 +481,9 @@ public class ListCardioExercisesActivity extends ListActivity
 		System.out.println(params.toString());
 		
 		params.append("&sensor=false");
-		return params.toString();
+		final String longUrl = params.toString();
+		
+		return longUrl;
 	}
 	
     private static int floor1e5(double coordinate) {
@@ -519,8 +579,7 @@ public class ListCardioExercisesActivity extends ListActivity
 			
 			String timeFormatted;
 			if(hours == 0) timeFormatted = String.format("%02d:%02d", mins, secs).toString();
-			else timeFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();
-				
+			else timeFormatted = String.format("%02d:%02d:%02d", hours, mins, secs).toString();				
 			
 			double dist = Double.valueOf(cursor.getString(2)) / 1000;
 			String distUnits = "km ";
