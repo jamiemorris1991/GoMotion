@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -488,15 +489,19 @@ public class HomeScreen extends Activity {
 		
 		if(loading)
 		{
+			LinearLayout barContainer = new LinearLayout(getApplicationContext());
+			barContainer.setLayoutParams(
+					new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			barContainer.setGravity(Gravity.CENTER);
+			
 			ProgressBar bar = new ProgressBar(this.getApplicationContext());
-			wall.setGravity(Gravity.CENTER);
-			wall.addView(bar);
+			
+			barContainer.addView(bar);
+			wall.addView(barContainer);
 		}
-		
-		wall.setGravity(Gravity.BOTTOM + Gravity.CENTER_HORIZONTAL);
-		TextView text = new TextView(getApplicationContext());
-		text.setText(m);
-		wall.addView(text);
+		//TextView text = new TextView(getApplicationContext());
+		//text.setText(m);
+		//wall.addView(text);
 	}
 
 	@Override

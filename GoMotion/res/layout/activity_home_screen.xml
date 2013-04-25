@@ -49,7 +49,7 @@
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/linearLayout1"
         android:fillViewport="true" >
 
@@ -66,7 +66,7 @@
                 android:layout_marginRight="1dp"
                 android:background="@color/goBlue"
                 android:onClick="leaderboardOptions"
-                android:text="Wall mode: Timeline"
+                android:text="Timeline"
                 android:textColor="@color/buttonsText"
                 tools:ignore="ButtonStyle,HardcodedText" />
 
