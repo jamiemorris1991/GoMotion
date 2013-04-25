@@ -27,14 +27,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -52,11 +55,13 @@ import com.gomotion.BodyWeightExercise.BodyWeightType;
 public class HomeScreen extends Activity {
 	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";
 	public static final String BODY_WEIGHT_TYPE = "com.gomotion.BODY_WEIGHT_TYPE";
-
+	public static final int POSTS_TO_SHOW = 16;
+	
+	static public enum WallSortMode{timeline, indoor, outdoorDistance, outdoorSpeed};
+	
 	private HashMap<String, FacebookUser> friends;
-	//List<GraphUser> friends;
-
 	private Session session;
+	private WallSortMode wallSortMode = WallSortMode.timeline;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -67,7 +72,6 @@ public class HomeScreen extends Activity {
 
 		if(session != null)
 		{	
-			setSingleWallMessage("Communicating with Facebook");
 
 			friends = new HashMap<String, FacebookUser>();
 
@@ -152,7 +156,7 @@ public class HomeScreen extends Activity {
 						meTask.execute();
 						task.execute();
 						
-						setSingleWallMessage("Communicating with database");
+						setSingleWallMessage("Communicating with database", true);
 						buildWall();
 					}					
 				}
@@ -162,21 +166,32 @@ public class HomeScreen extends Activity {
 
 	private void buildWall()
 	{
+		setSingleWallMessageInMainThread("Communicating with Facebook", true);
 
 		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
 			@Override
 			protected Void doInBackground(Void... params) {
-
-				LinkedList<BodyWeightExercise> bwe = OnlineDatabase
-						.getBodyWeightExercises(friends, 30);
-				LinkedList<CardioExercise> ce = OnlineDatabase
-						.getCardioExercises(friends, 30);
+				LinkedList<BodyWeightExercise> bwe;
+				LinkedList<CardioExercise> ce;
 				
-				System.out.println(bwe.size());
+				if(wallSortMode == WallSortMode.timeline
+						|| wallSortMode == WallSortMode.indoor)
+					bwe = OnlineDatabase
+					.getBodyWeightExercises(friends, POSTS_TO_SHOW, wallSortMode);
+				else
+					bwe = new LinkedList<BodyWeightExercise>();
+				if(wallSortMode == WallSortMode.timeline
+						|| wallSortMode == WallSortMode.outdoorDistance
+						|| wallSortMode == WallSortMode.outdoorSpeed)
+					ce = OnlineDatabase
+					.getCardioExercises(friends, POSTS_TO_SHOW, wallSortMode);
+				else
+					ce = new LinkedList<CardioExercise>();
+				
 
 				if (bwe == null || ce == null) {
-					setSingleWallMessageInMainThread("Failed to communicate with database");
+					setSingleWallMessageInMainThread("Failed to communicate with database", false);
 					return null;
 				}
 
@@ -185,10 +200,11 @@ public class HomeScreen extends Activity {
 				allExcercises.addAll(ce);
 
 				if (allExcercises.size() == 0) {
-					setSingleWallMessageInMainThread("None of your friends are using GoMotion yet!");
+					setSingleWallMessageInMainThread("None of your friends are using GoMotion yet!", false);
 					return null;
 				}
-
+				
+				if(wallSortMode == WallSortMode.timeline)
 				Collections.sort(allExcercises, new Comparator<Exercise>() {
 
 					public int compare(Exercise lhs, Exercise rhs) {
@@ -202,7 +218,7 @@ public class HomeScreen extends Activity {
 				});
 
 				final List<Exercise> excercises = allExcercises.subList(0,
-						Math.min(10, allExcercises.size()));
+						Math.min(POSTS_TO_SHOW, allExcercises.size()));
 
 				runOnUiThread(new Runnable() {
 
@@ -227,13 +243,14 @@ public class HomeScreen extends Activity {
 		final ListIterator<Exercise> i = exercises.listIterator();
 		while (i.hasNext()) 
 		{			
-			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+			AsyncTask<WallSortMode, Void, Void> task = new AsyncTask<WallSortMode, Void, Void>() {
 
 				Exercise exercise = i.next();
 				String message = "";
 				
 				@Override
-				protected Void doInBackground(Void... params) {
+				protected Void doInBackground(WallSortMode... params) {
+					final WallSortMode myWallSortMode = params[0];
 					
 					try	{
 						URL newurl = new URL(friends.get(exercise.getUserID()).getPictureURL());
@@ -351,18 +368,11 @@ public class HomeScreen extends Activity {
 //								}
 //								else
 //								{
-//									final CardioExercise c = (CardioExercise) exercise;
+//									
 //									message += "Distance: " + c.getDistance() + " Time: " + getCardioTimeString(c.getTimeLength());
 //									message += "\nClick to view route";
 //									
-//									text.setOnClickListener(new OnClickListener() {
-//										
-//										public void onClick(View arg0) {
-//											Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-//													Uri.parse(c.getMapURL()));
-//											startActivity(browserIntent);
-//										}
-//									});
+//									
 //								}
 								
 								TextView text = new TextView(HomeScreen.this);
@@ -370,8 +380,23 @@ public class HomeScreen extends Activity {
 								text.setTextSize(14);
 								text.setPadding(20, 0, 0, 8);
 								
-								
+								if(exercise instanceof CardioExercise)
+								{
+									final CardioExercise c = (CardioExercise) exercise;
+									text.setOnClickListener(new OnClickListener() {									
+										public void onClick(View arg0) {
+											Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+													Uri.parse(c.getMapURL()));
+											startActivity(browserIntent);
+										}
+									});
+								}
 								text.setText(message);
+								
+								//Thread safety
+								if(wallSortMode != myWallSortMode)
+									return;
+								
 								post.addView(text);
 								wall.addView(post);
 
@@ -388,7 +413,7 @@ public class HomeScreen extends Activity {
 				} 
 			};
 			
-			task.execute();
+			task.execute(wallSortMode);
 
 		}
 	}
@@ -447,22 +472,31 @@ public class HomeScreen extends Activity {
 		return millis + " month" + (millis == 1 ? "" : "s");
 	}
 
-	private void setSingleWallMessageInMainThread(final String m)
+	private void setSingleWallMessageInMainThread(final String m, final Boolean l)
 	{
 		this.runOnUiThread(new Runnable() {
 			public void run() {
-				setSingleWallMessage(m);
+				setSingleWallMessage(m, l);
 			}
 		});
 	}
 
-	private void setSingleWallMessage(String m)
+	private void setSingleWallMessage(String m, boolean loading)
 	{
-//		ScrollView wall = (ScrollView) findViewById(R.id.scroll);
-//		TextView text = new TextView(getApplicationContext());
-//		text.setText(m);
-//		wall.removeAllViews();
-//		wall.addView(text);
+		LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
+		wall.removeAllViews();
+		
+		if(loading)
+		{
+			ProgressBar bar = new ProgressBar(this.getApplicationContext());
+			wall.setGravity(Gravity.CENTER);
+			wall.addView(bar);
+		}
+		
+		wall.setGravity(Gravity.BOTTOM + Gravity.CENTER_HORIZONTAL);
+		TextView text = new TextView(getApplicationContext());
+		text.setText(m);
+		wall.addView(text);
 	}
 
 	@Override
@@ -615,6 +649,74 @@ public class HomeScreen extends Activity {
 		builder.show();
 	}
 
+	
+	public void leaderboardOptions(View view)
+	{
+		final Item[] items = { 
+				new Item("Time", R.drawable.history),
+				new Item("Indoor", R.drawable.situp),
+				new Item("Outdoor - Distance", R.drawable.walk),
+				new Item("Outdoor - speed", R.drawable.bike),
+			};
+
+		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this,
+				android.R.layout.select_dialog_item, android.R.id.text1, items) {
+			public View getView(int position, View convertView,
+					ViewGroup viewGroup) {
+				// User super class to create the View
+				View v = super.getView(position, convertView, viewGroup);
+				TextView tv = (TextView) v.findViewById(android.R.id.text1);
+
+				// Put the image on the TextView
+				tv.setCompoundDrawablesWithIntrinsicBounds(
+						items[position].icon, 0, 0, 0);
+
+				// Add margin between image and text (support various screen
+				// densities)
+				int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+				tv.setCompoundDrawablePadding(dp5);
+				tv.setTextSize(18);
+
+				return v;
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle("Set wall mode").setAdapter(adapter,
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int i) {
+						
+						Button wallSortButton = (Button)
+								findViewById(R.id.changeWallButton);
+
+						wallSortMode = WallSortMode.values()[i];
+						
+						switch (wallSortMode) {
+						case timeline:
+							wallSortButton.setText("Timeline");
+							break;
+						case indoor:
+							wallSortButton.setText("Indoor Leaderboard");
+							break;
+						case outdoorDistance:
+							wallSortButton.setText("Outdoor Leaderboard - Distance");
+							break;
+						case outdoorSpeed:
+							wallSortButton.setText("Outdoor Leaderboard - Speed");
+							break;
+						}
+						
+						buildWall();
+						
+					}
+				});
+
+		builder.show();
+	}
+	
+	
 	public void doPushUps() {
 		BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
 

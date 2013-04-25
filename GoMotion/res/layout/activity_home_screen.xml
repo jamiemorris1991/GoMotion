@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -32,6 +32,7 @@
             android:text="Indoor"
             android:textColor="@color/buttonsText"
             tools:ignore="ButtonStyle,HardcodedText" />
+
     </LinearLayout>
 
     <!-- <LinearLayout -->
@@ -53,11 +54,33 @@
         android:fillViewport="true" >
 
         <LinearLayout
-            android:id="@+id/wall"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
             
+            <Button
+                android:id="@+id/changeWallButton"
+                android:layout_width="fill_parent"
+                android:layout_height="28dp"
+                android:layout_margin="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@color/goBlue"
+                android:onClick="leaderboardOptions"
+                android:text="Wall mode: Timeline"
+                android:textColor="@color/buttonsText"
+                tools:ignore="ButtonStyle,HardcodedText" />
+
+            <LinearLayout
+                android:id="@+id/wall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="133.06"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                tools:ignore="InefficientWeight" >
+
+            </LinearLayout>
+
         </LinearLayout>
         
     </ScrollView>

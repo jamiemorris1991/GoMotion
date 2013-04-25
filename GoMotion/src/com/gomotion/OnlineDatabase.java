@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import com.gomotion.HomeScreen.WallSortMode;
+
 public class OnlineDatabase {
 	static private final String url = "jdbc:mysql://hexdex.net:3306/hexdexne_csc2015";
 	static private final String user = "hexdexne_csc2015";
@@ -69,7 +71,7 @@ public class OnlineDatabase {
 		return true;
 	}
 
-	static public LinkedList<BodyWeightExercise> getBodyWeightExercises(HashMap<String, FacebookUser> friends, int num) {
+	static public LinkedList<BodyWeightExercise> getBodyWeightExercises(HashMap<String, FacebookUser> friends, int num, WallSortMode wsm) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
@@ -85,9 +87,22 @@ public class OnlineDatabase {
 				whereClause = whereClause.substring(0, whereClause.length() - 4);
 			}
 			
+			String order = " ORDER BY ";
+			switch(wsm)
+			{
+			case indoor:
+				order += "Sets*Reps desc";
+				break;
+				case timeline:
+				default:
+					order += "Timestamp desc";
+					break;
+			}
 
 			String query = "SELECT * FROM bodyweight b WHERE "
-					+ whereClause + " LIMIT " + num + ";";
+					+ whereClause + order + " LIMIT " + num + ";";
+			
+			System.out.println("SQL:: " + query);
 
 			ResultSet result = s
 					.executeQuery(query);
@@ -107,7 +122,7 @@ public class OnlineDatabase {
 	}
 
 
-	static public LinkedList<CardioExercise> getCardioExercises(HashMap<String, FacebookUser> friends, int num) {
+	static public LinkedList<CardioExercise> getCardioExercises(HashMap<String, FacebookUser> friends, int num, WallSortMode wsm) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
@@ -125,12 +140,26 @@ public class OnlineDatabase {
 				whereClause = whereClause.substring(0, whereClause.length() - 4);
 			}		
 			
-			System.out.println("SELECT * FROM cardio c WHERE "
-					+ whereClause + " LIMIT " + num + ";");
+			String order = "ORDER BY ";
+			switch(wsm)
+			{
+				case outdoorDistance:
+					order += "Distance desc";
+				break;
+				case outdoorSpeed:
+					order += "Distance/TimeLength desc";
+					break;
+				case timeline:
+				default:
+					order += "Timestamp desc";
+					break;
+			}
+			
+			String query = "SELECT * FROM cardio c WHERE "
+					+ whereClause + order + " LIMIT " + num + ";";
 
 			ResultSet result = s
-					.executeQuery("SELECT * FROM cardio c WHERE "
-							+ whereClause + " LIMIT " + num + ";");			
+					.executeQuery(query);			
 
 			LinkedList<CardioExercise> out = new LinkedList<CardioExercise>();
 
