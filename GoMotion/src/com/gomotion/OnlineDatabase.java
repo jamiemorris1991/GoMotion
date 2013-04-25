@@ -36,7 +36,7 @@ public class OnlineDatabase {
 						
 			s.executeUpdate("INSERT INTO bodyweight VALUES (" + "null,"
 					+ exercise.getTimeStamp() + ","
-					+ exercise.getDBTimestamp() + ","
+					+ "UNIX_TIMESTAMP(),"
 					+ exercise.getUserID() + ","
 					+ exercise.getSets() + ","
 					+ exercise.getReps() + ","
@@ -60,7 +60,7 @@ public class OnlineDatabase {
 			Statement s = connection.createStatement();
 			s.execute("INSERT INTO cardio VALUES (" + "null,"
 					+ exercise.getTimeStamp() + ","
-					+ exercise.getDBTimestamp() + ","
+					+ "UNIX_TIMESTAMP(),"
 					+ exercise.getUserID() + ","
 					+ exercise.getTimeLength() + ","
 					+ exercise.getDistance() + ","
