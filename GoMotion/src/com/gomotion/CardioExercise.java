@@ -27,16 +27,18 @@ public class CardioExercise extends Exercise
 		ID = r.getInt(1);
 		//timeStamp
 		timeStamp = r.getLong(2);
+		//dbtimestamp
+		dbTimestamp = r.getLong(3);
 		//user
-		userID = r.getString(3);
+		userID = r.getString(4);
 		//timeLength
-		timeLength = r.getInt(4);
+		timeLength = r.getInt(5);
 		//distance
-		distance = r.getInt(5);
+		distance = r.getInt(6);
 		//URL
-		mapURL = r.getString(6).replace("\\\"", "\"");
+		mapURL = r.getString(7).replace("\\\"", "\"");
 		//type
-		type = CardioType.values()[r.getInt(7)];
+		type = CardioType.values()[r.getInt(8)];
     }
     
     public CardioExercise(int distance, int timeLength, CardioType type, LinkedList<Location> waypoints)

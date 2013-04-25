@@ -10,6 +10,7 @@ public abstract class Exercise
 	
 	//All exercises
 	protected long timeStamp;
+	protected long dbTimestamp;
 	
 	//If id isn't null then the record has been stored on the server
 	public boolean isStored()
@@ -51,6 +52,14 @@ public abstract class Exercise
 	public void setTimeStamp(long timeStamp)
 	{
 		this.timeStamp = timeStamp;
+	}
+	public long getDBTimestamp()
+	{
+		return dbTimestamp;
+	}
+	public void setDBTimestamp(long dbTimestamp)
+	{
+		this.dbTimestamp = dbTimestamp; 
 	}
 
 }

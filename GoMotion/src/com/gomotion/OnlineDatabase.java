@@ -36,6 +36,7 @@ public class OnlineDatabase {
 						
 			s.executeUpdate("INSERT INTO bodyweight VALUES (" + "null,"
 					+ exercise.getTimeStamp() + ","
+					+ exercise.getDBTimestamp() + ","
 					+ exercise.getUserID() + ","
 					+ exercise.getSets() + ","
 					+ exercise.getReps() + ","
@@ -58,8 +59,10 @@ public class OnlineDatabase {
 			System.out.println("Connected!");
 			Statement s = connection.createStatement();
 			s.execute("INSERT INTO cardio VALUES (" + "null,"
-					+ exercise.getTimeStamp() + "," + exercise.getUserID()
-					+ "," + exercise.getTimeLength() + ","
+					+ exercise.getTimeStamp() + ","
+					+ exercise.getDBTimestamp() + ","
+					+ exercise.getUserID() + ","
+					+ exercise.getTimeLength() + ","
 					+ exercise.getDistance() + ","
 					+ "\"" + exercise.getMapURL().replace("\"", "\\\"") + "\","
 					+ exercise.getType().ordinal() + ");");
@@ -95,7 +98,7 @@ public class OnlineDatabase {
 				break;
 				case timeline:
 				default:
-					order += "Timestamp desc";
+					order += "DBTimestamp desc";
 					break;
 			}
 
@@ -151,7 +154,7 @@ public class OnlineDatabase {
 					break;
 				case timeline:
 				default:
-					order += "Timestamp desc";
+					order += "DBTimestamp desc";
 					break;
 			}
 			

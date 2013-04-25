@@ -17,18 +17,20 @@ public class BodyWeightExercise extends Exercise
 		ID = r.getInt(1);
 		//timeStamp
 		timeStamp = r.getLong(2);
+		//db timestamp
+		dbTimestamp = r.getLong(3);
 		//user
-		userID = r.getString(3);
+		userID = r.getString(4);
 		//sets
-		sets = r.getInt(4);
+		sets = r.getInt(5);
 		//reps
-		reps = r.getInt(5);
+		reps = r.getInt(6);
 		//name
-		name = r.getString(6);
+		name = r.getString(7);
 		if(name != null) name = name.replace("\\\"", "\"");
 		else name = "";
 		//type
-		type = BodyWeightType.values()[r.getInt(7)];
+		type = BodyWeightType.values()[r.getInt(8)];
 	}
 	
 	public BodyWeightExercise(int sets, int reps, BodyWeightType type)
