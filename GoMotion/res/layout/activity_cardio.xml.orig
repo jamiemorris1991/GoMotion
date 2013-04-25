@@ -1,0 +1,159 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/goBlue"
+    tools:context=".CardioActivity" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="160dp"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/start_cardio"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/linearLayout1"
+        android:layout_alignTop="@+id/finish_cardio"
+        android:background="@color/buttonsText"
+        android:onClick="startExercise"
+        android:text="Start"
+        android:textColor="@color/goBlue"
+        android:textSize="32sp" />
+
+    <Button
+        android:id="@+id/finish_cardio"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/start_cardio"
+        android:background="@color/buttonsText"
+        android:onClick="finishExercise"
+        android:text="Finish"
+        android:textColor="@color/goBlue"
+        android:textSize="32sp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="64dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lblDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distance:"
+            android:textColor="@color/buttonsText"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/cardio_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="distance"
+            android:textColor="@color/buttonsText"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="64dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lblPace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pace:"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/buttonsText"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/cardio_pace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pace"
+            android:textColor="@color/buttonsText"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lblWaypoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/lblDistance"
+        android:layout_marginTop="10dp"
+        android:text="Waypoints:"
+        android:textColor="@color/buttonsText" />
+
+    <TextView
+        android:id="@+id/gps_signal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/waypoint_count"
+        android:layout_alignBottom="@+id/waypoint_count"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:text="signal"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/lblSignal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gps_signal"
+        android:layout_alignLeft="@+id/gps_signal"
+        android:text="Signal:"
+        android:textColor="@color/buttonsText" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:layout_below="@+id/waypoint_count"
+        android:src="@drawable/stopwatch1" />
+
+    <TextView
+        android:id="@+id/cardio_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="108dp"
+        android:text="00:00"
+        android:textColor="@color/buttonsText"
+        android:textSize="48sp" />
+
+    <TextView
+        android:id="@+id/waypoint_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_below="@+id/lblWaypoint"
+        android:layout_marginLeft="17dp"
+        android:text="0"
+        android:textColor="@color/buttonsText"
+        android:textSize="20sp" />
+
+</RelativeLayout>
