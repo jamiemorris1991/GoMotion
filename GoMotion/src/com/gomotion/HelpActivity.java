@@ -67,8 +67,8 @@ public class HelpActivity extends Activity
 				TextView timelineTitle = new TextView(this);
 				TextView timelineDesc = new TextView(this);
 				
-				String timelineTitleStr = "Timeline";
-				String timelineDescStr = "The main screen you will see in the app is the timeline. It is only available" +
+				String timelineTitleStr = "News Feed";
+				String timelineDescStr = "The main screen you will see in the app is the News Feed. It is only available" +
 						" when logged into Facebook, as it shows your friends shared exercises. For outdoor exercises you can " +
 						"click on a friend’s post to view the route they travelled.";
 				

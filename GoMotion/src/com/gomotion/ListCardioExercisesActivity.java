@@ -180,9 +180,7 @@ public class ListCardioExercisesActivity extends ListActivity
         outState.putInt(POST_ITEM, postItem);
         outState.putBoolean(PENDING_PUBLISH_KEY, pendingPublishReauthorization);
     }
-    
-   
-    
+       
     public void postRouteGoMotion()
     {
 		AsyncTask<CardioExercise, Void, Boolean> task;
@@ -195,7 +193,8 @@ public class ListCardioExercisesActivity extends ListActivity
 				Request request = Request.newMeRequest(Session.getActiveSession(), null);
 				Response response = request.executeAndWait();
 				params[0].setUserID((String)response.getGraphObject().getProperty("id"));
-				params[0].setMapURL(makeGoogleMapsString(params[0]));
+				String url = makeShortUrl(makeGoogleMapsString(params[0]));
+				params[0].setMapURL(url);
 				//#ADD URL
 				return OnlineDatabase.add(params[0]);
 			}
@@ -267,43 +266,11 @@ public class ListCardioExercisesActivity extends ListActivity
 
     		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
     			
-    			String shortUrl = "";
-
     			@Override			
     			protected String doInBackground(Void... params) {
-
-    				HttpClient httpClient = new DefaultHttpClient();
-
-    				try {
-    					System.out.println("Starting shortener request");
-    					HttpPost request = new HttpPost("https://www.googleapis.com/urlshortener/v1/url");
-    					request.addHeader("Content-Type", "application/json");
-    					request.setHeader("Accept", "application/json");  
-
-    					JSONObject obj = new JSONObject();  
-    					obj.put("longUrl", longUrl);  
-    					request.setEntity(new StringEntity(obj.toString(), "UTF-8"));  
-
-    					HttpResponse resp = httpClient.execute(request);
-    					System.out.println("Requested shortener URL");
-
-
-    					if ( resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK )  
-    					{  
-    						ByteArrayOutputStream out = new ByteArrayOutputStream();  
-    						resp.getEntity().writeTo(out);  
-    						out.close();       
-    						shortUrl   = new JSONObject(out.toString()).getString("id");
-    					}  
-    					else
-    					{
-    						System.out.println(resp.getStatusLine().getStatusCode());
-    					}
-    				} catch (Exception e) {
-    					e.printStackTrace();
-    				}
-    				    				
-    				return shortUrl;
+    				
+    				return makeShortUrl(longUrl);
+    				
     			}
 
     			@Override
@@ -405,6 +372,44 @@ public class ListCardioExercisesActivity extends ListActivity
 
     		task.execute();
     	}
+    }
+    
+    public String makeShortUrl(String longUrl)
+    {
+    	String shortUrl = "";
+    	
+		HttpClient httpClient = new DefaultHttpClient();
+
+		try {
+			System.out.println("Starting shortener request");
+			HttpPost request = new HttpPost("https://www.googleapis.com/urlshortener/v1/url");
+			request.addHeader("Content-Type", "application/json");
+			request.setHeader("Accept", "application/json");  
+
+			JSONObject obj = new JSONObject();  
+			obj.put("longUrl", longUrl);  
+			request.setEntity(new StringEntity(obj.toString(), "UTF-8"));  
+
+			HttpResponse resp = httpClient.execute(request);
+			System.out.println("Requested shortener URL");
+
+
+			if ( resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK )  
+			{  
+				ByteArrayOutputStream out = new ByteArrayOutputStream();  
+				resp.getEntity().writeTo(out);  
+				out.close();       
+				shortUrl   = new JSONObject(out.toString()).getString("id");
+			}  
+			else
+			{
+				System.out.println(resp.getStatusLine().getStatusCode());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		    				
+		return shortUrl;
     }
 
 	public String makeGoogleMapsString(CardioExercise exercise)

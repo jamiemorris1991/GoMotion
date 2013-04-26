@@ -5,7 +5,19 @@ public class FacebookUser
 	private String id;
 	private String name;
 	private String pictureURL;
+	private int data;
+	private int num;
 	
+	public int getNum()
+	{
+		return num;
+	}
+
+	public void setNum(int num)
+	{
+		this.num = num;
+	}
+
 	public FacebookUser(String id, String name, String pictureURL)
 	{
 		this.id = id;
@@ -38,6 +50,15 @@ public class FacebookUser
 	public void setPictureURL(String pictureURL) 
 	{
 		this.pictureURL = pictureURL;
+	}
+	
+	public int getData() 
+	{
+		return data;
+	}
+	public void setData(int data) 
+	{
+		this.data = data;
 	}
 
 	public String toString()
