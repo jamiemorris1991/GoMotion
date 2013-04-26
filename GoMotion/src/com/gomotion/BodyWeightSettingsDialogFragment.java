@@ -140,29 +140,6 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 					}
 					else startActivity(intent);
 					
-				 					
-//					EditText setsEditText = (EditText) v.findViewById(R.id.set_choice);
-//					EditText repsEditText = (EditText) v.findViewById(R.id.rep_choice);
-//					EditText restTimeText = (EditText) v.findViewById(R.id.rest_time);
-//					
-//					int sets = Integer.valueOf( setsEditText.getText().toString() );
-//					int reps = Integer.valueOf( repsEditText.getText().toString() );
-//					int restTime = Integer.valueOf( restTimeText.getText().toString() );
-					
-					// Error checking, if the values have not been set then it uses the default values - Done by BeN
-					// Feel free to change it
-					// It works when only one hasn't been changed, but does not work if all of them has not been entered
-					
-//					if (sets <= 0 || reps <= 0 || restTime <= 0) {
-//						// close dialog
-//					} else {
-//						intent.putExtra(SET_CHOICE, sets);
-//						intent.putExtra(REP_CHOICE, reps);
-//						intent.putExtra(REST_TIME, restTime);
-//	
-//						startActivity(intent);
-//					}
-					// End of error checking
 				}
 			})
 			.setNeutralButton(R.string.defaultButton, new DialogInterface.OnClickListener()
@@ -188,10 +165,22 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 					{
 						EditText field = (EditText) v.findViewById(R.id.custom_exercise_name);
 						String exerciseName = field.getText().toString();
-						intent.putExtra(EXERCISE_NAME, exerciseName);
-					}
-					
-					startActivity(intent);
+						if(exerciseName.length() < 3) 
+						{
+							new AlertDialog.Builder(BodyWeightSettingsDialogFragment.this.getActivity())
+							.setTitle("Error")
+							.setMessage("Custom exercises must have a name over 3 characters long.")
+							.setCancelable(true)
+							.setNegativeButton("Cancel", null)
+							.show();
+						}
+						else
+						{
+							intent.putExtra(EXERCISE_NAME, exerciseName);
+							startActivity(intent);
+						}
+					}			
+					else startActivity(intent);
 
 //					setsEditText.setText(String.valueOf(defaultSets));
 //					repsEditText.setText(String.valueOf(defaultReps));
