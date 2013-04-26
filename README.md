@@ -11,3 +11,5 @@ Navigate to the CSC2015 folder, and select all 3 Projects to be imported.
 Once added, make sure your device is plugged in (and has USB debugging turned on), unless you're using the 
 emulator. Click Run->Run->Android Application. (you may need to open at least one .java file for Run to be available
 HomeScreen.java for instance).
+
+You can also download the latest .apk file from here, to install directly on your Android phone: https://www.dropbox.com/s/cjkvm8namt2z986/GoMotion.apk
