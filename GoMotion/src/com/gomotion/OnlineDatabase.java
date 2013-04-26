@@ -1,10 +1,17 @@
 package com.gomotion;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import com.gomotion.HomeScreen.WallSortMode;
+import java.util.TreeMap;
+
+import com.gomotion.HomeScreen.ExerciseType;
+import com.gomotion.HomeScreen.LeaderboardType;
 
 public class OnlineDatabase {
 	static private final String url = "jdbc:mysql://hexdex.net:3306/hexdexne_csc2015";
@@ -31,7 +38,7 @@ public class OnlineDatabase {
 			// Try to get a connection
 			getConnection();
 			Statement s = connection.createStatement();			
-						
+
 			s.executeUpdate("INSERT INTO bodyweight VALUES (" + "null,"
 					+ exercise.getTimeStamp() + ","
 					+ "UNIX_TIMESTAMP(),"
@@ -64,7 +71,7 @@ public class OnlineDatabase {
 					+ exercise.getDistance() + ","
 					+ "\"" + exercise.getMapURL().replace("\"", "\\\"") + "\","
 					+ exercise.getType().ordinal() + ");");
-			
+
 			connection.close();
 		} catch (SQLException e) {
 			return false;
@@ -72,11 +79,11 @@ public class OnlineDatabase {
 		return true;
 	}
 
-	static public LinkedList<BodyWeightExercise> getBodyWeightExercises(HashMap<String, FacebookUser> friends, int num, WallSortMode wsm) {
+	static public LinkedList<BodyWeightExercise> getBodyWeightExercises(HashMap<String, FacebookUser> friends, int num) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
-						
+
 			String whereClause = "";
 			if(friends.size() == 0)
 				return null;
@@ -87,33 +94,21 @@ public class OnlineDatabase {
 					whereClause += "b.user = \"" + i.next() + "\" OR ";
 				whereClause = whereClause.substring(0, whereClause.length() - 4);
 			}
-			
-			String order = " ORDER BY ";
-			switch(wsm)
-			{
-			case indoor:
-				order += "Sets*Reps desc";
-				break;
-				case timeline:
-				default:
-					order += "DBTimestamp desc";
-					break;
-			}
 
 			String query = "SELECT * FROM bodyweight b WHERE "
-					+ whereClause + order + " LIMIT " + num + ";";
-			
+					+ whereClause + " ORDER BY DBTimestamp desc" + " LIMIT " + num + ";";
+
 			System.out.println("SQL:: " + query);
 
 			ResultSet result = s
 					.executeQuery(query);
-			
+
 			LinkedList<BodyWeightExercise> out = new LinkedList<BodyWeightExercise>();
-			
+
 
 			while(result.next())
 				out.add(new BodyWeightExercise(result));
-			
+
 			connection.close();
 			return out;
 		} catch (SQLException e) {
@@ -123,11 +118,11 @@ public class OnlineDatabase {
 	}
 
 
-	static public LinkedList<CardioExercise> getCardioExercises(HashMap<String, FacebookUser> friends, int num, WallSortMode wsm) {
+	static public LinkedList<CardioExercise> getCardioExercises(HashMap<String, FacebookUser> friends, int num) {
 		try {
 			Connection connection = getConnection();
 			Statement s = connection.createStatement();
-			
+
 			System.out.println("Creating cardio statement");
 
 			String whereClause = "";
@@ -140,24 +135,9 @@ public class OnlineDatabase {
 					whereClause += "c.user = \"" + i.next() + "\" OR ";
 				whereClause = whereClause.substring(0, whereClause.length() - 4);
 			}		
-			
-			String order = "ORDER BY ";
-			switch(wsm)
-			{
-				case outdoorDistance:
-					order += "Distance desc";
-				break;
-				case outdoorSpeed:
-					order += "Distance/TimeLength desc";
-					break;
-				case timeline:
-				default:
-					order += "DBTimestamp desc";
-					break;
-			}
-			
+
 			String query = "SELECT * FROM cardio c WHERE "
-					+ whereClause + order + " LIMIT " + num + ";";
+					+ whereClause + " ORDER BY DBTimestamp desc " + " LIMIT " + num + ";";
 
 			ResultSet result = s
 					.executeQuery(query);			
@@ -168,7 +148,7 @@ public class OnlineDatabase {
 			{
 				out.add(new CardioExercise(result));
 			}
-			
+
 			System.out.println(out);
 
 			connection.close();
@@ -178,4 +158,140 @@ public class OnlineDatabase {
 		}
 	}
 
-}
+	public static LinkedList<FacebookUser> getBodyWeightExercisesLeaderboard(HashMap<String, FacebookUser> friends, int postsToShow,
+			LeaderboardType type, ExerciseType exerciseType)
+			{
+		try {
+			Connection connection = getConnection();
+			Statement s = connection.createStatement();
+
+			System.out.println("Creating body weight statement");
+
+			String whereClause = "";
+			if(friends.size() == 0)
+				return null;
+			else
+			{
+				Iterator<String> i = friends.keySet().iterator();
+				while(i.hasNext())
+					whereClause += "user = \"" + i.next() + "\" OR ";
+				whereClause = whereClause.substring(0, whereClause.length() - 4);
+			}		
+
+			int num = postsToShow;
+
+			int exerciseNum = 0;
+			switch(exerciseType)
+			{
+				case PUSHUPS:
+					exerciseNum = 0;
+					break;
+				case SITUPS:
+					exerciseNum = 1;
+					break;
+			}
+
+			String query = "";
+			ResultSet result;
+			LinkedList<FacebookUser >resultSet = new LinkedList<FacebookUser>();
+
+			query = "SELECT user, SUM(Sets*Reps) as totalReps FROM (SELECT * FROM bodyweight WHERE " + whereClause + ") c WHERE ExerciseType=" + exerciseNum + " GROUP BY user ORDER BY totalReps DESC LIMIT " + num + ";";
+			result = s.executeQuery(query);	
+
+			int n = 0;
+			while(result.next())
+			{
+				n++;
+				FacebookUser user = friends.get(result.getString(1));
+				user.setData(result.getInt(2));
+				user.setNum(n);
+				resultSet.add(user);
+			}							
+
+			connection.close();
+			return resultSet;
+		} catch (SQLException e) {
+			return null;
+		}
+			}
+
+	public static LinkedList<FacebookUser> getCardioExercisesLeaderboard(HashMap<String, FacebookUser> friends, int postsToShow,
+			LeaderboardType type, ExerciseType exerciseType)
+		{
+			try {
+				Connection connection = getConnection();
+				Statement s = connection.createStatement();
+
+				System.out.println("Creating cardio statement");
+
+				String whereClause = "";
+				if(friends.size() == 0)
+					return null;
+				else
+				{
+					Iterator<String> i = friends.keySet().iterator();
+					while(i.hasNext())
+						whereClause += "user = \"" + i.next() + "\" OR ";
+					whereClause = whereClause.substring(0, whereClause.length() - 4);
+				}		
+
+				int num = postsToShow;
+
+				int exerciseNum = 0;
+				switch(exerciseType)
+				{
+					case WALK:
+						exerciseNum = 0;
+						break;
+					case RUN:
+						exerciseNum = 1;
+						break;
+					case CYCLE:
+						exerciseNum = 2;
+						break;
+				}
+
+				String query = "";
+				ResultSet result;
+				LinkedList<FacebookUser> resultSet = new LinkedList<FacebookUser>();
+				switch(type)
+				{
+					case DISTANCE:
+						query = "SELECT user, SUM(Distance) as totalDistance FROM (SELECT * FROM cardio WHERE " + whereClause + ") c WHERE ExerciseType=" 
+								+ exerciseNum + " GROUP BY user ORDER BY totalDistance DESC LIMIT " + num + ";";
+						
+						result = s.executeQuery(query);	
+
+						int n = 0;
+						while(result.next())
+						{
+							n++;
+							FacebookUser user = friends.get(result.getString(1));
+							user.setData(result.getInt(2));
+							user.setNum(n);
+
+							resultSet.add(user);
+						}								
+						break;
+					case SPEED:
+						query = "SELECT user, AVG(Distance/TimeLength) as averageSpeed FROM (SELECT * FROM cardio WHERE " + whereClause + ") c WHERE ExerciseType=" + exerciseNum
+							+ " GROUP BY user ORDER BY averageSpeed DESC LIMIT " + num + ";";
+						
+						result = s.executeQuery(query);	
+
+						while(result.next())
+						{
+							FacebookUser user = friends.get(result.getString(1));
+							resultSet.add(user);
+						}
+
+						break;
+				}
+
+				connection.close();
+				return resultSet;
+			} catch (SQLException e) {
+				return null;
+			}
+		}
+	}

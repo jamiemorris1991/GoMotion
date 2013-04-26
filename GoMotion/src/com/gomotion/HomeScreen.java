@@ -50,13 +50,17 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
+import com.gomotion.BodyWeightExercise.BodyWeightType;
+import com.gomotion.CardioExercise.CardioType;
 
 public class HomeScreen extends Activity {
 	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";
 	public static final String BODY_WEIGHT_TYPE = "com.gomotion.BODY_WEIGHT_TYPE";
 	public static final int POSTS_TO_SHOW = 16;
+		
+	public static enum LeaderboardType {DISTANCE, SPEED, REPS};
+	public static enum ExerciseType {WALK, RUN, CYCLE, PUSHUPS, SITUPS};
 	
-	public static enum WallSortMode{timeline, indoor, outdoorDistance, outdoorSpeed};
 	public static String[] greetings = {"How about going for a run?", "How about doing a few sets of push ups?", "How about doing a few sets of sit ups?",
 										"How about going for a walk?", "How about going out for a bike ride?", "How about seeing if you can beat a personal best?"};
 	
@@ -64,7 +68,6 @@ public class HomeScreen extends Activity {
 	private HashMap<String, Bitmap> profilePics;
 	
 	private Session session;
-	private WallSortMode wallSortMode = WallSortMode.timeline;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -187,22 +190,12 @@ public class HomeScreen extends Activity {
 
 			@Override
 			protected Void doInBackground(Void... params) {
-				LinkedList<BodyWeightExercise> bwe;
-				LinkedList<CardioExercise> ce;
 				
-				if(wallSortMode == WallSortMode.timeline
-						|| wallSortMode == WallSortMode.indoor)
-					bwe = OnlineDatabase
-					.getBodyWeightExercises(friends, POSTS_TO_SHOW, wallSortMode);
-				else
-					bwe = new LinkedList<BodyWeightExercise>();
-				if(wallSortMode == WallSortMode.timeline
-						|| wallSortMode == WallSortMode.outdoorDistance
-						|| wallSortMode == WallSortMode.outdoorSpeed)
-					ce = OnlineDatabase
-					.getCardioExercises(friends, POSTS_TO_SHOW, wallSortMode);
-				else
-					ce = new LinkedList<CardioExercise>();
+				LinkedList<BodyWeightExercise> bwe = OnlineDatabase
+						.getBodyWeightExercises(friends, POSTS_TO_SHOW);
+				
+				LinkedList<CardioExercise> ce = OnlineDatabase
+						.getCardioExercises(friends, POSTS_TO_SHOW);
 				
 
 				if (bwe == null || ce == null) {
@@ -219,7 +212,7 @@ public class HomeScreen extends Activity {
 					return null;
 				}
 				
-				if(wallSortMode == WallSortMode.timeline)
+				
 				Collections.sort(allExcercises, new Comparator<Exercise>() {
 
 					public int compare(Exercise lhs, Exercise rhs) {
@@ -258,15 +251,14 @@ public class HomeScreen extends Activity {
 		final ListIterator<Exercise> i = exercises.listIterator();
 		while (i.hasNext()) 
 		{			
-			AsyncTask<WallSortMode, Void, Void> task = new AsyncTask<WallSortMode, Void, Void>() {
+			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
 				Exercise exercise = i.next();
 				Bitmap bm;
 				String message = "";
 				
 				@Override
-				protected Void doInBackground(WallSortMode... params) {
-					final WallSortMode myWallSortMode = params[0];
+				protected Void doInBackground(Void... params) {
 					
 					try	{
 						
@@ -381,6 +373,7 @@ public class HomeScreen extends Activity {
 									final CardioExercise c = (CardioExercise) exercise;
 									text.setOnClickListener(new OnClickListener() {									
 										public void onClick(View arg0) {
+											System.out.println(c.getMapURL());
 											Intent browserIntent = new Intent(Intent.ACTION_VIEW,
 													Uri.parse(c.getMapURL()));
 											startActivity(browserIntent);
@@ -388,10 +381,6 @@ public class HomeScreen extends Activity {
 									});
 								}
 								text.setText(message);
-								
-								//Thread safety
-								if(wallSortMode != myWallSortMode)
-									return;
 								
 								post.addView(text);
 								wall.addView(post);
@@ -409,7 +398,7 @@ public class HomeScreen extends Activity {
 				} 
 			};
 			
-			task.execute(wallSortMode);
+			task.execute();
 		}
 	}
 
@@ -599,16 +588,7 @@ public class HomeScreen extends Activity {
 							break;
 						}
 					}
-				})
-		/*
-		 * .setItems(items, new DialogInterface.OnClickListener() { public void
-		 * onClick(DialogInterface dialog, int i) {
-		 * 
-		 * switch(i) { case 0: doCardio(0); break; case 1: doCardio(1); break;
-		 * case 2: doCardio(2); break; case 3: listCardioExercises(); break; }
-		 * 
-		 * } })
-		 */;
+				});
 
 		builder.show();
 	}
@@ -673,10 +653,10 @@ public class HomeScreen extends Activity {
 	public void leaderboardOptions()
 	{
 		final Item[] items = { 
-				new Item("Time", R.drawable.history),
-				new Item("Indoor", R.drawable.situp),
-				new Item("Outdoor - Distance", R.drawable.walk),
-				new Item("Outdoor - speed", R.drawable.bike),
+				new Item("News Feed", R.drawable.history),
+				new Item("Indoor - Most Reps", R.drawable.situp),
+				new Item("Outdoor - Distance Travelled", R.drawable.walk),
+				new Item("Outdoor - Speed", R.drawable.bike),
 			};
 
 		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this,
@@ -703,41 +683,256 @@ public class HomeScreen extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		builder.setTitle("Leaderboard options").setAdapter(adapter,
-				new DialogInterface.OnClickListener() {
+		builder.setTitle("Leaderboard options").setAdapter(adapter,	new DialogInterface.OnClickListener() {
 
-					public void onClick(DialogInterface dialog, int i) {
-//						
-//						Button wallSortButton = (Button)
-//								findViewById(R.id.changeWallButton);
-//
-//						wallSortMode = WallSortMode.values()[i];
-//						
-//						switch (wallSortMode) {
-//						case timeline:
-//							wallSortButton.setText("Timeline");
-//							break;
-//						case indoor:
-//							wallSortButton.setText("Indoor Leaderboard");
-//							break;
-//						case outdoorDistance:
-//							wallSortButton.setText("Outdoor Leaderboard - Distance");
-//							break;
-//						case outdoorSpeed:
-//							wallSortButton.setText("Outdoor Leaderboard - Speed");
-//							break;
-//						}
-						
+			LeaderboardType type;
+			ExerciseType exerciseType;
+			
+			public void onClick(DialogInterface dialog, int i) {
+
+				switch(i)
+				{
+					case 0:
 						buildWall();
+						break;
+					case 1:
+						type = LeaderboardType.REPS;
+						String[] choices = {"Push Ups", "Sit Ups"};
+						AlertDialog.Builder outdoorChoices = new AlertDialog.Builder(HomeScreen.this);
+
+						outdoorChoices
+						.setTitle("Exercise Choices")
+						.setItems(choices, new DialogInterface.OnClickListener()
+						{										
+							public void onClick(DialogInterface dialog, int which)
+							{
+								switch(which)
+								{
+									case 0:
+										exerciseType = ExerciseType.PUSHUPS;
+										break;
+									case 1:
+										exerciseType = ExerciseType.SITUPS;
+										break;
+								}								
+								buildLeaderboard(type, exerciseType);
+							}
+						});
 						
+						outdoorChoices.show();
+						
+						break;
+					case 2:
+						type = LeaderboardType.DISTANCE;
+						buildOutdoorChoices();
+						break;
+					case 3:
+						type = LeaderboardType.SPEED;
+						buildOutdoorChoices();
+						break;
+				}
+			}
+			
+			public void buildOutdoorChoices()
+			{
+				String[] choices = {"Walking", "Running", "Cycling"};
+				AlertDialog.Builder outdoorChoices = new AlertDialog.Builder(HomeScreen.this);
+
+				outdoorChoices
+				.setTitle("Exercise Choices")
+				.setItems(choices, new DialogInterface.OnClickListener()
+				{										
+					public void onClick(DialogInterface dialog, int which)
+					{
+						switch(which)
+						{
+							case 0:
+								exerciseType = ExerciseType.WALK;
+								break;
+							case 1:
+								exerciseType = ExerciseType.RUN;
+								break;
+							case 2:
+								exerciseType = ExerciseType.CYCLE;
+								break;
+						}
+						buildLeaderboard(type, exerciseType);
 					}
 				});
+				outdoorChoices.show();
+			}
+		});
 
 		builder.show();
 	}
 	
+	public void buildLeaderboard(final LeaderboardType type, final ExerciseType exerciseType)
+	{
+		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+			LinkedList<FacebookUser> users = null;
+			
+			@Override
+			protected Void doInBackground(Void... params) {
+				
+				if(type == LeaderboardType.DISTANCE || type == LeaderboardType.SPEED) users = OnlineDatabase.getCardioExercisesLeaderboard(friends, POSTS_TO_SHOW, type, exerciseType);
+				else users = OnlineDatabase.getBodyWeightExercisesLeaderboard(friends, POSTS_TO_SHOW, type, exerciseType);				
+
+				if ((users == null && type == LeaderboardType.REPS)|| (users == null && (type == LeaderboardType.DISTANCE || type == LeaderboardType.SPEED))) {
+					setSingleWallMessageInMainThread("Failed to communicate with database", false);
+					return null;
+				}
+
+				runOnUiThread(new Runnable() {
+
+					public void run() {
+						buildLeaderboardFromExercises(users, type, exerciseType);
+					}
+				});
+
+				return null;
+			}
+
+		};
+		
+		task.execute();
+	}
 	
-	public void doPushUps() {
+	public void buildLeaderboardFromExercises(LinkedList<FacebookUser> users, final LeaderboardType type, final ExerciseType exerciseType)
+	{
+		final LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
+		wall.removeAllViews();
+		
+		final ListIterator<FacebookUser> i = users.listIterator();
+		while (i.hasNext()) 
+		{	
+			AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+				FacebookUser user = i.next();
+				Bitmap bm;
+				String message = "";
+				
+				@Override
+				protected Void doInBackground(Void... params) {
+					
+					try	{
+						
+						if(profilePics.get(user.getId()) == null)
+						{
+							URL newurl = new URL(friends.get(user.getId()).getPictureURL());
+							bm = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+							profilePics.put(user.getId(), bm);
+						}
+						else 
+						{
+							bm = profilePics.get(user.getId());
+						}
+						
+						runOnUiThread(new Runnable() {
+							public void run() {
+								
+								LinearLayout post = new LinearLayout(HomeScreen.this);	
+								post.setOrientation(LinearLayout.HORIZONTAL);
+								post.setPadding(10, 10, 10, 10);
+								
+								ImageView profilePic = new ImageView(HomeScreen.this);	
+								profilePic.setImageBitmap(bm);	
+								profilePic.setScaleX(1.5f);
+								profilePic.setScaleY(1.5f);								
+								post.addView(profilePic);
+								
+								if(type == LeaderboardType.DISTANCE)
+								{
+									String format = "%s has %s a total distance of %s%s.";
+									
+									String typeVerb = "";
+									
+									switch(exerciseType)
+									{
+										case WALK:
+											typeVerb = "walked";
+											break;
+										case RUN:
+											typeVerb = "ran";
+											break;
+										case CYCLE:
+											typeVerb = "cycled";
+											break;
+									}
+																		
+									SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(HomeScreen.this);
+									String units = sharedPref.getString(SettingsActivity.UNITS, "1");
+									
+									double dist = (double) (user.getData()) / 1000;
+									String distUnits = "km";
+									
+									if(Integer.valueOf(units) == 2)
+									{
+										dist = dist * 0.621371192;
+										distUnits = " mi";
+									}			
+
+									String distStr = String.format("%.2f", dist);		
+									
+									message = String.format(format, user.getName(), typeVerb, distStr, distUnits);
+								}
+								else if(type == LeaderboardType.SPEED)
+								{
+									message = " " + user.getName();
+								}
+								else if(type == LeaderboardType.REPS)
+								{
+									String format = "%s has performed a total number of %d %s.";
+									System.out.println(user.getNum());
+									String exer = "";
+									switch(exerciseType)
+									{
+										case PUSHUPS:
+											exer = "push ups";
+											break;
+										case SITUPS:
+											exer = "sit ups";
+											break;
+									}
+									
+									message = String.format(format, user.getName(), user.getData(), exer);
+								}
+																
+								TextView num = new TextView(HomeScreen.this);
+								num.setTextColor(Color.BLACK);
+								num.setTextSize(14);
+								num.setPadding(20, 0, 0, 8);
+								
+								TextView text = new TextView(HomeScreen.this);
+								text.setTextColor(Color.BLACK);
+								text.setTextSize(14);
+								text.setPadding(5, 0, 0, 8);
+								
+								num.setText(String.valueOf(user.getNum()) + ".");
+								text.setText(message);
+								post.addView(num);
+								post.addView(text);
+								wall.addView(post);
+
+							}
+						});
+						
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (IOException e)	{
+						e.printStackTrace();
+					}
+					
+					return null;
+				} 
+			};
+			
+			task.execute();
+		}
+	}
+
+	public void doPushUps()
+	{
 		BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
 
 		Bundle bundle = new Bundle();
@@ -748,7 +943,8 @@ public class HomeScreen extends Activity {
 
 	}
 
-	public void doSitUps() {
+	public void doSitUps() 
+	{
 		BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
 
 		Bundle bundle = new Bundle();
@@ -758,7 +954,8 @@ public class HomeScreen extends Activity {
 		dialog.show(getFragmentManager(), "sit_ups_dialog");
 	}
 
-	public void doCustomExercise() {
+	public void doCustomExercise()
+	{
 		BodyWeightSettingsDialogFragment dialog = new BodyWeightSettingsDialogFragment();
 
 		Bundle bundle = new Bundle();
@@ -768,30 +965,35 @@ public class HomeScreen extends Activity {
 		dialog.show(getFragmentManager(), "custom_exercise_dialog");
 	}
 
-	public void doCardio(int type) {
+	public void doCardio(int type)
+	{
 		Intent intent = new Intent(this, CardioActivity.class);
 		intent.putExtra(CARDIO_TPYE, type);
 		startActivity(intent);
 	}
 
-	public void listBodyWeightExercises() {
+	public void listBodyWeightExercises() 
+	{
 		Intent intent = new Intent(this, ListBodyWeightExercisesActivity.class);
 		startActivity(intent);
 	}
 
-	public void listCardioExercises() {
+	public void listCardioExercises() 
+	{
 
 		Intent intent = new Intent(this, ListCardioExercisesActivity.class);
 		startActivity(intent);
 	}
 
-	public void viewRoute() {
+	public void viewRoute()
+	{
 		Intent intent = new Intent(this, RouteActivity.class);
 		startActivity(intent);
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(Bundle outState) 
+	{
 		super.onSaveInstanceState(outState);
 	}
 }
