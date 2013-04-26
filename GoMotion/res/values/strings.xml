@@ -6,14 +6,14 @@
     <string name="title_activity_home_screen">GoMotion</string>
     <string name="title_activity_push_ups">Push Ups</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_list_body_weight_exercises">Body Weight Exercise History</string>
-    <string name="title_activity_list_cardio_weight_exercises">Cardio Exercise History</string>
+    <string name="title_activity_list_body_weight_exercises">Indoor Exercise History</string>
+    <string name="title_activity_list_cardio_weight_exercises">Outdoor Exercise History</string>
     <string name="rep_choice">Reps</string>
     <string name="set_choice">Sets</string>
     <string name="start">Start</string>
     <string name="cancel">Cancel</string>
     <string name="rest_time">Rest time (s)</string>
-    <string name="title_activity_cardio">Cardio Tracking</string>
+    <string name="title_activity_cardio">Outdoor Tracking</string>
     <string name="title_activity_route">Route</string>
     <string name="action_settings">Settings</string>
     <string name="defaultButton">Default</string>
@@ -24,6 +24,7 @@
     <string name="menu_refresh">Refresh</string>
     <string name="menu_leaderboards">Leaderboards</string>
     <string name="custom_exercise_name">Exercise name</string>
-    
-    
+    <string name="menu_help">Help</string>
+    <string name="title_activity_help_list">Help</string>
+
 </resources>

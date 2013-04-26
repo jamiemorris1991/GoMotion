@@ -38,13 +38,9 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.facebook.FacebookRequestError;
@@ -54,7 +50,6 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
-import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 public class HomeScreen extends Activity {
 	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";
@@ -376,35 +371,6 @@ public class HomeScreen extends Activity {
 									message = String.format(format, name, typeVerb, distStr, distUnits, timeLengthFormatted, timeString);
 								}
 								
-								
-//								message += friends.get( exercise.getUserID() ).getName() + " completed a \"";
-//								if(exercise instanceof BodyWeightExercise)
-//								{
-//									BodyWeightExercise b = (BodyWeightExercise) exercise;
-//									if(b.getType() == BodyWeightType.CUSTOM)
-//										message += b.getName().toLowerCase();
-//									else
-//										message += b.getType().toString().toLowerCase();
-//								}
-//								else
-//									message += ((CardioExercise)exercise).getType().toString().toLowerCase();
-//								
-//								message += "\" exercise " + getTimestampString(time) + " ago.\nStats: ";
-//								
-//								if(exercise instanceof BodyWeightExercise)
-//								{
-//									BodyWeightExercise b = (BodyWeightExercise) exercise;
-//									message += "Sets: " + b.getSets() + " Reps: " + b.getReps();
-//								}
-//								else
-//								{
-//									
-//									message += "Distance: " + c.getDistance() + " Time: " + getCardioTimeString(c.getTimeLength());
-//									message += "\nClick to view route";
-//									
-//									
-//								}
-								
 								TextView text = new TextView(HomeScreen.this);
 								text.setTextColor(Color.BLACK);
 								text.setTextSize(14);
@@ -444,7 +410,6 @@ public class HomeScreen extends Activity {
 			};
 			
 			task.execute(wallSortMode);
-
 		}
 	}
 
@@ -571,6 +536,10 @@ public class HomeScreen extends Activity {
 		case R.id.menu_logout:
 			session.closeAndClearTokenInformation();
 			recreate();
+			break;
+		case R.id.menu_help:
+			Intent helpIntent = new Intent(this, HelpListActivity.class);
+			startActivity(helpIntent);
 			break;
 		}
 
@@ -734,7 +703,7 @@ public class HomeScreen extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		builder.setTitle("Set wall mode").setAdapter(adapter,
+		builder.setTitle("Leaderboard options").setAdapter(adapter,
 				new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int i) {

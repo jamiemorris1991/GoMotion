@@ -4,8 +4,6 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
-
 import com.gomotion.HomeScreen.WallSortMode;
 
 public class OnlineDatabase {

@@ -1,15 +1,11 @@
 package com.gomotion;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
@@ -18,9 +14,7 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.android.Util;
 import com.facebook.model.GraphUser;
-import com.gomotion.BodyWeightExercise.BodyWeightType;
 import com.gomotion.R;
 
 import android.app.AlertDialog;

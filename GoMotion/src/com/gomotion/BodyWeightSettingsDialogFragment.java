@@ -13,13 +13,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.gomotion.R;
-import com.gomotion.BodyWeightExercise.BodyWeightType;
 
 
 public class BodyWeightSettingsDialogFragment extends DialogFragment

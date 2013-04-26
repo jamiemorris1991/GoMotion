@@ -77,14 +77,14 @@
                 android:textSize="16sp"
                 android:visibility="invisible" />
             
-        <LinearLayout
-            android:id="@+id/wall"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            tools:ignore="InefficientWeight" >
-        </LinearLayout>
+	        <LinearLayout
+	            android:id="@+id/wall"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="vertical"
+	            android:showDividers="middle"
+	            tools:ignore="InefficientWeight" >
+	        </LinearLayout>
         
         </RelativeLayout>
 

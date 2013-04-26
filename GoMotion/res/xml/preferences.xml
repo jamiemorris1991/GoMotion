@@ -40,7 +40,7 @@
         android:key="body_weight_values"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="Default body weight settings"
+        android:title="Default indoor settings"
         android:defaultValue="5,10,60" />
 
 </PreferenceScreen>

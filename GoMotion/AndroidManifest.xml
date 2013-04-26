@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:icon="@drawable/ic_logonew"
@@ -62,7 +62,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gomotion.HomeScreen" />
-        </activity>        
+        </activity>
         <activity
             android:name="com.gomotion.ListBodyWeightExercisesActivity"
             android:label="@string/title_activity_list_body_weight_exercises"
@@ -124,6 +124,23 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
 
+        <activity
+            android:name="com.gomotion.HelpListActivity"
+            android:label="@string/title_activity_help_list"
+            android:parentActivityName="com.gomotion.HomeScreen"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gomotion.HomeScreen" />
+        </activity>
+        <activity
+            android:name="com.gomotion.HelpActivity"
+            android:label="Help"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gomotion.HelpListActivity" />
+        </activity>
     </application>
 
 </manifest>

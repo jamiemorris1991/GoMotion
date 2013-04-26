@@ -1,6 +1,5 @@
 package com.gomotion;
 
-import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Timer;

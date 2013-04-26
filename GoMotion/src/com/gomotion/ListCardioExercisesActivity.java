@@ -1,10 +1,6 @@
 package com.gomotion;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -344,7 +340,6 @@ public class ListCardioExercisesActivity extends ListActivity
     							 * MUST ACCOUNT FOR HOURS AND IMPERIAL UNITS ALSO
     							 * DON'T FORGET!
     							 *  **/
-    							double distance = ((double) exercise.getDistance()) / 1000; // kilometres	
 
     							int timeLength = exercise.getTimeLength();
     							int hours = timeLength / (60 * 60);
@@ -358,7 +353,7 @@ public class ListCardioExercisesActivity extends ListActivity
     							SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ListCardioExercisesActivity.this);
     							String units = sharedPref.getString(SettingsActivity.UNITS, "1");
     							
-    							double dist = distance / 1000;
+    							double dist = (double) (exercise.getDistance()) / 1000;
     							String distUnits = "km";
     							
     							if(Integer.valueOf(units) == 2)
@@ -369,8 +364,8 @@ public class ListCardioExercisesActivity extends ListActivity
 
     							String distStr = String.format("%.2f", dist);
 
-    							String descriptionTemplate = "%s has just %s %.2f %s in %s, view the route they travelled here!";
-    							String description = String.format(descriptionTemplate, name, typeVerb, distance, distUnits, timeLengthFormatted);
+    							String descriptionTemplate = "%s has just %s %s %s in %s, view the route they travelled here!";
+    							String description = String.format(descriptionTemplate, name, typeVerb, distStr, distUnits, timeLengthFormatted);
 
     							final Bundle postParams = new Bundle();
     							postParams.putString("name", "GoMotion Fitness App for Android");
