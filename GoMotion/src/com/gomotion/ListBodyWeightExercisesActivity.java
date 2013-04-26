@@ -35,7 +35,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ListBodyWeightExercisesActivity extends ListActivity {
+/**
+ * Screen where past indoor exercises can be viewed and deleted.
+ * Can also be shared with Facebook so friends can see them.
+ * 
+ * @author Jack Hindmarch & Jamie Sterling
+ *
+ */
+public class ListBodyWeightExercisesActivity extends ListActivity
+{
 	private OfflineDatabase db;
 	private BodyWeightAdapter adapter;
 
@@ -99,8 +107,7 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 
 		if (session != null && session.isOpened()) {
 			online = true;
-			String[] temp = { "Share exercise on Facebook",
-					"Share exercise on GoMotion", "Delete" };
+			String[] temp = { "Share", "Delete" };
 			items = temp;
 		} else {
 			String[] temp = { "Delete" };
@@ -112,16 +119,14 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 		builder.setTitle("Options").setItems(items,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
-						if ((!online && item == 0) || (online && item == 2)) {
+						if ((!online && item == 0) || (online && item == 1)) {
 							db.deleteBodyWeightExercise(bwid);
 							adapter.changeCursor(db.getAllBodyWeightExercises());
 						} else if (online && item == 0) {
 							postItem = bwid;
 							postExerciseFacebook();
-						} else if (online && item == 1) {
-							postItem = bwid;
 							postExerciseGoMotion();
-						}
+						} 
 					}
 				});
 
@@ -256,30 +261,30 @@ public class ListBodyWeightExercisesActivity extends ListActivity {
 				return OnlineDatabase.add(params[0]);
 			}
 
-			@Override
-			protected void onPostExecute(Boolean result) {
-				if (result)
-					ListBodyWeightExercisesActivity.this
-							.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(
-											ListBodyWeightExercisesActivity.this,
-											"Exercise post successful",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-				else
-					ListBodyWeightExercisesActivity.this
-							.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(
-											ListBodyWeightExercisesActivity.this,
-											"Failed to communicate with database",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-
-			}
+//			@Override
+//			protected void onPostExecute(Boolean result) {
+//				if (result)
+//					ListBodyWeightExercisesActivity.this
+//							.runOnUiThread(new Runnable() {
+//								public void run() {
+//									Toast.makeText(
+//											ListBodyWeightExercisesActivity.this,
+//											"Exercise post successful",
+//											Toast.LENGTH_SHORT).show();
+//								}
+//							});
+//				else
+//					ListBodyWeightExercisesActivity.this
+//							.runOnUiThread(new Runnable() {
+//								public void run() {
+//									Toast.makeText(
+//											ListBodyWeightExercisesActivity.this,
+//											"Failed to communicate with database",
+//											Toast.LENGTH_SHORT).show();
+//								}
+//							});
+//
+//			}
 		};
 		task.execute(db.getBodyWeightExercise(postItem));
 	}

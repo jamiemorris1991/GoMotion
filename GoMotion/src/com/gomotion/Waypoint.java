@@ -1,5 +1,12 @@
 package com.gomotion;
 
+/**
+ * Convinience class used for holding GPS
+ * co-ordinate data.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class Waypoint 
 {
 	private double longitude;

@@ -9,6 +9,14 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 
+/**
+ * Class used to display the settings
+ * stored on the phone. Allows for them to be
+ * changed from here.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
 	public static final String UNITS = "units";

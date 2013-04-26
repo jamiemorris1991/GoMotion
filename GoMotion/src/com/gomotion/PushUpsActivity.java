@@ -18,6 +18,14 @@ import android.widget.TextView;
 
 import com.gomotion.BodyWeightExercise.BodyWeightType;
 
+/**
+ * Screen where push up exercises can be performed, as well as 
+ * custom exercises that make use of touch the screen in the same
+ * way push ups are performed. Data is saved when finished successfully.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class PushUpsActivity extends Activity
 {
 	private int countdown;

@@ -7,6 +7,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.SeekBar;
 
+/**
+ * A settings dialog that allows the user to use a seek bar 
+ * to select a number percentage (between 20-100)
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class SeekBarPreference extends DialogPreference
 {
 	private final int DEFAULT_VALUE = 100;

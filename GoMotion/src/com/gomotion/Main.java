@@ -9,10 +9,16 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 
 
+/**
+ * The first screen the user is met with. Allows them to
+ * choose either offline mode or online, where a Facebook login is
+ * required.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class Main extends Activity
 {
-	static public User user;
-	
 	private Session.StatusCallback callback;
 			
 	/** To be called at the start of the app

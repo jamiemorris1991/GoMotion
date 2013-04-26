@@ -9,6 +9,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 
+/**
+ * Class that contains methods for saving and retrieving
+ * data from the phone's storage, using SQLite.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class OfflineDatabase extends SQLiteOpenHelper
 {
 	// All Static variables

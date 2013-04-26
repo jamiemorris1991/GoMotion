@@ -62,18 +62,22 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"  
         android:layout_below="@id/situp_image"
+		android:layout_marginTop="10dp"
   		android:textColor="@color/goBlue"
-  		android:textSize="18sp"
-        android:text="\nTrack your running,\nLog your push-ups,\nChallenge your friends!\n\nGet up and Go(Motion)!" />
+		android:gravity="center"
+  		android:textSize="14sp"
+        android:text="Track your running, Log your push ups, Challenge your friends! Get up and Go(Motion)!" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/textView2"   
+        android:layout_below="@id/textView2" 
+        android:layout_marginTop="10dp"
+        android:gravity="center"  
         android:textColor="@color/goGrey" 
-        android:text="\n\nLog in with Facebook™ or choose 'Offline Mode' to get going" />  
+        android:text="Log in with Facebook or choose 'Offline Mode' to get going." />  
         
     <LinearLayout
         android:id="@+id/linearLayout1"

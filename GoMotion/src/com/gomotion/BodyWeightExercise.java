@@ -2,6 +2,10 @@ package com.gomotion;
 
 import java.sql.*;
 
+/**
+ * @author Jack Hindmarch & Jamie Sterling
+ *
+ */
 public class BodyWeightExercise extends Exercise
 {
     public enum BodyWeightType{PUSHUPS, SITUPS, CUSTOM};

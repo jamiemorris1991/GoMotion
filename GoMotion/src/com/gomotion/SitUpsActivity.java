@@ -22,6 +22,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Screen used for performing sit up exercises with.
+ * The accelerometer is used to make each sit up interactive.
+ * Once exercise is finished it is saved to the phone's storage.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class SitUpsActivity extends Activity
 {
 	private int countdown;

@@ -11,6 +11,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+/**
+ * Dialog shown when the user whishes to select
+ * default indoor exercise settings (sets, reps and rest time)
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class DefaultBodyWeightPreference extends DialogPreference
 {
 	private String values;

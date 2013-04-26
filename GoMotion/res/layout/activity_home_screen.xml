@@ -73,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/logo"
                 android:layout_centerHorizontal="true"
+                android:textColor="@color/goBlue"
                 android:text="How about going for a run?"
                 android:textSize="16sp"
                 android:visibility="invisible" />

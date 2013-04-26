@@ -1,12 +1,15 @@
 package com.gomotion;
 
 
+/**
+ * @author Jack Hindmarch & Jamie Sterling
+ *
+ */
 public abstract class Exercise
 {
 	//Online Exercises
 	protected Integer ID;
 	protected String userID;
-	protected boolean shouldShare;
 	
 	//All exercises
 	protected long timeStamp;

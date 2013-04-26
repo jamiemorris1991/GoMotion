@@ -50,10 +50,19 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
-import com.gomotion.BodyWeightExercise.BodyWeightType;
-import com.gomotion.CardioExercise.CardioType;
 
-public class HomeScreen extends Activity {
+/**
+ * Home screen of the application.
+ * 
+ * Provides buttons to access exercises, settings and help.
+ * It is also where the wall is located, and where the leaderboards
+ * are shown. 
+ * 
+ * @author Jack Hindmarch & Jamie Sterling
+ *
+ */
+public class HomeScreen extends Activity
+{
 	public static final String CARDIO_TPYE = "com.gomotion.CARDIO_TYPE";
 	public static final String BODY_WEIGHT_TYPE = "com.gomotion.BODY_WEIGHT_TYPE";
 	public static final int POSTS_TO_SHOW = 16;
@@ -69,10 +78,18 @@ public class HomeScreen extends Activity {
 	
 	private Session session;
 
+	
 	@Override
-	public void onCreate(final Bundle savedInstanceState) {
+	public void onCreate(final Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home_screen);		
+		setContentView(R.layout.activity_home_screen);	
+		
+		/**
+		 * If session is closed/offline mode selected, provide the user with a
+		 * random greeting and show the application's logo.
+		 *
+		 */
 
 		session = Session.getActiveSession();
 
@@ -182,6 +199,11 @@ public class HomeScreen extends Activity {
 		}
 	}
 
+	
+	/**
+	 * Access the OnlineDatabase class to retrieve user/friend
+	 * data. Prepare data structure by ordering by posted timestamp.
+	 */
 	private void buildWall()
 	{
 		setSingleWallMessageInMainThread("Communicating with Facebook", true);
@@ -243,6 +265,14 @@ public class HomeScreen extends Activity {
 		task.execute();
 	}
 
+	/**
+	 * Remove everything currently on the wall, and for each of
+	 * the exercises in the list, post information about the exercise,
+	 * the user, and show the user's Facebook profile picture.
+	 * 
+	 * @param exercises mixed cardio/body weight exercises to be
+	 * displayed on the wall.
+	 */
 	private void buildWallFromExcercises(List<Exercise> exercises)
 	{
 		final LinearLayout wall = (LinearLayout) findViewById(R.id.wall);
@@ -401,28 +431,13 @@ public class HomeScreen extends Activity {
 			task.execute();
 		}
 	}
-
 	
-	private String getCardioTimeString(int time)
-	{
-		time /= 1000;
-		int seconds = time % 60;
-		
-		time /= 60;
-		int minutes = time % 60;
-		
-		time /= 60;
-		int hours = time;
-		
-		String out = "";
-		if(hours > 0) out += hours + " hours, ";
-		if(minutes > 0) out += minutes + " minutes, ";
-		out += seconds + " seconds";
-		
-		return out;
-	}
-	
-	
+	/**
+	 * Necessary for wall to show user when the exercise was posted.
+	 * 
+	 * @param millis timestamp to get string representation from.
+	 * @return plain English description of how long ago the time was
+	 */
 	private String getTimestampString(long millis)
 	{
 		// Seconds
@@ -766,6 +781,15 @@ public class HomeScreen extends Activity {
 		builder.show();
 	}
 	
+	/**
+	 * Works the same as the news feed, in that it
+	 * prepares a data structure with the relevant users
+	 * then sends them to buildLeaderboardFromExercises()
+	 * which actually displays them on the wall
+	 * 
+	 * @param type which stats to be shown on the leaderboard
+	 * @param exerciseType which exercise to show the leaderboard for
+	 */
 	public void buildLeaderboard(final LeaderboardType type, final ExerciseType exerciseType)
 	{
 		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -798,6 +822,12 @@ public class HomeScreen extends Activity {
 		task.execute();
 	}
 	
+	/**
+	 * @param users list of friends (plus the user) who have some data
+	 * for the chosen exercise
+	 * @param type which stats the show
+	 * @param exerciseType which exercise to show
+	 */
 	public void buildLeaderboardFromExercises(LinkedList<FacebookUser> users, final LeaderboardType type, final ExerciseType exerciseType)
 	{
 		final LinearLayout wall = (LinearLayout) findViewById(R.id.wall);

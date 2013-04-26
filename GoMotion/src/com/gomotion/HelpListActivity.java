@@ -7,6 +7,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * Screen showing all the help categories
+ * available to the user.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class HelpListActivity extends ListActivity 
 {
 	  public static String HELP_CATEGORY = "com.gomotion.HelpListActivity.HELP_CATEGORY";

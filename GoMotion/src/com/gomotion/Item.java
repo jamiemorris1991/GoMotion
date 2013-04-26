@@ -1,5 +1,12 @@
 package com.gomotion;
 
+/**
+ * Class for helping show icons next to text 
+ * on dialogs.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class Item
 {
     public final String text;

@@ -1,5 +1,13 @@
 package com.gomotion;
 
+/**
+ * Convinience class for holding data about 
+ * a Facebook user, mainly used for the news feed
+ * and leaderboard.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class FacebookUser
 {
 	private String id;

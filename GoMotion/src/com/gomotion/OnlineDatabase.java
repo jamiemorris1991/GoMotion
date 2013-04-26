@@ -8,11 +8,16 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.TreeMap;
-
 import com.gomotion.HomeScreen.ExerciseType;
 import com.gomotion.HomeScreen.LeaderboardType;
 
+/**
+ * Online database class used for communicating with
+ * our database using JDBC.
+ * 
+ * @author Jack Hindmrach & Jamie Sterling
+ *
+ */
 public class OnlineDatabase {
 	static private final String url = "jdbc:mysql://hexdex.net:3306/hexdexne_csc2015";
 	static private final String user = "hexdexne_csc2015";

@@ -20,6 +20,13 @@ import android.widget.Spinner;
 import com.gomotion.R;
 
 
+/**
+ * Dialog fragment used to allow settings to be entered for 
+ * indoor exercises.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class BodyWeightSettingsDialogFragment extends DialogFragment
 {
 	private int type;

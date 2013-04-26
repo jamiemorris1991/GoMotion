@@ -30,12 +30,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * Class that handles GPS tracking, and saves
+ * all necessary data to the phone's storage.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class CardioActivity extends Activity 
 {
 	public static final String WAYPOINTS = "com.gomotion.WAYPOINTS";
-	
-	private static final int MIN_DIST = 10;
-	private static final int MAX_DIST = 50;
 
 	private int typeID;
 	private CardioType type;
@@ -62,10 +66,11 @@ public class CardioActivity extends Activity
 	private String timeFormatted;
 	private int time = 0;
 	private double distance;
-	private long lastTime;
+	private String distanceUnits;
 
 	private int minDist;
 	private double pace;
+	private String paceUnits;
 
 	// Debugging views
 	private TextView waypoint_count;
@@ -108,10 +113,25 @@ public class CardioActivity extends Activity
 		timeView = (TextView) findViewById(R.id.cardio_time);
 		distanceView = (TextView) findViewById(R.id.cardio_distance);
 		paceView = (TextView) findViewById(R.id.cardio_pace);
+		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		String unitSetting = sharedPref.getString(SettingsActivity.UNITS, "1");
+		
+		switch(Integer.valueOf(unitSetting))
+		{
+			case 1:
+				paceUnits = " min/km";
+				distanceUnits = "km";
+				break;
+			case 2:
+				paceUnits = " min/mi";
+				distanceUnits = " mi";
+				break;
+		}
 
 		timeView.setText("00:00");
 		distanceView.setText("0m");
-		paceView.setText("0 mins/mile");
+		paceView.setText("0" + paceUnits);
 
 		started = false;
 		signal = false;
@@ -129,7 +149,6 @@ public class CardioActivity extends Activity
 		signalView.setText("No Signal");
 		signalView.setTextColor(Color.RED);
 						
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		String accuracy = sharedPref.getString(SettingsActivity.ACCURACY, "1");
 				
 		switch(Integer.valueOf(accuracy))
@@ -200,22 +219,22 @@ public class CardioActivity extends Activity
 						waypoint_count.setText(String.valueOf(waypoints.size()));
 
 						distance += dist;
-						distanceView.setText(String.valueOf((int) distance) + "m");
+						if(distanceUnits.equals(" mi")) distance *= 0.621371192;
+						
+						String distStr = String.format("%f.2", distance/1000);						
+						distanceView.setText(distStr + distanceUnits);
 
-						//double miles = distance * 0.000621371192;
-
-						pace = time / distance;						
+						pace = (double) (time) / distance;						
 						int mins = (int) (pace / 60);
 						int secs = (int) (pace % 60);
 
 						String paceString = String.format("%02d:%02d", mins, secs);
-						paceView.setText(paceString + " min/mile");
+						paceView.setText(paceString + paceUnits);
 					}					
 				}
 				else
 				{
 					initialPoints.add(location);
-					lastTime = time;
 				}
 			}
 

@@ -11,6 +11,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
+/**
+ * Dialog used for telling the user if they a GPS signal or not.
+ * If they don't, then they cannot close the dialog and start the exercise.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class SignalDialog extends DialogFragment
 {
 	@Override

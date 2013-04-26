@@ -20,6 +20,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+/**
+ * Screen which contains the Google Map used
+ * to draw the tracked cardio exercise data on. Uses
+ * the Google Maps application already installed on the device.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class RouteActivity extends Activity
 {
 	private GoogleMap map;

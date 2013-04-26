@@ -45,6 +45,14 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 
 
+/**
+ * Screen where past cardio exercises are shown.
+ * The exercises can be deleted, shared with on Facebook, and 
+ * also viewed on a Google Map.
+ * 
+ * @author Jack Hindmarch & Jamie Sterling
+ *
+ */
 public class ListCardioExercisesActivity extends ListActivity 
 {
 	public static final String EXERCISE_ID = "com.gomotion.EXERCISE_ID";
@@ -118,7 +126,7 @@ public class ListCardioExercisesActivity extends ListActivity
 		if(session != null && session.isOpened())
 		{
 			online = true;
-			String[] temp = {"View route", "Share route on Facebook", "Share route on GoMotion", "Delete"};
+			String[] temp = {"View route", "Share", "Delete"};
 			items = temp;
 		} 
 		else 
@@ -145,13 +153,9 @@ public class ListCardioExercisesActivity extends ListActivity
 					{
 						postItem = cid;
 						postRouteFacebook();
-					}
-					else if(item == 2 && online)
-					{
-						postItem = cid;
 						postRouteGoMotion();
 					}
-					else if((item == 1 && !online) || (online && item == 3)) 
+					else if((item == 1 && !online) || (online && item == 2)) 
 					{
 						db.deleteCardioExercise(cid);
 						adapter.changeCursor(db.getAllCardioExercises());
@@ -199,30 +203,30 @@ public class ListCardioExercisesActivity extends ListActivity
 				return OnlineDatabase.add(params[0]);
 			}
 	
-			@Override
-			protected void onPostExecute(Boolean result) {
-				if (result)
-					ListCardioExercisesActivity.this
-							.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(
-											ListCardioExercisesActivity.this,
-											"Exercise post successful",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-				else
-					ListCardioExercisesActivity.this
-							.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(
-											ListCardioExercisesActivity.this,
-											"Failed to communicate with database",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-	
-			}
+//			@Override
+//			protected void onPostExecute(Boolean result) {
+//				if (result)
+//					ListCardioExercisesActivity.this
+//							.runOnUiThread(new Runnable() {
+//								public void run() {
+//									Toast.makeText(
+//											ListCardioExercisesActivity.this,
+//											"Exercise post successful",
+//											Toast.LENGTH_SHORT).show();
+//								}
+//							});
+//				else
+//					ListCardioExercisesActivity.this
+//							.runOnUiThread(new Runnable() {
+//								public void run() {
+//									Toast.makeText(
+//											ListCardioExercisesActivity.this,
+//											"Failed to communicate with database",
+//											Toast.LENGTH_SHORT).show();
+//								}
+//							});
+//	
+//			}
 		};
 		
 		task.execute(db.getCardioExercise(postItem));

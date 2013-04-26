@@ -2,11 +2,17 @@ package com.gomotion;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * Screen which shows text for a selected category
+ * from the HelpListActivity.
+ * 
+ * @author Jack Hindmarch
+ *
+ */
 public class HelpActivity extends Activity
 {
 

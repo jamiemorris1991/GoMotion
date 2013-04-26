@@ -3,7 +3,10 @@ import java.util.*;
 import android.location.Location;
 import java.sql.*;
 
-//Class to store running/walking/cycling sessions
+/**
+ * @author Jack Hindmarch & Jamie Sterling
+ *
+ */
 public class CardioExercise extends Exercise
 {
 	//Enumerates the types or session
