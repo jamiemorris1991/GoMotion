@@ -279,14 +279,17 @@ public class OnlineDatabase {
 						}								
 						break;
 					case SPEED:
-						query = "SELECT user, AVG(Distance/TimeLength) as averageSpeed FROM (SELECT * FROM cardio WHERE " + whereClause + ") c WHERE ExerciseType=" + exerciseNum
-							+ " GROUP BY user ORDER BY averageSpeed DESC LIMIT " + num + ";";
+						query = "SELECT user, AVG((Distance/1000)/((TimeLength/60)/60)) as averageSpeed FROM (SELECT * FROM cardio WHERE " + whereClause + ") c WHERE ExerciseType=" + exerciseNum + " GROUP BY user ORDER BY averageSpeed DESC LIMIT " + num + ";";
 						
 						result = s.executeQuery(query);	
-
+						
+						int count = 0;
 						while(result.next())
 						{
+							count++;
 							FacebookUser user = friends.get(result.getString(1));
+							user.setDataDouble(result.getDouble(2));
+							user.setNum(count);
 							resultSet.add(user);
 						}
 

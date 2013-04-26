@@ -15,16 +15,7 @@ public class FacebookUser
 	private String pictureURL;
 	private int data;
 	private int num;
-	
-	public int getNum()
-	{
-		return num;
-	}
-
-	public void setNum(int num)
-	{
-		this.num = num;
-	}
+	private double dataDouble;
 
 	public FacebookUser(String id, String name, String pictureURL)
 	{
@@ -68,7 +59,24 @@ public class FacebookUser
 	{
 		this.data = data;
 	}
+	public double getDataDouble()
+	{
+		return dataDouble;
+	}
+	public void setDataDouble(double dataDouble)
+	{
+		this.dataDouble = dataDouble;
+	}
+	
+	public int getNum()
+	{
+		return num;
+	}
 
+	public void setNum(int num)
+	{
+		this.num = num;
+	}
 	public String toString()
 	{
 		return this.name;

@@ -908,7 +908,38 @@ public class HomeScreen extends Activity
 								}
 								else if(type == LeaderboardType.SPEED)
 								{
-									message = " " + user.getName();
+									String format = "%s has travelled at a total average speed of %s%s whilst %s.";
+									
+									String typeVerb = "";
+									
+									switch(exerciseType)
+									{
+										case WALK:
+											typeVerb = "walking";
+											break;
+										case RUN:
+											typeVerb = "running";
+											break;
+										case CYCLE:
+											typeVerb = "cycling";
+											break;
+									}
+																		
+									SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(HomeScreen.this);
+									String units = sharedPref.getString(SettingsActivity.UNITS, "1");
+									
+									double dist = user.getDataDouble();
+									String speedUnits = " km/h";
+									
+									if(Integer.valueOf(units) == 2)
+									{
+										dist = dist * 0.621371192;
+										speedUnits = " mph";
+									}			
+
+									String distStr = String.format("%.2f", dist);		
+									
+									message = String.format(format, user.getName(), distStr, speedUnits, typeVerb);
 								}
 								else if(type == LeaderboardType.REPS)
 								{
