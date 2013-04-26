@@ -83,7 +83,7 @@ public class BodyWeightSettingsDialogFragment extends DialogFragment
 		
 		/** Add numbers to rep chooser **/
 		List<String> repNums = new LinkedList<String>();
-		for(int i = 1; i <= 200; i++)
+		for(int i = 1; i <= 100; i++)
 		{
 			repNums.add(String.valueOf(i));
 		}
