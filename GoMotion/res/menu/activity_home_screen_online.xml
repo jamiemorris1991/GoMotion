@@ -2,7 +2,7 @@
     
     <item android:id="@+id/menu_leaderboards"
         android:title="@string/menu_leaderboards"
-        android:icon="@drawable/history"
+        android:icon="@drawable/leaderboards"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
     
