@@ -21,7 +21,7 @@ import android.widget.Spinner;
 public class DefaultBodyWeightPreference extends DialogPreference
 {
 	private String values;
-	private final String DEFAULT_VALUE = "5,10,60";
+	private final String DEFAULT_VALUE = "5,10,59";
 	private Spinner sets;
 	private Spinner reps;
 	private Spinner rest;
@@ -72,7 +72,7 @@ public class DefaultBodyWeightPreference extends DialogPreference
 		
 		/** Add numbers to rest chooser **/
 		List<String> restNums = new LinkedList<String>();
-		for(int i = 1; i <= 300; i++)
+		for(int i = 1; i <= 59; i++)
 		{
 			restNums.add(String.valueOf(i));
 		}
@@ -105,7 +105,10 @@ public class DefaultBodyWeightPreference extends DialogPreference
     {
         if (restorePersistedValue) {
             // Restore existing state
+        	System.out.println(DEFAULT_VALUE);
             values = this.getPersistedString(DEFAULT_VALUE);
+        	System.out.println(values);
+
 
         } else {
             // Set default state from the XML attribute
