@@ -130,7 +130,7 @@ public class CardioActivity extends Activity
 		}
 
 		timeView.setText("00:00");
-		distanceView.setText("0m");
+		distanceView.setText("0" + distanceUnits);
 		paceView.setText("0" + paceUnits);
 
 		started = false;
@@ -221,10 +221,10 @@ public class CardioActivity extends Activity
 						distance += dist;
 						if(distanceUnits.equals(" mi")) distance *= 0.621371192;
 						
-						String distStr = String.format("%f.2", distance/1000);						
+						String distStr = String.format("%.2f", distance/1000);						
 						distanceView.setText(distStr + distanceUnits);
 
-						pace = (double) (time) / distance;						
+						pace = (double) (time) / (distance/1000);						
 						int mins = (int) (pace / 60);
 						int secs = (int) (pace % 60);
 
