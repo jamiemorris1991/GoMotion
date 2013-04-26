@@ -62,16 +62,18 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"  
         android:layout_below="@id/situp_image"
-        android:layout_margin="20dp"      
-        android:text="Test your fitness against yourself, your friends and better yourself." />
+  		android:textColor="@color/goBlue"
+  		android:textSize="18sp"
+        android:text="\nTrack your running,\nLog your push-ups,\nChallenge your friends!\n\nGet up and Go(Motion)!" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/textView2"    
-        android:text="Get up and GoMotion." />  
+        android:layout_below="@id/textView2"   
+        android:textColor="@color/goGrey" 
+        android:text="\n\nLog in with Facebook™ or choose 'Offline Mode' to get going" />  
         
     <LinearLayout
         android:id="@+id/linearLayout1"
