@@ -8,8 +8,9 @@
     
         <item android:id="@+id/menu_refresh"
         android:title="@string/menu_refresh"
+        android:icon="@drawable/refresh"
         android:orderInCategory="101"
-        android:showAsAction="never" />
+        android:showAsAction="ifRoom" />
     
     <item android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
